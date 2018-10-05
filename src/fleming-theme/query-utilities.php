@@ -229,11 +229,9 @@ function show_grants_for_page(&$fleming_content) {
                     $full_grants[] = grant_with_post_data_and_fields(get_post_data_and_fields($grant->ID));
                 }
 
-                // Filter out future grants, if any
-                $future_grants = array_filter($full_grants, function ($grant) {
-                    // If it has a 'nextEvent' then it is in the future
-                    return $grant['nextEvent'];
-                });
+                // Find any future grants
+                $future_grants = array_filter($full_grants, "grant_deadline_is_in_future");
+
                 $showing_future_grants = false;
                 if ($future_grants && sizeof($future_grants) >= 1) {
                     // We have future grants. Sort them earliest deadline first.

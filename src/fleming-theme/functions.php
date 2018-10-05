@@ -203,39 +203,50 @@ function grant_with_post_data_and_fields($grant) {
 
     $grant['identifier'] = $identifier;
 
-    // Find the next event in the dates list
-    // We'll also use this for the 'status' if present, else we'll use the final event.
-    $dates = $grant['fields']['dates']['value'];
+    $events = $grant['fields']['dates']['value'];
     $nextEvent = null;
     $finalEvent = null;
-    if ($dates) {
-        $today = mktime(0, 0, 0); // midnight on today's date
-        foreach ($dates as &$event) {
+    $deadlineEvent = null;
+    if ($events) {
+        foreach ($events as &$event) {
             $date = $event['date'];
             if ($date) {
-                $timestamp = to_timestamp($date);
-                $event['timestamp'] = $timestamp;
-                if (($timestamp >= $today) &&
-                    ((!$nextEvent) || ($timestamp < $nextEvent['timestamp']))) {
-                    $nextEvent = $event;
-                }
-                if ((!$finalEvent) || ($timestamp > $finalEvent['timestamp'])) {
-                    $finalEvent = $event;
-                }
+                $event['timestamp'] = to_timestamp($date);
             }
         }
-    }
-    $grant['nextEvent'] = $nextEvent;
 
-    $status = null;
-    $statusEventDate = null;
-    $statusEvent = $nextEvent ?? $finalEvent;
-    if ($statusEvent) {
-        $status = $statusEvent['event_name'] . ' ' . $statusEvent['date'];
-        $statusEventDate = $statusEvent['date'];
+        usort($events, function($a, $b) {
+            $a['timestamp'] - $b['timestamp'];
+        });
+
+        // Find the next event in the dates list
+        // We'll also use this for the 'status' if present, else we'll use the final event.
+        $today = mktime(0, 0, 0); // midnight on today's date
+        foreach ($events as &$event) {
+            $timestamp = $event['timestamp'];
+            if (isset($timestamp) && $timestamp >= $today) {
+                $nextEvent = $event;
+                break;
+            }
+        }
+
+        $count = count($events);
+        $finalEvent = end($events);
+
+        // The second last event (normally 'Application deadline') is always used as the deadline.
+        $deadlineEvent = $count > 1 ? $events[$count - 2] : $finalEvent;
     }
-    $grant['status'] = $status;
-    $grant['statusEventDate'] = $statusEventDate;
+
+    $grant['nextEvent'] = $nextEvent;
+    $grant['deadlineEvent'] = $deadlineEvent;
+    $statusEvent = $nextEvent ?? $finalEvent;
+
+    if ($statusEvent) {
+        $grant['status'] = $statusEvent['event_name'] . ' ' . $statusEvent['date'];
+    }
+    if ($deadlineEvent) {
+        $grant['deadlineStatus'] = $deadlineEvent['event_name'] . ' ' . $deadlineEvent['date'];
+    }
 
     if (isset($grant['fields']['flexible_content'])) {
         $grant['overview'] = get_overview_text_from_flexible_content($grant['fields']['flexible_content']);
@@ -244,12 +255,17 @@ function grant_with_post_data_and_fields($grant) {
     return $grant;
 }
 
-// Sort grant records by nextEvent ascending
+function grant_deadline_is_in_future($grant) {
+    $today = mktime(0, 0, 0);
+    return isset($grant['deadlineEvent']) && $grant['deadlineEvent']['timestamp'] >= $today;
+}
+
+// Sort grant records by deadline ascending
 function sort_future_grants($opportunities)
 {
     usort($opportunities, function ($a, $b) {
-        $aTimestamp = $a['nextEvent']['timestamp'];
-        $bTimestamp = $b['nextEvent']['timestamp'];
+        $aTimestamp = $a['deadlineEvent']['timestamp'];
+        $bTimestamp = $b['deadlineEvent']['timestamp'];
         return $aTimestamp - $bTimestamp;
     });
     return $opportunities;
