@@ -141,7 +141,7 @@
             },
             {
                 "key": "field_5b06962b6ae17g95jsyfh",
-                "label": "Country",
+                "label": "Countries",
                 "name": "country",
                 "type": "post_object",
                 "instructions": "",
@@ -157,7 +157,7 @@
                 ],
                 "taxonomy": [],
                 "allow_null": 1,
-                "multiple": 0,
+                "multiple": 1,
                 "return_format": "object",
                 "ui": 1
             },

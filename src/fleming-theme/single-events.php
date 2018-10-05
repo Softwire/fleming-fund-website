@@ -36,6 +36,14 @@ function fleming_get_content() {
         $post = entity_with_post_data_and_fields($post);
     }
 
+    if (!empty($fleming_content["fields"]["country"]["value"])) {
+        foreach ($fleming_content["fields"]["country"]["value"] as &$location) {
+            $location = $location->post_title;
+        }
+        $fleming_content["fields"]["country"]["value"] = implode(", ",
+            $fleming_content["fields"]["country"]["value"]);
+    }
+
     return $fleming_content;
 }
 
