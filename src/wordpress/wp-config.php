@@ -30,6 +30,12 @@ define('LOGGED_IN_SALT',   $_ENV['LOGGED_IN_SALT']);
 define('NONCE_SALT',       $_ENV['NONCE_SALT']);
 
 
+if (isset($_ENV["FLEM_ENV"]) && (("local-dev" == $_ENV["FLEM_ENV"]) || ("test" == $_ENV["FLEM_ENV"]))) {
+  define('MAX_CACHE_SECONDS', 1);
+} else {
+  define('MAX_CACHE_SECONDS', 60 * 60); # One hour
+}
+
 if (isset($_ENV["FLEM_ENV"]) && ("local-dev" == $_ENV["FLEM_ENV"])) {
   # Local dev settings
   define('WP_HOME', 'http://localhost:3000');

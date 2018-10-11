@@ -78,10 +78,12 @@ function process_flexible_content(&$fields, &$content, $force_in_page_links = fa
                     $show_in_page_links = true;
                 }
             } elseif ($type == 'links_to_other_posts') {
-                foreach($content_block['links'] as &$postLink) {
-                    $postLink['post'] = entity_with_post_data_and_fields(
-                        get_post_data_and_fields($postLink['post']->ID)
-                    );
+                if (is_array($content_block['links'])) {
+                    foreach($content_block['links'] as &$postLink) {
+                        $postLink['post'] = entity_with_post_data_and_fields(
+                            get_post_data_and_fields($postLink['post']->ID)
+                        );
+                    }
                 }
             }
         }
@@ -447,7 +449,7 @@ function get_footer_organisations() {
         }
 
         $one_hour_in_seconds = 3600;
-        set_transient($cache_id, $organisations, $one_hour_in_seconds);
+        set_transient($cache_id, $organisations, min(MAX_CACHE_SECONDS, $one_hour_in_seconds));
     }
     return $organisations;
 }

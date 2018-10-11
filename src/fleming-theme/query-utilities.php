@@ -165,7 +165,7 @@ function get_related_posts($post, $limit=2, $same_post_type_only) {
             if (count($related_posts) >= $limit) break;
         }
         $one_day_in_seconds = 86400;
-        set_transient($cache_id, $related_posts, $one_day_in_seconds);
+        set_transient($cache_id, $related_posts, min(MAX_CACHE_SECONDS, $one_day_in_seconds));
     }
     return $related_posts;
 }
@@ -262,7 +262,7 @@ function show_grants_for_page(&$fleming_content) {
                     'grants' => []
                 ];
             }
-            set_transient($cache_id, $current_grants, 30 * 60);
+            set_transient($cache_id, $current_grants, min(MAX_CACHE_SECONDS, 30 * 60));
         }
 
         if ($current_grants && is_array($current_grants['grants']) && sizeof($current_grants['grants']) > 0) {
