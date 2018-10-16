@@ -36,7 +36,7 @@ function fleming_get_content()
             return $opportunity['nextEvent'];
         });
         $opportunities = array_slice(sort_future_grants($opportunities), 0, 3);
-        set_transient($opportunities_cache_id, $opportunities, min(MAX_CACHE_SECONDS, 30 * 60)); // cache for half hour
+        set_transient($opportunities_cache_id, $opportunities, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
     }
     $fleming_content["opportunities"] = $opportunities;
 

@@ -448,8 +448,7 @@ function get_footer_organisations() {
             );
         }
 
-        $one_hour_in_seconds = 3600;
-        set_transient($cache_id, $organisations, min(MAX_CACHE_SECONDS, $one_hour_in_seconds));
+        set_transient($cache_id, $organisations, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS));
     }
     return $organisations;
 }
