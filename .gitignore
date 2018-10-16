@@ -4,6 +4,7 @@ dist/
 .credentials/
 .temp/
 .idea/
+.vs/
 deployments/
 
 # SSL cert
