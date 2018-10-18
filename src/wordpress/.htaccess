@@ -21,7 +21,9 @@ RewriteRule . /index.php [L]
     ExpiresByType text/javascript "access plus 216000 seconds"
     ExpiresByType application/javascript "access plus 216000 seconds"
     ExpiresByType application/x-javascript "access plus 216000 seconds"
-    ExpiresByType text/html "access plus 1 second"
-    # ExpiresByType application/xhtml+xml "access plus 600 seconds"
+    ExpiresByType text/html "now"
+</ifModule>
+<ifModule mod_headers.c>
+    Header merge "Cache-Control" "s-maxage=60" "expr=%{CONTENT_TYPE} =~ m|^text/html|
 </ifModule>
 # END Expire headers
