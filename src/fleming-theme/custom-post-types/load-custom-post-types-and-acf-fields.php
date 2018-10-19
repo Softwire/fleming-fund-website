@@ -12,7 +12,7 @@ $searchable_custom_post_types = [
     'projects',
     'publications',
     'regions',
-    'topics'
+    'topics',
 ];
 
 $nonsearchable_custom_post_types = [
@@ -56,7 +56,7 @@ function init_acf_fields() {
     $pageData = get_post(is_admin() ? ($_GET['post'] ?? $_POST['post_ID']) : null);
     if (isset($pageData)) {
         if ($pageData->post_type === 'page') {
-            $acfFilename = __DIR__ . '/types/page-'.$pageData->post_name.'.json';
+            $acfFilename = __DIR__ . '/types/page-' . $pageData->post_name . '.json';
             $currently_accessing_a_page = true;
             if (is_file($acfFilename)) {
                 load_acf_fields($acfFilename);
@@ -65,7 +65,6 @@ function init_acf_fields() {
     } else if ($_GET['post_type'] ?? null === 'page') {
         $currently_accessing_a_page = true;
     }
-
 
     if (!$currently_accessing_a_page) {
         foreach ($allPageAcfFieldDefinitionFiles as $pageAcfFieldDefinitionFile) {
@@ -136,8 +135,8 @@ function add_extra_content_to_index_of_post($content, $post) {
             array(
                 'value' => serialize(strval($post->ID)),
                 'compare' => 'LIKE'
-            )
-        )
+            ),
+        ),
     ];
     $query = new WP_Query($query_args);
     foreach ($query->get_posts() as $referringPost) {
@@ -147,3 +146,5 @@ function add_extra_content_to_index_of_post($content, $post) {
     return $content . ' ' . implode(' ', $extraSearchTerms);
 }
 add_filter('relevanssi_content_to_index', 'add_extra_content_to_index_of_post', 10, 2);
+
+include __DIR__ . "/acf-validation.php";
