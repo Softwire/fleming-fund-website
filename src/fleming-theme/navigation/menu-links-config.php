@@ -186,7 +186,7 @@ class MenuLinksConfig
             if ($value['target'] == $url) {
                 return array($key);
             }
-            if ($value['children']) {
+            if (isset($value['children'])) {
                 $path = self::findLinkRecurse($value['children'], $url);
                 if ($path) {
                     array_unshift($path, $key);

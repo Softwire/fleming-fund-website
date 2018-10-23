@@ -154,19 +154,32 @@ function grant_with_post_data_and_fields($grant) {
 
     $grantType = $grant['fields']['type']['value'];
 
-    $identifier = $grantType->post_title ?? 'Grant';
+    $identifier = null;
+    if (is_object($grantType) && isset($grantType->post_title)) {
+        $identifier = $grantType->post_title;
+    } else {
+        $identifier = 'Grant';
+    }
 
-    if ($grantType->post_name === 'global-grant') {
+    if (!is_object($grantType) || $grantType->post_name === 'global-grant') {
         $grant['colour_scheme'] = 'base';
     } else {
 
         $countries = $grant['fields']['countries']['value'];
-        $region = $grant['fields']['region']['value'];
+        $regions = $grant['fields']['region']['value'];
 
         if (empty($countries)) {
-            if ($region) {
-                $grant['colour_scheme'] = region_slug_to_colour_scheme_name($region->post_name);
-                $identifier .= ' : '.$region->post_title;
+            $regionCount = is_array($regions) ? count($regions) : 0;
+            if ($regionCount >= 1) {
+                $identifier .= ' : ' . implode(' | ', array_map(
+                    function($region) {
+                        return $region->post_title;
+                    },
+                    $regions
+                ));
+            }
+            if ($regionCount == 1) {
+                $grant['colour_scheme'] = region_slug_to_colour_scheme_name($regions[0]->post_name);
             } else {
                 $grant['colour_scheme'] = 'base';
             }

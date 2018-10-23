@@ -59,6 +59,7 @@ function get_referring_posts_single_valued($postID, $post_type, $reference_type)
 function get_referring_posts($postID, $post_type, $reference_type) {
     $dependent_arguments = [ $post_type, $reference_type, $postID ];
     $cache_id = 'referring_posts_' . implode('_', $dependent_arguments);
+
     $referring_posts = get_transient($cache_id);
 
     if (false === $referring_posts)
@@ -73,8 +74,7 @@ function get_referring_posts($postID, $post_type, $reference_type) {
                     'value' => $postID,
                     'compare' => 'LIKE'
                 )
-            )
-            )
+            ))
         );
 
         // Load all fields
@@ -83,26 +83,24 @@ function get_referring_posts($postID, $post_type, $reference_type) {
         }
 
         // Filter down to the correct subset we want by checking exact matches in the fields this time.
-        if (is_array($posts[0]['fields'][$reference_type]['value'])) {
-            $posts = array_filter($posts, function($post) use($postID, $reference_type) {
-                $refers_to_post = false;
-                if ($post['fields'][$reference_type]['value']) {
-                    foreach($post['fields'][$reference_type]['value'] as $reference) {
-                        if ($reference->ID == $postID) $refers_to_post = true;
+        $posts = array_filter($posts, function($post) use($postID, $reference_type) {
+            if (is_array($post['fields'][$reference_type]['value'])) {
+                foreach($post['fields'][$reference_type]['value'] as $reference) {
+                    if ($reference->ID == $postID) {
+                        return true;
                     }
                 }
-                return $refers_to_post;
-            });
-        } else {
-            $posts = array_filter($posts, function($post) use($postID, $reference_type) {
+            } else if (is_object($post['fields'][$reference_type]['value'])) {
                 return $post['fields'][$reference_type]['value']->ID == $postID;
-            });
-        }
+            }
+            return false;
+        });
 
         foreach ($posts as &$post) {
             unset($post);
         }
         $referring_posts = array_values($posts); // reset array indices to 0, 1, 2, ...
+        set_transient($cache_id, $referring_posts, min(MAX_CACHE_SECONDS, 60 * 5));
     }
 
     return $referring_posts;
