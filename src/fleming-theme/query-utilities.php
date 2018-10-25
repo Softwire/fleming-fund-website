@@ -81,6 +81,7 @@ function get_referring_posts($postID, $post_type, $reference_type) {
         foreach ($posts as &$post) {
             $post = get_post_data_and_fields($post->ID);
         }
+        unset($post);
 
         // Filter down to the correct subset we want by checking exact matches in the fields this time.
         $posts = array_filter($posts, function($post) use($postID, $reference_type) {
@@ -96,9 +97,6 @@ function get_referring_posts($postID, $post_type, $reference_type) {
             return false;
         });
 
-        foreach ($posts as &$post) {
-            unset($post);
-        }
         $referring_posts = array_values($posts); // reset array indices to 0, 1, 2, ...
         set_transient($cache_id, $referring_posts, min(MAX_CACHE_SECONDS, 60 * 5));
     }
