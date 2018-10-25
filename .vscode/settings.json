@@ -1,0 +1,5 @@
+{
+    "search.exclude": {
+        "src/fleming-theme/twig": true
+    }
+}
