@@ -7,9 +7,5 @@ dist/
 .vs/
 deployments/
 
-# SSL cert
-src/wordpress/.ebextensions/https-instance.config
-src/wordpress/.ebextensions/https-single-instance.config
-
 # Paid for plugins
 dependencies/plugins/
