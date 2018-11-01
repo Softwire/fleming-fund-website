@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source ./.credentials/local-credentials-for-install.sh
-
 set -x
 
 ./setup-extra-steps

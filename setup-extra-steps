@@ -22,10 +22,7 @@ export MAX_CACHE_SECONDS="1"
 export WP_HOME="http://localhost:3000"
 
 # Localhost
-export DB_HOST="${process.env.DB_HOST}"
-export DB_NAME="${process.env.DB_NAME}"
-export DB_USER="${process.env.DB_USER}"
-export DB_PASSWORD="${process.env.DB_PASSWORD}"
+source .credentials/local-database-credentials.sh
 
 ## AWS databases. Details are in Zoho. Connections allowed from Softwire offices only.
 # LIVE
