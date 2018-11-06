@@ -76,6 +76,16 @@
           </div>
         </div>
       {% endif %}
+      {% for file in fields.other_files.value %}
+        <div class="card {{ colour_scheme }}">
+          <div class="content">
+            <p>{{ file.title }}</p>
+            <a href={{ file.file.url }}>
+              <button class="button">Download &darr;</button>
+            </a>
+          </div>
+        </div>
+      {% endfor %}
     </div>
     <div class="people card-container cover">
       {% include 'cards/entities/person-with-image.html' with {
