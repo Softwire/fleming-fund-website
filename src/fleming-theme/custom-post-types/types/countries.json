@@ -178,6 +178,60 @@
                 "mime_types": ""
             },
             {
+                "key": "field_5ba0fad3164d2",
+                "label": "Other files",
+                "name": "other_files",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "collapsed": "",
+                "min": 0,
+                "max": 0,
+                "layout": "table",
+                "button_label": "Add file",
+                "sub_fields": [
+                    {
+                        "key": "field_5b6165ccf2f5e",
+                        "label": "Description",
+                        "name": "title",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        }
+                    },
+                    {
+                        "key": "field_5b14d3f68fbda",
+                        "label": "File",
+                        "name": "file",
+                        "type": "file",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "array",
+                        "library": "all",
+                        "min_size": "",
+                        "max_size": "",
+                        "mime_types": ""
+                    }
+                ]
+            },
+            {
                 "key": "field_5b0ecf9a4f40bqwerty",
                 "label": "Case Study",
                 "name": "case_study",
