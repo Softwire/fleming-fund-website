@@ -55,9 +55,10 @@
 
 {% embed 'flexible_content.twig' with { 'flexible_content': fields.flexible_content.value } %}
   {% block aside %}
+    <hr class="row-border"/>
     <div class="card-container cover">
       {% if fields.nap_doc.value %}
-        <div class="card {{ colour_scheme }}">
+        <div class="card {{ colour_scheme }} aside-card">
           <div class="content">
             <p>{{ title }}'s National Action Plan is available here</p>
             <a href={{ fields.nap_doc.value.url }}>
@@ -67,7 +68,7 @@
         </div>
       {% endif %}
       {% if fields.rfp_doc.value %}
-        <div class="card {{ colour_scheme }}">
+        <div class="card {{ colour_scheme }} aside-card">
           <div class="content">
             <p>{{ title }}'s Request for Proposals is available here</p>
             <a href={{ fields.rfp_doc.value.url }}>
@@ -77,7 +78,7 @@
         </div>
       {% endif %}
       {% for file in fields.other_files.value %}
-        <div class="card {{ colour_scheme }}">
+        <div class="card {{ colour_scheme }} aside-card">
           <div class="content">
             <p>{{ file.title }}</p>
             <a href={{ file.file.url }}>
@@ -87,6 +88,7 @@
         </div>
       {% endfor %}
     </div>
+    <hr class="row-border"/>
     <div class="people card-container cover">
       {% include 'cards/entities/person-with-image.html' with {
         'person': coordinator,
