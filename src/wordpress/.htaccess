@@ -24,6 +24,6 @@ RewriteRule . /index.php [L]
     ExpiresByType text/html "now"
 </ifModule>
 <ifModule mod_headers.c>
-    Header merge "Cache-Control" "s-maxage=60" "expr=%{CONTENT_TYPE} =~ m|^text/html|
+    Header merge "Cache-Control" "s-maxage=60" "expr=%{CONTENT_TYPE} =~ m|^text/html|"
 </ifModule>
 # END Expire headers
