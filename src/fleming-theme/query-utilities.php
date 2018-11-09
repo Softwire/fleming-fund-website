@@ -120,9 +120,6 @@ function get_query_results($query = NULL) {
     }
     wp_reset_postdata();
 
-    $total_results_summary = strval($query->found_posts) . " result" . ($query->found_posts == 1 ? "" : "s");
-    $pagination_summary = $max_page > 1 ? "" . strval(($page_number - 1)*$page_size + 1) . "-" . strval(min($page_number*$page_size, $query->found_posts)) . " of " : "";
-
     return array(
         "posts" => $posts,
         "query" => get_search_query(),
@@ -133,8 +130,14 @@ function get_query_results($query = NULL) {
             'total' => $max_page,
             'current' => $page_number
         ]),
-        "summary" => $pagination_summary . $total_results_summary
+        "summary" => query_summary($query->found_posts, $page_size, $page_number, $max_page)
     );
+}
+
+function query_summary($total, $page_size, $page_number, $max_page) {
+    $total_results_summary = strval($total) . " result" . ($total == 1 ? "" : "s");
+    $pagination_summary = $max_page > 1 ? "" . strval(($page_number - 1)*$page_size + 1) . "-" . strval(min($page_number*$page_size, $total)) . " of " : "";
+    return $pagination_summary . $total_results_summary;
 }
 
 function get_related_posts($post, $limit=2, $same_post_type_only) {
@@ -176,6 +179,39 @@ function compare_date_strings($string1, $string2) {
     if ($date2[1] != $date1[1]) return (int) $date1[1] - (int) $date2[1];
     if ($date2[0] != $date1[0]) return (int) $date1[0] - (int) $date2[0];
     return 0;
+}
+
+function get_all_future_grants() {
+    $future_grants_cache_id = 'all_future_grants';
+    $future_grants = get_transient($future_grants_cache_id);
+
+    if (!is_array($future_grants)) {
+        $grants = get_posts(array('post_type' => 'grants', 'numberposts' => -1));
+        foreach ($grants as &$grant) {
+            $grant = grant_with_post_data_and_fields(get_post_data_and_fields($grant->ID));
+        }
+        $future_grants = array_filter($grants, "grant_deadline_is_in_future");
+        set_transient($future_grants_cache_id, $future_grants, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
+    }
+    return $future_grants;
+}
+
+function array_to_query_results($posts, $current_page=1, $page_size=10) {
+    $total = count($posts);
+    $max_page = intdiv($total, $page_size) + 1;
+    $current_posts = array_slice($posts, ($current_page - 1) * $page_size, $page_size);
+
+    return array(
+        "posts" => $current_posts,
+        "max_page" => $max_page,
+        "pagination_links" => paginate_links([
+            'show_all' => true,
+            'prev_next' => true,
+            'total' => $max_page,
+            'current' => $current_page
+        ]),
+        "summary" => query_summary($total, $page_size, $current_page, $max_page)
+    );
 }
 
 // For a grant type page (Global Grants, Country Grants, Regional Grants, Fellowships)

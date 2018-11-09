@@ -8,11 +8,12 @@
 <div class="grant-filters">
   <form action="" method="get">
     <span>Show me</span>
-    <select name="type">
-      <option value="" {% if selected_grant_type.ID == NULL %} selected {% endif %}>All types</option>
+    <select name="filter">
+      <option value="" {% if filter_string is empty %} selected {% endif %}>All</option>
+      <option value="current" {% if filter_string == "current" %} selected {% endif %}>All open grants</option>
       {% for grant_type in grant_types %}
         <option
-            value="{{ grant_type.post_name }}" {% if selected_grant_type.ID == grant_type.ID %} selected {% endif %} >{{ grant_type.post_title }}</option>
+            value="{{ grant_type.post_name }}" {% if filter_string == grant_type.post_name %} selected {% endif %} >{{ grant_type.post_title }}</option>
       {% endfor %}
     </select>
     <input type="submit" value="Apply"/>
@@ -20,18 +21,18 @@
 </div>
 
 <script>
-    function updateType() {
+    function updateFilter() {
         var url = '/grants/';
-        var type = $(".grant-filters select[name='type']").val();
-        if (type) {
-            url += '?type=' + type
+        var filter = $(".grant-filters select[name='filter']").val();
+        if (filter) {
+            url += '?filter=' + filter
         }
         document.location = url;
     }
 
     $(function () {
         $(".grant-filters input[type='submit']").hide();
-        $(".grant-filters select").on("change", updateType);
+        $(".grant-filters select").on("change", updateFilter);
     });
 </script>
 
