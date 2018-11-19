@@ -191,7 +191,7 @@ function get_all_future_grants() {
             $grant = grant_with_post_data_and_fields(get_post_data_and_fields($grant->ID));
         }
         $future_grants = array_filter($grants, "grant_deadline_is_in_future");
-        set_transient($future_grants_cache_id, $future_grants, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
+        set_transient($future_grants_cache_id, $future_grants, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
     }
     return $future_grants;
 }
