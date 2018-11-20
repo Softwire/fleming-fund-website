@@ -216,7 +216,7 @@ function grant_with_post_data_and_fields($grant) {
         }
 
         usort($events, function($a, $b) {
-            $a['timestamp'] - $b['timestamp'];
+            return $a['timestamp'] - $b['timestamp'];
         });
 
         // Find the next event in the dates list
