@@ -48,7 +48,7 @@ trait CommonLinksServer
         return $this->getMenuRouteLink('news');
     }
 
-    function getAllGrantsPageLink()
+    function getOpenGrantsPageLink()
     {
         $link = new Link();
         $link->setTitle('Open Grants');
