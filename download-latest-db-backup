@@ -137,10 +137,6 @@ async function loadConfigsAndTestConnections(options) {
     if (options.get_database || options.get_files) {
         await loadAwsConfigAndTestConnection();
     }
-
-    if (options.restore_database) {
-        loadMySqlConfigAndTestConnection();
-    }
 }
 
 function loadAwsConfigAndTestConnection() {
@@ -166,12 +162,6 @@ function loadAwsConfigAndTestConnection() {
                 }
             });
     });
-}
-
-function loadMySqlConfigAndTestConnection() {
-    console.log(''); // make some space in the log
-    console.log('loading MySQL config and testing connection');
-
 }
 
 
@@ -261,9 +251,6 @@ async function restoreDatabase() {
 
         const backupQuery = fs.readFileSync(databaseBackupSqlFile);
         const wholeRestoreQuery = "DROP SCHEMA IF EXISTS `wordpress`; CREATE SCHEMA `wordpress` DEFAULT CHARACTER SET utf8mb4; USE `wordpress`; " + backupQuery;
-        if (wholeRestoreQuery.length > max_allowed_packet) {
-            throw Error("Restore query exceeds " + max_allowed_packet);
-        }
 
         console.log("Trying to increase the max packet size to " + max_allowed_packet);
         const setMaxPacketSizeQuery = `SET GLOBAL max_allowed_packet=${max_allowed_packet};`;
@@ -274,9 +261,15 @@ async function restoreDatabase() {
             console.log("Running main restore query");
             connection.query(wholeRestoreQuery, function (error) {
                 if (error) throw error;
-                console.log('Query executed.');
-                resolve();
-                connection.end();
+                console.log('Restore query executed, disabling backups and setting up user Softwire/password');
+                const localChangesQuery =
+                    "UPDATE wordpress.wp_options SET option_value = 'manual' WHERE option_name IN ('updraft_interval', 'updraft_interval_database'); "
+                    + "UPDATE wordpress.wp_users SET user_pass = md5('password') WHERE user_login = 'Softwire';"
+                connection.query(localChangesQuery, function (error) {
+                    if (error) throw error;
+                    resolve();
+                    connection.end();
+                })
             });
         });
     });
