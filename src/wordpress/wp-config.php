@@ -35,7 +35,7 @@ if (isset($_ENV["WP_CONTENT_URL"])) {
 if (isset($_ENV["MAX_CACHE_SECONDS"])) {
   define('MAX_CACHE_SECONDS', intval($_ENV["MAX_CACHE_SECONDS"]));
 } else {
-  define('MAX_CACHE_SECONDS', HOUR_IN_SECONDS);
+  define('MAX_CACHE_SECONDS', 60 * 10);
 }
 
 if (isset($_SERVER["HTTP_X_AMZ_CF_ID"])) {
