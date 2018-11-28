@@ -52,7 +52,7 @@ trait CommonLinksServer
     {
         $link = new Link();
         $link->setTitle('Open Grants');
-        $link->setTarget('/grants/?filter=current');
+        $link->setTarget('/grants/');
         return $link;
     }
 
