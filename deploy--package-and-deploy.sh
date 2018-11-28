@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -v
+set -ev
 
 # Move "uploads" folder out the way (otherwise wp-install will delete it) 
 mkdir -p ./dist/wordpress/wp-content/uploads
