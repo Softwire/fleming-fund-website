@@ -14,7 +14,9 @@ This is the [Git repository](https://en.wikipedia.org/wiki/Git) for the code tha
 * Install Git for Windows (https://git-scm.com/download/win)  
   (optional extra) Install your Git GUI of choice
 
-* Install NPM + Node (https://nodejs.org/en/download/)
+* Install Node (https://nodejs.org/en/download/)
+
+* Install Yarn (https://yarnpkg.com/latest.msi)
 
 * Install the latest version of MySQL Community (https://dev.mysql.com/downloads/installer)
   * Note: it asks you to login to an Oracle Web Account  
@@ -61,7 +63,7 @@ This is the [Git repository](https://en.wikipedia.org/wiki/Git) for the code tha
 (the names should match `.wp-install.yml`)
 
 * Run `one-click-install.sh`. This will:
-  * `npm install`
+  * `yarn install`
   * Install wordpress + plugins
   * Fetch and restore a copy of the database and uploads folder from S3.
     **THIS WILL DELETE ANY EXISTING WORDPRESS DATABASE**
