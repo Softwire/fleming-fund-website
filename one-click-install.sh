@@ -4,7 +4,7 @@ set -x
 
 ./setup-extra-steps
 
-npm install
+yarn
 
 ./node_modules/wp-install/bin/wp-install
 
