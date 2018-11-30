@@ -180,6 +180,10 @@
   }
 
   .card {
+    @media (#{$min-width-desktop}) {
+      margin-top: 2rem;
+      margin-bottom: 2rem;
+    }
     margin-top: ($column-margin / 2);
     margin-bottom: ($column-margin / 2);
   }
