@@ -28,4 +28,8 @@ cd ../..
 if [[ ! -z "$1" ]]
 then
     ./deploy--deploy-to-aws $1 "$ZIPFILE"
+    DATE=`date '+%Y-%m-%d_%H-%M'`
+    TAG_NAME=${1}-${DATE}
+    git tag ${TAG_NAME}
+    git push origin ${TAG_NAME}
 fi
