@@ -141,12 +141,18 @@
   }
 }
 
-.aside-card {
-  .content {
-    padding-left: 0;
+@each $configName, $colourConfig in $colourConfigs {
+  .aside-card.#{$configName} {
+
+    border-color: map-get($colourConfig, intense);
+    background: map-get($colourConfig, intense);
+    color: #fff;
+
+    .button {
+      background: map-get($colourConfig, subtle);
+    }
   }
 }
-
 // Layout
 
 @mixin perRow($numPerRow) {
