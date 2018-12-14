@@ -1,10 +1,9 @@
 # What is this
-This is the [Git repository](https://en.wikipedia.org/wiki/Git) for the code that runs the [Fleming Fund website](http://www.flemingfund.org)
+This is the Git repository for the code that runs the [Fleming Fund website](http://www.flemingfund.org)
 
 # Tech overview
 * Content Management System (CMS): WordPress
 * Hosting: AWS
-* CI: Travis CI
 
 # Zero-to-hero
 
@@ -66,13 +65,13 @@ This is the [Git repository](https://en.wikipedia.org/wiki/Git) for the code tha
   * `yarn install`
   * Install wordpress + plugins
   * Fetch and restore a copy of the database and uploads folder from S3.
-    **THIS WILL DELETE ANY EXISTING WORDPRESS DATABASE**
+    **THIS WILL DELETE ANY EXISTING LOCAL WORDPRESS DATABASE**
 
 ## Running the website
 
 * Run these two shell scripts to build and serve the website:
   * `dev--build-and-watch.sh`  
-  This uses Webpack to compile SCSS etc  
+  This uses Webpack to compile SCSS etc.
   It watches for changed files and re-compiles automatically.
 
   * `dev--run-php-server.sh`  
@@ -89,6 +88,14 @@ This is the [Git repository](https://en.wikipedia.org/wiki/Git) for the code tha
 To use the live/staging/test database edit `.credentials/set-local-credentials.sh`, commenting out your local database and
 uncommenting a different one. Get the password from Zoho.
 
+## Deploying
+
+Run the `deploy--package-and-deploy.sh` script. Pass an environment name (test, stage, production) to deploy to that environment e.g.
+
+    /deploy--package-and-deploy.sh test
+
+Make sure you have the deploy credentials and YouTube API key in your `.credentals` folder.
+Stop any `./dev--build-and-run` scripts first - they will conflict otherwise.
 
 # Custom Post Types and Custom Field Groups
 
