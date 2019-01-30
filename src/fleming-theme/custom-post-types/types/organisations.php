@@ -18,3 +18,7 @@ register_post_type('organisations', array(
     'menu_position'         => 40,
     'supports'              => array('title', 'revisions')
 ));
+
+add_action( 'admin_init', function() {
+    remove_post_type_support( 'organisations', 'editor' );
+});
