@@ -206,6 +206,11 @@
   &.four-max .card {
     @include perRow(4);
   }
+
+  .card.large-card {
+    width: 100%;
+    margin-right: 0 !important;
+  }
 }
 
 @media (#{$max-width-desktop}) {
