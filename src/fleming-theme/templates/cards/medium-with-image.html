@@ -4,7 +4,8 @@
     {% if not card.remove_image_for_low_bandwidth == true %}
         <div class="image-container">
             {% if card.image_src %}
-                <img src="{{ card.image_src }}" title="{{ card.image_title | default(card.title) }}"/>
+                <img src="{{ card.image_src }}" title="{{ card.image_title | default(card.title) }}"
+                    {{card.full_size_image ? 'class="full-size-image"' : '' }}/>
             {% endif %}
             {% if card.link_target %}
                 {% include 'cards/common/link-overlay.html' %}
