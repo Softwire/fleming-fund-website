@@ -41,25 +41,28 @@ function fleming_get_content()
             )
         )
     ];
-    $country = get_page_by_path($_GET["country"], 'OBJECT', 'countries');
-    if ($country != null && $country->post_status == 'publish') {
-        $fleming_content['selected_country'] = $country;
-        $query_args["meta_query"] = array(
-            'relation' => 'and',
-            $query_args["meta_query"],
-            array(
-                'relation' => 'or',
+    $country = null;
+    if (isset($_GET["country"])) {
+        $country = get_page_by_path($_GET["country"], 'OBJECT', 'countries');
+        if ($country != null && $country->post_status == 'publish') {
+            $fleming_content['selected_country'] = $country;
+            $query_args["meta_query"] = array(
+                'relation' => 'and',
+                $query_args["meta_query"],
                 array(
-                    'key' => 'country',
-                    'value' => $country->ID
-                ),
-                array(
-                    'key' => 'country_region',
-                    'value' => serialize(strval($country->ID)),
-                    'compare' => 'LIKE'
+                    'relation' => 'or',
+                    array(
+                        'key' => 'country',
+                        'value' => $country->ID
+                    ),
+                    array(
+                        'key' => 'country_region',
+                        'value' => serialize(strval($country->ID)),
+                        'compare' => 'LIKE'
+                    )
                 )
-            )
-        );
+            );
+        }
     }
 
     if ($current_page == 1 && empty($fleming_content['selected_country'])) {
@@ -68,6 +71,12 @@ function fleming_get_content()
 
     $query = new WP_Query($query_args);
     $query_result = get_query_results($query);
+
+    foreach($query_result['posts'] as &$post) {
+        if($post['data']->post_type === 'publications') {
+            $post = publication_with_post_data_and_fields($post);
+        }
+    }
 
     $fleming_content['query_result'] = $query_result;
     $fleming_content['countries'] = get_posts(array(
