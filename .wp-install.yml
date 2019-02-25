@@ -22,4 +22,4 @@ plugins-to-copy:
     filename: advanced-custom-fields-pro.zip
   - name: two-factor-authentication-premium
     type: zip
-    filename: two-factor-authentication-premium.1.3.13.zip
+    filename: two-factor-authentication-premium.zip
