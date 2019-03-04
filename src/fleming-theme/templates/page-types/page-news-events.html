@@ -46,7 +46,7 @@
       <div class="card-container two-max">
         {% for post in query_result.posts %}
           {% if post.data.post_type is same as("publications") and post.picture_large_url %}
-            {% include 'cards/entities/publication-medium-with-image.html' with {'publication': post} %}
+            {% include 'cards/entities/publication-large-with-image.html' with {'publication': post} %}
           {% else %}
             {% include 'cards/entities/single-post.html' %}
           {% endif %}
