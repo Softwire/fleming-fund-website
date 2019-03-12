@@ -18,7 +18,7 @@ function should_display_prominently($post)
 {
     return $post['data']->post_type === 'publications'
         && isset($post['fields']['display_card_prominently'])
-        && $post['fields']['display_card_prominently']
+        && $post['fields']['display_card_prominently']['value']
         && $post['picture_large_url'];
 }
 
@@ -125,6 +125,9 @@ function fleming_get_content()
                 }
             }
         }
+    }
+    if($held_back_post) {
+        $ordered_posts[] = $held_back_post;
     }
 
     $query_result['posts'] = $ordered_posts;

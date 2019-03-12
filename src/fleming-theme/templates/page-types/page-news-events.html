@@ -41,11 +41,10 @@
     {% include 'flexible_content.twig' with { 'flexible_content': fields.supporting_content.value } %}
 
     {% if query_result %}
-      <p class="query-result-summary">
-        {{ query_result.summary }}</p>
+      <p class="query-result-summary">{{ query_result.summary }}</p>
       <div class="card-container new-two-max">
         {% for post in query_result.posts %}
-          {% if weight == 'heavy' and post.data.post_type is same as("publications") and post.fields.display_card_prominently and post.picture_large_url %}
+          {% if weight == 'heavy' and post.data.post_type is same as("publications") and post.fields.display_card_prominently.value and post.picture_large_url %}
             {% include 'cards/entities/publication-with-image.html' with {'publication': post} %}
           {% else %}
             {% include 'cards/entities/single-post.html' %}
