@@ -290,7 +290,7 @@
             {
                 "key": "field_5b5e245b403bc",
                 "label": "Display prominently where available",
-                "name": "display_prominently",
+                "name": "display_card_prominently",
                 "type": "true_false",
                 "instructions": "This publication will be displayed as a large card on the News and Events page.",
                 "required": 0,

@@ -14,32 +14,40 @@ require_once 'query-utilities.php';
  * VIEWs are located in the ./templates folder and have a .html file extension
  */
 
+function should_display_prominently($post)
+{
+    return $post['data']->post_type === 'publications'
+        && isset($post['fields']['display_card_prominently'])
+        && $post['fields']['display_card_prominently']
+        && $post['picture_large_url'];
+}
+
 function fleming_get_content()
 {
     $fleming_content = array(
-        "title" => get_raw_title(),
+        "title"  => get_raw_title(),
         "fields" => get_field_objects(),
-        "nav" => get_nav_builder()->withMenuRoute('news')->build(),
+        "nav"    => get_nav_builder()->withMenuRoute('news')->build(),
     );
 
     $current_page = get_query_var('paged') ?: 1;
 
-    $newsType = get_page_by_path('news', 'OBJECT', 'publication_types');
+    $newsType   = get_page_by_path('news', 'OBJECT', 'publication_types');
     $query_args = [
-        'post_type' => ['events', 'publications'],
-        'paged' => $current_page,
+        'post_type'  => ['events', 'publications'],
+        'paged'      => $current_page,
         'meta_query' => array(
             'relation' => 'or',
             array(
-                'key' => 'type',
-                'compare' => 'NOT EXISTS' // assuming that events don't have a field named 'type'
+                'key'     => 'type',
+                'compare' => 'NOT EXISTS', // assuming that events don't have a field named 'type'
             ),
             array(
-                'key' => 'type',
-                'value' => $newsType->ID,
-                'compare' => '='
-            )
-        )
+                'key'     => 'type',
+                'value'   => $newsType->ID,
+                'compare' => '=',
+            ),
+        ),
     ];
     $country = null;
     if (isset($_GET["country"])) {
@@ -52,15 +60,15 @@ function fleming_get_content()
                 array(
                     'relation' => 'or',
                     array(
-                        'key' => 'country',
-                        'value' => $country->ID
+                        'key'   => 'country',
+                        'value' => $country->ID,
                     ),
                     array(
-                        'key' => 'country_region',
-                        'value' => serialize(strval($country->ID)),
-                        'compare' => 'LIKE'
-                    )
-                )
+                        'key'     => 'country_region',
+                        'value'   => serialize(strval($country->ID)),
+                        'compare' => 'LIKE',
+                    ),
+                ),
             );
         }
     }
@@ -69,30 +77,72 @@ function fleming_get_content()
         process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
     }
 
-    $query = new WP_Query($query_args);
+    $query        = new WP_Query($query_args);
     $query_result = get_query_results($query);
 
-    foreach($query_result['posts'] as &$post) {
-        if($post['data']->post_type === 'publications') {
+    foreach ($query_result['posts'] as &$post) {
+        if ($post['data']->post_type === 'publications') {
             $post = publication_with_post_data_and_fields($post);
         }
     }
 
-    $fleming_content['query_result'] = $query_result;
-    $fleming_content['countries'] = get_posts(array(
-        'post_type' => 'countries',
-        'numberposts' => -1,
-        'ignore_custom_sort' => true,
-        'orderby' => 'name',
-        'order' => 'ASC',
-    ));
+    /*
+     * Re-order the posts so that they are arranged nicely in two columns even if some of them will be 'prominent' and take an entire row.
+     * Assumes two rows. This isn't always required, but we always re-order for consistency.
+     * Instead of:
+     * <POST1>
+     * <PROMINENT_POST2>
+     * <POST3>   <POST4>
+     *
+     * We get:
+     * <PROMINENT_POST2>
+     * <POST1>   <POST3>
+     * <POST4>
+     */
+    $ordered_posts  = [];
+    $held_back_post = null;
+    $length         = count($query_result['posts']);
+    unset($post);
+    for ($i = 0; $i < $length; $i++) {
+        $post = $query_result['posts'][$i];
+        if (should_display_prominently($post)) {
+            $ordered_posts[] = $post;
+        } else {
+            if ($held_back_post) {
+                $ordered_posts[] = $held_back_post;
+                $ordered_posts[] = $post;
+                $held_back_post  = null;
+            } elseif ($i + 1 === $length) {
+                $ordered_posts[] = $post;
+            } else {
+                $next_post = $query_result['posts'][$i + 1];
+                if (should_display_prominently($next_post)) {
+                    $held_back_post = $post;
+                } else {
+                    $ordered_posts[] = $post;
+                    $ordered_posts[] = $next_post;
+                    $i++;
+                }
+            }
+        }
+    }
 
+    $query_result['posts'] = $ordered_posts;
+
+    $fleming_content['query_result'] = $query_result;
+    $fleming_content['countries']    = get_posts(array(
+        'post_type'          => 'countries',
+        'numberposts'        => -1,
+        'ignore_custom_sort' => true,
+        'orderby'            => 'name',
+        'order'              => 'ASC',
+    ));
 
     return $fleming_content;
 }
 
 $template_name = pathinfo(__FILE__)['filename'];
 if (isset($_GET['ajax'])) {
-    $template_name = 'ajax-'.$template_name;
+    $template_name = 'ajax-' . $template_name;
 }
 include __DIR__ . '/use-templates.php';
