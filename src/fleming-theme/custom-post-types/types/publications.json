@@ -288,6 +288,25 @@
                 "mime_types": ""
             },
             {
+                "key": "field_5b5e245b403bc",
+                "label": "Display prominently where available",
+                "name": "display_prominently",
+                "type": "true_false",
+                "instructions": "This publication will be displayed as a large card on the News and Events page.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "message": "",
+                "default_value": 0,
+                "ui": 0,
+                "ui_on_text": "",
+                "ui_off_text": ""
+            },
+            {
                 "key": "field_5b7582a0a5215",
                 "label": "Call-to-action button",
                 "name": "call_to_action_button",
