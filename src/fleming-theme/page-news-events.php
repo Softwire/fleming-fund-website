@@ -54,7 +54,7 @@ function fleming_get_content()
         $country = get_page_by_path($_GET["country"], 'OBJECT', 'countries');
         if ($country != null && $country->post_status == 'publish') {
             $fleming_content['selected_country'] = $country;
-            $query_args["meta_query"] = array(
+            $query_args["meta_query"]            = array(
                 'relation' => 'and',
                 $query_args["meta_query"],
                 array(
@@ -84,6 +84,7 @@ function fleming_get_content()
         if ($post['data']->post_type === 'publications') {
             $post = publication_with_post_data_and_fields($post);
         }
+        $post['should_display_prominently'] = should_display_prominently($post);
     }
 
     /*
@@ -105,7 +106,7 @@ function fleming_get_content()
     unset($post);
     for ($i = 0; $i < $length; $i++) {
         $post = $query_result['posts'][$i];
-        if (should_display_prominently($post)) {
+        if ($post['should_display_prominently']) {
             $ordered_posts[] = $post;
         } else {
             if ($held_back_post) {
@@ -115,18 +116,11 @@ function fleming_get_content()
             } elseif ($i + 1 === $length) {
                 $ordered_posts[] = $post;
             } else {
-                $next_post = $query_result['posts'][$i + 1];
-                if (should_display_prominently($next_post)) {
-                    $held_back_post = $post;
-                } else {
-                    $ordered_posts[] = $post;
-                    $ordered_posts[] = $next_post;
-                    $i++;
-                }
+                $held_back_post = $post;
             }
         }
     }
-    if($held_back_post) {
+    if ($held_back_post) {
         $ordered_posts[] = $held_back_post;
     }
 
