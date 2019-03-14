@@ -113,8 +113,6 @@ function fleming_get_content()
                 $ordered_posts[] = $held_back_post;
                 $ordered_posts[] = $post;
                 $held_back_post  = null;
-            } elseif ($i + 1 === $length) {
-                $ordered_posts[] = $post;
             } else {
                 $held_back_post = $post;
             }
