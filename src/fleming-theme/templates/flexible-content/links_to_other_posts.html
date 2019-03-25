@@ -10,7 +10,7 @@
     {% endif %}
     {% include 'cards/entities/single-post.html' with {
       'post': post_link.post,
-      'is_prominent': post_link.is_prominent,
+      'is_prominent': post_link.is_prominent and post_link.post.can_display_prominently,
       'content_override': post_link.description_override
     } %}
     {% if post_link.is_prominent %}

@@ -307,6 +307,25 @@
                 "ui_off_text": ""
             },
             {
+                "key": "field_5b44dec7d4f82",
+                "label": "Lock preview image aspect ratio",
+                "name": "lock_preview_image_aspect_ratio",
+                "type": "true_false",
+                "instructions": "Lock the preview image aspect ratio rather than stretching it to fill the card. Good for odd size images or those with a white background.",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "message": "",
+                "default_value": 0,
+                "ui": 0,
+                "ui_on_text": "",
+                "ui_off_text": ""
+            },
+            {
                 "key": "field_5b7582a0a5215",
                 "label": "Call-to-action button",
                 "name": "call_to_action_button",

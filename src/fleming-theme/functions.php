@@ -344,9 +344,15 @@ function publication_with_post_data_and_fields($publication) {
         }
     }
 
-    $publication['picture_large_url']  = $primary_image ? $primary_image['sizes']['large'] : null;
-    $publication['picture_medium_url'] = $primary_image ? $primary_image['sizes']['medium'] : null;
-    $publication['picture_small_url']  = $primary_image ? $primary_image['sizes']['thumbnail'] : null;
+    $publication['lock_aspect_ratio']    = isset($publication['fields']['lock_preview_image_aspect_ratio'])
+        && $publication['fields']['lock_preview_image_aspect_ratio']['value'];
+
+    $publication['picture_large_url']       = $primary_image ? $primary_image['sizes']['large'] : null;
+    $publication['picture_large_width']     = $primary_image ? $primary_image['width'] : null;
+    $publication['picture_large_height']    = $primary_image ? $primary_image['height'] : null;
+    $publication['picture_medium_url']      = $primary_image ? $primary_image['sizes']['medium'] : null;
+    $publication['picture_small_url']       = $primary_image ? $primary_image['sizes']['thumbnail'] : null;
+    $publication['can_display_prominently'] = $publication['picture_large_url'] != null;
 
     return $publication;
 }

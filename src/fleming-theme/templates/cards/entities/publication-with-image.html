@@ -1,5 +1,5 @@
 {% if publication %}
-  {% include 'cards/large-with-image.html' with {'card': {
+  {% include 'cards/large-with-image2.html' with {'card': {
     'decorated': true,
     'colour_scheme': null,
     'identifier': publication.fields.type.value.post_title,
@@ -7,6 +7,9 @@
     'overview': publication.fields.publication_date.value ? 'Date: '~publication.fields.publication_date.value,
     'content': publication.overview,
     'image_src': publication.picture_large_url,
-    'link_target': publication.permalink
+    'link_target': publication.permalink,
+    'image_width': publication.picture_large_width,
+    'image_height': publication.picture_large_height,
+    'lock_aspect_ratio': publication.lock_aspect_ratio,
   }} %}
 {% endif %}
