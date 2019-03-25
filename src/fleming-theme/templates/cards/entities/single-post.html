@@ -22,7 +22,8 @@
 {% elseif post.data.post_type == 'projects' %}
     {% include('cards/entities/project.html') with { 'project' : post, 'truncate_content_if_no_override': true } %}
 {% elseif post.data.post_type == 'publications' %}
-    {% include(is_prominent ? 'cards/entities/publication-with-image.html' : 'cards/entities/publication.html') with { 'publication' : post, 'truncate_content_if_no_override': true } %}
+    {% include(is_prominent ? 'cards/entities/publication-with-image.html' : 'cards/entities/publication.html')
+        with { 'publication' : post, 'truncate_content_if_no_override': true } %}
 {% elseif post.data.post_type == 'regions' %}
     {% include('cards/entities/region.html') with { 'region' : post, 'truncate_content_if_no_override': true } %}
 {% elseif post.data.post_type == 'topics' %}

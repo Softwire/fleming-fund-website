@@ -5,12 +5,27 @@
     width: 100%;
     position: relative;
     overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     img {
-      max-height: 550px;
-      display: block;
       width: 100%;
       height: auto;
+      max-height: 600px;
+
+      &.stretch  {
+        min-height: 100%;
+      }
+
+      &.lock-aspect-ratio {
+        min-height: 0;
+
+        &.tall-image {
+          min-height: 100%;
+          width: auto;
+        }
+      }
     }
   }
 
@@ -30,7 +45,6 @@
     flex-flow: row wrap;
 
     .image-container {
-      display: inline-block;
       vertical-align: top;
     }
 
@@ -69,14 +83,6 @@
     .image-container {
       width: 50%;
       margin: 0;
-
-      img {
-        min-width: 100%;
-        min-height: 100%;
-        // width: auto;
-        max-width: none;
-        position: absolute;
-      }
     }
   }
 }
