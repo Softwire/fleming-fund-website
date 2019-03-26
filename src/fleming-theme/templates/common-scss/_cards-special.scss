@@ -1,9 +1,10 @@
 .card.with-image {
   border: none;
 
+  // By default display the image above the rest of the card
   .image-container {
     width: 100%;
-    position: relative;
+    max-height: 800px;
     overflow: hidden;
     display: flex;
     justify-content: center;
@@ -12,23 +13,18 @@
     img {
       width: 100%;
       height: auto;
-      max-height: 600px;
+      max-height: 100%;
+    }
 
-      &.stretch  {
-        min-height: 100%;
-      }
-
-      &.lock-aspect-ratio {
-        min-height: 0;
-
-        &.tall-image {
-          min-height: 100%;
-          width: auto;
-        }
+    &.lock-aspect-ratio {
+      max-height: 400px;
+      img {
+        object-fit: contain;
       }
     }
   }
 
+  // Inner 'card' contains the title and description
   .card {
     border: none;
     margin: 0;
@@ -39,50 +35,57 @@
     }
   }
 
-  &.image-left {
-    font-size: 0;
-    display: flex;
-    flex-flow: row wrap;
-
-    .image-container {
-      vertical-align: top;
-    }
-
-    .card {
-      display: inline-block;
-      vertical-align: top;
-      padding-top: 1rem;
-    }
-  }
-
-  &.image-top {
-    .image-container {
-      img {
-        padding: 0 1.5em;
-        box-sizing: border-box;
-      }
-      img.full-size-image {
-        padding: 0;
-      }
-    }
-
-    & > .card {
-      flex: 1 0 auto;
-    }
+  &.image-left, &.image-right {
+    width: 100%;
   }
 }
 
 @media (#{$min-width-desktop}) {
-  .card.with-image.image-left {
+  .card.with-image.image-left, .card.with-image.image-right {
+    font-size: 0;
+    display: flex;
+    flex-flow: row;
+    min-height: 350px;
+
     .card {
       box-sizing: border-box;
+      display: inline-block;
+      vertical-align: top;
+      height: 100%;
       width: 50%;
+      padding-top: 1rem;
       padding-left: (0.5 * $column-margin);
       margin: 0;
     }
+
     .image-container {
+      position: relative;
+      vertical-align: top;
+      min-height: 100%;
       width: 50%;
       margin: 0;
+
+      img {
+        position: absolute;
+        height: 100%;
+        // Old FF versions + IE (centre image)
+        left: 50%;
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+      }
+
+      &.lock-aspect-ratio {
+        max-height: none;
+        img {
+          max-height: 800px;
+        }
+      }
+    }
+  }
+  .card.with-image.image-right {
+    .image-container {
+      order: 1;
     }
   }
 }

@@ -220,10 +220,6 @@
   &.four-max .card {
     @include perRow(4);
   }
-
-  .card.large-card {
-    width: 100%;
-  }
 }
 
 @media (#{$max-width-desktop}) {
