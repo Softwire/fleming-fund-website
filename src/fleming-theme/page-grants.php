@@ -33,7 +33,7 @@ function fleming_get_content()
         'post_type' => 'grants',
         'paged'     => $current_page,
     ];
-    $filter_string = isset($_GET["filter"]) ? $_GET["filter"] : null;
+    $filter_string = isset($_GET["filter"]) ? $_GET["filter"] : (isset($_GET["type"]) ? $_GET["type"] : null);
 
     $query_result = null;
 
