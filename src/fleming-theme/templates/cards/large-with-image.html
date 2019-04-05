@@ -1,9 +1,8 @@
 {% if card %}
-  <div class="card with-image image-left large-card">
+  <div class="card with-image image-left">
 
-    <div class="image-container">
-      <img class="{{card.lock_aspect_ratio ? 'lock-aspect-ratio' : 'stretch'}} {{card.image_width / card.image_height < 0.6 ? 'tall-image'}}"
-        width={{card.image_width}}
+    <div class="image-container {{card.lock_aspect_ratio ? 'lock-aspect-ratio' : 'stretch'}} {{card.image_width / card.image_height <= 1.4 ? 'tall-image'}}">
+      <img width={{card.image_width}}
         height={{card.image_height}}
         src="{{ card.image_src }}"
         title="{{ card.image_title | default(card.title) }}" />
