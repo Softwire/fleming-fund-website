@@ -3,25 +3,22 @@
 
   .image-container {
     width: 100%;
-    position: relative;
+    max-height: 800px;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
 
     img {
-      max-height: 600px;
       width: 100%;
-      height: auto;
+      height: 100%;
     }
 
-    &.stretch img {
-      min-height: 100%;
-    }
-
-    &.lock-aspect-ratio.tall-image img {
+    &.lock-aspect-ratio {
       max-height: 400px;
-      width: auto;
+      img {
+        object-fit: contain;
+      }
     }
   }
 
@@ -35,13 +32,13 @@
     }
   }
 
-  &.image-left {
+  &.image-left, &.image-right {
     width: 100%;
   }
 }
 
 @media (#{$min-width-desktop}) {
-  .card.with-image.image-left {
+.card.with-image.image-left, .card.with-image.image-right {
     font-size: 0;
     display: flex;
     flex-flow: row;
@@ -58,6 +55,7 @@
     }
 
     .image-container {
+      max-height: 800px;
       vertical-align: top;
       height: 100%;
       width: 50%;
@@ -66,19 +64,17 @@
       // Old FF versions
       align-self: center;
 
-      &.lock-aspect-ratio.tall-image {
+      &.lock-aspect-ratio {
         min-height: 350px;
         img {
-          height: 100%;
-          position: absolute;
-
-          // Old FF versions + IE
-          left: 50%;
-          top: 50%;
-          -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+          max-height: 800px;
         }
       }
+    }
+  }
+  .card.with-image.image-right {
+    .image-container {
+      order: 1;
     }
   }
 }

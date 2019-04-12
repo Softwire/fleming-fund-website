@@ -1,7 +1,7 @@
 {% if card %}
-  <div class="card with-image image-left">
+  <div class="card with-image {{card.image_on_right ? 'image-right' : 'image-left'}}">
 
-    <div class="image-container {{card.lock_aspect_ratio ? 'lock-aspect-ratio' : 'stretch'}} {{card.image_width / card.image_height <= 1.4 ? 'tall-image'}}">
+    <div class="image-container {{card.lock_aspect_ratio ? 'lock-aspect-ratio' : 'stretch'}}">
       <img width={{card.image_width}}
         height={{card.image_height}}
         src="{{ card.image_src }}"

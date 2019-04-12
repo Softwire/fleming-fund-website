@@ -311,7 +311,26 @@
                 "label": "Lock preview image aspect ratio",
                 "name": "lock_preview_image_aspect_ratio",
                 "type": "true_false",
-                "instructions": "Lock the preview image aspect ratio rather than stretching it to fill the card. Good for odd size images and those with a white background.",
+                "instructions": "Lock the preview image aspect ratio rather than stretching it to fill the card. Good for odd size images and those with a white background. Does not work in Internet Explorer",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "message": "",
+                "default_value": 0,
+                "ui": 0,
+                "ui_on_text": "",
+                "ui_off_text": ""
+            },
+            {
+                "key": "field_5b437e5b79e00",
+                "label": "Display preview image on right side of card",
+                "name": "preview_image_right",
+                "type": "true_false",
+                "instructions": "If this publication is displayed as a full-size card then have the overview on the left and the image on the right.",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
