@@ -124,21 +124,33 @@
 }
 
 .card-container.opportunities {
+  align-items: center;
+  margin-bottom: 5px;
   .card {
+    box-sizing: border-box;
     font-weight: bold;
     font-size: 0.8em;
 
     .status {
       font-weight: normal;
     }
+  }
 
+  .opportunity {
+    border: 1px solid $turquoise;
+    padding: 0.5em 1em;
+    align-self: stretch;
+  }
+
+  .apply-button {
+    margin-left: auto;
     button, .button {
       margin: 0;
-      box-sizing: border-box;
       padding: 0.7em 0.5ex;
       min-width: 0;
       max-width: 100%;
       height: auto;
+      font-weight: 500;
     }
   }
 }
