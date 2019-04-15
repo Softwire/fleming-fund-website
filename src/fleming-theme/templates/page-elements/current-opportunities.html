@@ -1,23 +1,25 @@
 {% if opportunities %}
   <p style="margin: 0; color: #009898;">
     <span style="font-weight: bold; margin-right: 1em;">Current &amp; Upcoming Opportunities</span>
-    <span style="font-size: 0.9em;"><a href="{{ nav.openGrantsPageLink.target }}">More</a></span>
+    <span style="font-size: 0.9em;">
+      <a href="{{ nav.openGrantsPageLink.target }}">More</a>
+    </span>
   </p>
-  <div class="card-container four-max opportunities">
+  <div class="card-container new-four-max opportunities">
 
     {% for i in 0..2 %}
-      <div class="card">
-        {% set opportunity = opportunities[i] %}
-        {% if opportunity %}
+      {% set opportunity = opportunities[i] %}
+      {% if opportunity %}
+        <div class="card opportunity">
           <a href={{ opportunity.permalink }}>
             {{ opportunity.data.post_title }}<br/>
             <span class="status">{{ opportunity.deadlineStatus }}</span>
           </a>
-        {% endif %}
-      </div>
+        </div>
+      {% endif %}
     {% endfor %}
 
-    <div class="card base">
+    <div class="card apply-button">
       <a class="hollow button" href={{ nav.howToApplyLink.target }}>How to apply</a>
     </div>
 
