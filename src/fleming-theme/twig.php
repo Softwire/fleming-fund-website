@@ -17,3 +17,6 @@ $twigFilters = [
 foreach ($twigFilters as $twigFilter) {
     $twig->addFilter($twigFilter);
 }
+
+$twig->addFunction(new Twig_Function('wp_head', 'wp_head'));
+$twig->addFunction(new Twig_Function('wp_footer', 'wp_footer'));
