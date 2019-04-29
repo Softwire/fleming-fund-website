@@ -2,6 +2,16 @@
 
 require_once 'query-utilities.php';
 
+// Remove items from wp_head
+
+remove_action('wp_head', 'rsd_link');
+remove_action('wp_head', 'wlwmanifest_link');
+remove_action('wp_head', 'adjacent_posts_rel_link_wp_head');
+remove_action('wp_head', 'wp_generator');
+remove_action('wp_head', 'rel_canonical');
+remove_action('wp_head', 'wp_shortlink_wp_head');
+remove_action('wp_head', 'rest_output_link_wp_head');
+
 ////////////////////////////////////////////////////////////////
 ////////                    GENERAL                     ////////
 ////////////////////////////////////////////////////////////////
@@ -89,7 +99,6 @@ function process_flexible_content(&$fields, &$content, $force_in_page_links = fa
         }
         $fields["fields"]["supporting_content"]["value"] = split_supporting_content($content['value']);
     }
-
 
     if ($show_in_page_links) {
         $fields['in_page_links'] = $in_page_links;

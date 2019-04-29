@@ -13,6 +13,9 @@ plugins-to-download:
   - name: wp-ses
   - name: safe-svg
   - name: wp-external-links
+  - name: disable-emojis
+  - name: disable-embeds
+  - name: wordpress-seo
 
 plugins-to-copy:
   directory: dependencies/plugins
