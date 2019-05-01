@@ -268,7 +268,7 @@
                 "label": "Override preview image",
                 "name": "override_preview_image",
                 "type": "image",
-                "instructions": "Used in place of the first flexible content image for a promoted card preview image",
+                "instructions": "Used in place of the first flexible content image for a promoted card preview image.",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -311,7 +311,7 @@
                 "label": "Lock preview image aspect ratio",
                 "name": "lock_preview_image_aspect_ratio",
                 "type": "true_false",
-                "instructions": "Lock the preview image aspect ratio rather than stretching it to fill the card. Good for odd size images and those with a white background. Does not work in Internet Explorer",
+                "instructions": "Lock the preview image aspect ratio rather than stretching it to fill the card. Good for odd size images and those with a white background. Has no effect in Internet Explorer.",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
