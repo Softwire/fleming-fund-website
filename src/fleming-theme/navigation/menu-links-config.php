@@ -18,10 +18,6 @@ class MenuLinksConfig
                     'title' => 'Importance of Data',
                     'target' => '/about-us/the-importance-of-data/'
                 ],
-                'works' => [
-                    'title' => 'How the Fleming Fund Works',
-                    'target' => '/about-us/how-the-fleming-fund-works/',
-                ],
                 'investment' => [
                     'title' => 'Investment Areas',
                     'target' => '/investment-areas/',
