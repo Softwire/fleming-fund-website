@@ -262,9 +262,7 @@ async function restoreDatabase() {
             connection.query(wholeRestoreQuery, function (error) {
                 if (error) throw error;
                 console.log('Restore query executed, disabling backups and setting up user Softwire/password');
-                const localChangesQuery =
-                    "UPDATE wordpress.wp_options SET option_value = 'manual' WHERE option_name IN ('updraft_interval', 'updraft_interval_database'); "
-                    + "UPDATE wordpress.wp_users SET user_pass = md5('password') WHERE user_login = 'Softwire';"
+                const localChangesQuery = fs.readFileSync("post-live-restore.sql").toString().replace("_PASSWORD_", "password");
                 connection.query(localChangesQuery, function (error) {
                     if (error) throw error;
                     resolve();
