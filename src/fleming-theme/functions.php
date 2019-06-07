@@ -353,6 +353,11 @@ function publication_with_post_data_and_fields($publication) {
         }
     }
 
+    if (!isset($primary_image['width']) && isset($primary_image['sizes']['full'])) {
+        $primary_image['height'] = $primary_image['sizes']['full']['height'];
+        $primary_image['width'] = $primary_image['sizes']['full']['width'];
+    }
+
     $publication['lock_aspect_ratio']    = isset($publication['fields']['lock_preview_image_aspect_ratio'])
         && $publication['fields']['lock_preview_image_aspect_ratio']['value'];
 

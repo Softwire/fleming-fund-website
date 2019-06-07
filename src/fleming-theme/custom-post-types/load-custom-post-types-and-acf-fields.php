@@ -53,7 +53,15 @@ function init_acf_fields() {
 
     $currently_accessing_a_page = false;
 
-    $pageData = get_post(is_admin() ? ($_GET['post'] ?? $_POST['post_ID']) : null);
+    $postIdForPageData = null;
+    if (is_admin()) {
+        if (isset($_GET['post'])) {
+            $postIdForPageData = $_GET['post'];
+        } else if (isset($_POST['post_ID'])) {
+            $postIdForPageData = $_POST['post_ID'];
+        }
+    }
+    $pageData = get_post($postIdForPageData);
     if (isset($pageData)) {
         if ($pageData->post_type === 'page') {
             $acfFilename = __DIR__ . '/types/page-' . $pageData->post_name . '.json';
