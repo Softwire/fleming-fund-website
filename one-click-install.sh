@@ -2,9 +2,9 @@
 
 set -ex
 
-./setup-extra-steps
-
 yarn
+
+./setup-extra-steps
 
 ./node_modules/wp-install/bin/wp-install
 

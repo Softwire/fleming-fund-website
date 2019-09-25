@@ -52,7 +52,7 @@ This is the Git repository for the code that runs the [Fleming Fund website](htt
 
 * Make a copy the `.credentials-template` folder called `.credentials`.
 
-* Fill in `.credentials/aws-credentials-backup-download.json` with vlaues from Zoho.
+* Fill in `.credentials/aws-credentials-backup-download.json` with values from Zoho.
 
 * Fill in `.credentials/youtube-api-key.json` with the value from Zoho.
 
@@ -82,6 +82,7 @@ This is the Git repository for the code that runs the [Fleming Fund website](htt
 
 **Be careful not to commit any secrets to git -- this is a public repository.**
 
+* The setup script set up a local admin login to `Softwire` / `_PASSWORD_`
 
 ## Using an AWS database
 

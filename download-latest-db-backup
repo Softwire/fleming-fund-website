@@ -9,7 +9,7 @@ const readline = require('readline');
 const child_process = require('child_process');
 const mysql = require('mysql');
 
-const max_allowed_packet = 64 * 1024 * 1024;
+const max_allowed_packet = 128 * 1024 * 1024;
 var s3 = null;
 
 
@@ -317,7 +317,7 @@ function moveOldUploadsFolderIfItExists() {
 }
 
 function unzipLatestFilesBackupToUploadsFolder() {
-    console.log('unzipiing the latest files backup');
+    console.log('unzipping the latest files backup');
 
     const tempPath = './.temp/file-backup';
 
