@@ -170,7 +170,7 @@ function grant_with_post_data_and_fields($grant) {
         $identifier = 'Grant';
     }
 
-    if (!is_object($grantType) || $grantType->post_name === 'global-grant') {
+    if (!is_object($grantType)) {
         $grant['colour_scheme'] = 'base';
     } else {
 
@@ -180,7 +180,7 @@ function grant_with_post_data_and_fields($grant) {
         if (empty($countries)) {
             $regionCount = is_array($regions) ? count($regions) : 0;
             if ($regionCount >= 1) {
-                $identifier .= ' : ' . implode(' | ', array_map(
+                $identifier .= ' › ' . implode(' | ', array_map(
                     function($region) {
                         return $region->post_title;
                     },
@@ -200,7 +200,7 @@ function grant_with_post_data_and_fields($grant) {
                 $associatedRegions[] = $country['fields']['region']['value']->post_name;
                 $countryTitles[] = $country['data']->post_title;
             }
-            $identifier .= ' : '.implode(' | ', $countryTitles);
+            $identifier .= ' › '.implode(' | ', $countryTitles);
             $associatedRegions = array_unique($associatedRegions);
             if (count($associatedRegions) == 1) {
                 $grant['colour_scheme'] = region_slug_to_colour_scheme_name($associatedRegions[0]);
@@ -252,6 +252,7 @@ function grant_with_post_data_and_fields($grant) {
 
     if ($statusEvent) {
         $grant['status'] = $statusEvent['event_name'] . ' ' . $statusEvent['date'];
+        $grant['status_name'] = $statusEvent['event_name'];
     }
     if ($deadlineEvent) {
         $grant['deadlineStatus'] = $deadlineEvent['event_name'] . ' ' . $deadlineEvent['date'];

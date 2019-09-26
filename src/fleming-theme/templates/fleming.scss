@@ -98,6 +98,15 @@ p.solid-left-indent {
   margin-top: 5rem;
 }
 
+.sub-section-title {
+  @extend .large-text;
+  margin-top: 4rem;
+}
+
+hr.row-separator.emphasis {
+  border-top-color: $light-turquoise;
+}
+
 hr.row-divider {
   margin-top: 4rem;
   margin-bottom: 5rem;

@@ -1,5 +1,8 @@
+{% set classes = "row-separator" %}
 {% if content_block.additional_whitespace and content_block.additional_whitespace != 'none' %}
-<hr class="row-separator whitespace-{{content_block.additional_whitespace}}"/>
-{% else %}
-<hr class="row-separator"/>
+    {% set classes = classes ~ " whitespace-" ~ content_block.additional_whitespace %}
 {% endif %}
+{% if content_block.emphasis %}
+    {% set classes = classes ~ " emphasis" %}
+{% endif %}
+<hr class="{{classes}}"/>

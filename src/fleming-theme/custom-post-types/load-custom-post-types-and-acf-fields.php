@@ -48,6 +48,7 @@ function init_acf_fields() {
     $allPageAcfFieldDefinitionFiles = [
         __DIR__ . '/types/page-investment-areas.json',
         __DIR__ . '/types/page-regions-countries.json',
+        __DIR__ . '/types/page-grants-funding.json',
         __DIR__ . '/types/page-technical-advisory-group.json',
     ];
 

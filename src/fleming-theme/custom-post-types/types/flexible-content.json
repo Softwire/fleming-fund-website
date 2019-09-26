@@ -989,6 +989,25 @@
                 "return_format": "value",
                 "ajax": 0,
                 "placeholder": ""
+              },
+              {
+                "key": "field_5d8b9761eed38",
+                "label": "Emphasis",
+                "name": "emphasis",
+                "type": "true_false",
+                "instructions": "Emphasises the line by making it turquoise",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                  "width": "",
+                  "class": "",
+                  "id": ""
+                },
+                "message": "",
+                "default_value": 0,
+                "ui": 0,
+                "ui_on_text": "",
+                "ui_off_text": ""
               }
             ],
             "min": "",
@@ -1043,9 +1062,57 @@
             ],
             "min": "",
             "max": ""
+          },
+          "layout_5d8b9c71f9ffc": {
+            "key": "layout_5d8b9c71f9ffc",
+            "name": "key_information",
+            "label": "Key Information",
+            "display": "block",
+            "sub_fields": [
+              {
+                "key": "field_5d8b9c86f9ffd",
+                "label": "Label",
+                "name": "label",
+                "type": "text",
+                "instructions": "E.g. \"Delivered by\". Note that a colon is automatically appended.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                  "width": "",
+                  "class": "",
+                  "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ":",
+                "maxlength": ""
+              },
+              {
+                "key": "field_5d8b9cf8f9ffe",
+                "label": "Value",
+                "name": "value",
+                "type": "text",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                  "width": "",
+                  "class": "",
+                  "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": "",
+                "maxlength": ""
+              }
+            ],
+            "min": "",
+            "max": ""
           }
         },
-        "button_label": "Add Layout",
+        "button_label": "Add Row",
         "min": "",
         "max": ""
       }
@@ -1121,7 +1188,7 @@
     "label_placement": "top",
     "instruction_placement": "label",
     "hide_on_screen": "",
-    "active": 1,
+    "active": true,
     "description": ""
   }
 ]

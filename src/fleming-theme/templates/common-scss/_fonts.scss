@@ -15,6 +15,11 @@ body {
   font-size: 1.3em;
 }
 
+.overview-text {
+  @extend .large-text;
+  font-weight: 500;
+}
+
 h1, h2, h3, h4, h5 {
   font-family: $font-family-headings;
   font-weight: bold;

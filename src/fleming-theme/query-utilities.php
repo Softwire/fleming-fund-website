@@ -214,7 +214,34 @@ function array_to_query_results($posts, $current_page=1, $page_size=10) {
     );
 }
 
-// For a grant type page (Global Grants, Country Grants, Regional Grants, Fellowships)
+function get_case_study($fleming_content) {
+    if ($fleming_content['fields']['case_study'] && $fleming_content['fields']['case_study']['value']) {
+        $case_study = get_post_data_and_fields($fleming_content['fields']['case_study']['value']->ID);
+        return [
+            'acf_fc_layout' => 'publication_with_image_block',
+            'heading' => 'Feature Case Study',
+            'publication' => $case_study
+        ];
+    }
+    return null;
+}
+
+function get_current_grants_as_content() {
+    $cache_id = 'current_grants';
+    $current_grants = get_transient($cache_id);
+    if (!is_array($current_grants)) {
+        // No cached data
+        $grants_query_args = [
+            'post_type' => 'grants',
+            'posts_per_page' => 1
+        ];
+        $current_grants = get_upcoming_or_else_most_recent_grants($grants_query_args, null);
+        set_transient($cache_id, $current_grants, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
+    }
+    return get_grants_as_content($current_grants);
+}
+
+// For a grant type page (Country Grants, Regional Grants, Fellowships)
 // show two example grants of this type. The examples are cached for half an hour.
 function show_grants_for_page(&$fleming_content) {
     $post_id = get_post()->ID;
@@ -257,33 +284,7 @@ function show_grants_for_page(&$fleming_content) {
                         )
                     )
                 ];
-                $grants = get_posts($all_grants_of_type_query_args);
-
-                // Read extra fields and process dates etc.
-                $full_grants = array();
-                foreach ($grants as $grant) {
-                    $full_grants[] = grant_with_post_data_and_fields(get_post_data_and_fields($grant->ID));
-                }
-
-                // Find any future grants
-                $future_grants = array_filter($full_grants, "grant_deadline_is_in_future");
-
-                $showing_future_grants = false;
-                if ($future_grants && sizeof($future_grants) >= 1) {
-                    // We have future grants. Sort them earliest deadline first.
-                    sort_future_grants($future_grants);
-                    $full_grants = $future_grants;
-                    $showing_future_grants = true;
-                } else {
-                    // We don't have future grants. Show the most recent previous grants instead.
-                    sort_past_grants($full_grants);
-                }
-
-                $current_grants = [
-                    'grant_type' => $grant_type_name,
-                    'grants' => array_slice($full_grants, 0, 2),
-                    'is_future' => $showing_future_grants
-                ];
+                $current_grants = get_upcoming_or_else_most_recent_grants($all_grants_of_type_query_args, $grant_type_name);
             } else {
                 // We couldn't read the grant type. Cache something as a failure.
                 $current_grants = [
@@ -294,47 +295,85 @@ function show_grants_for_page(&$fleming_content) {
             set_transient($cache_id, $current_grants, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
         }
 
-        if ($current_grants && is_array($current_grants['grants']) && sizeof($current_grants['grants']) > 0) {
-            // Look at the first grant and read the grant type and future/past
-            $first_grant = $current_grants['grants'][0];
-            $showing_future_grants = $current_grants['is_future'];
-            $grant_type_name = $current_grants['grant_type'];
-
-            // Build a links-to-other-posts section
-            $links = array();
-            foreach ($current_grants['grants'] as $grant) {
-                $links[] = [
-                    'is_prominent' => false,
-                    'post' => $grant,
-                    'description_override' => null
-                ];
-            }
-            $content = [
-                'acf_fc_layout' => 'links_to_other_posts',
-                'heading' => $showing_future_grants ? 'Current and upcoming opportunities' : 'Recent opportunities',
-                'links' => $links
-            ];
-
-            $button = [
-                'acf_fc_layout' => 'link_button',
-                'link' => [
-                    'title' => null,
-                    'url' => '/grants/?type=' . $grant_type_name,
-                    'target' => null
-                ],
-                'button_text' => 'View more',
-                'centred' => true
-            ];
-
-            // Append the links and button to the page's supported content, if any
-            if (!isset($fleming_content['fields']['supporting_content'])) {
-                $fleming_content['fields']['supporting_content'] = array();
-            }
-            if (!isset($fleming_content['fields']['supporting_content']['value'])) {
-                $fleming_content['fields']['supporting_content']['value'] = array();
-            }
-            $fleming_content['fields']['supporting_content']['value'][] = $content;
-            $fleming_content['fields']['supporting_content']['value'][] = $button;
+        add_supporting_content($fleming_content, get_grants_as_content($current_grants));
+        $grant_type = $current_grants['grant_type'];
+        if ($grant_type != 'error') {
+            add_supporting_content($fleming_content, get_link_button('/grants/?type=' . $current_grants['grant_type']));
         }
     }
 }
+
+function get_upcoming_or_else_most_recent_grants($query_args, $grant_type_name) {
+    $grants = get_posts($query_args);
+
+    // Read extra fields and process dates etc.
+    $full_grants = array();
+    foreach ($grants as $grant) {
+        $full_grants[] = grant_with_post_data_and_fields(get_post_data_and_fields($grant->ID));
+    }
+
+    // Find any future grants
+    $future_grants = array_filter($full_grants, "grant_deadline_is_in_future");
+
+    $showing_future_grants = false;
+    if ($future_grants && sizeof($future_grants) >= 1) {
+        // We have future grants. Sort them earliest deadline first.
+        sort_future_grants($future_grants);
+        $full_grants = $future_grants;
+        $showing_future_grants = true;
+    } else {
+        // We don't have future grants. Show the most recent previous grants instead.
+        sort_past_grants($full_grants);
+    }
+
+    return [
+        'grant_type' => $grant_type_name,
+        'grants' => array_slice($full_grants, 0, 2),
+        'is_future' => $showing_future_grants
+    ];
+}
+
+function get_link_button($url, $text = 'View More') {
+    return [
+        'acf_fc_layout' => 'link_button',
+        'link' => [
+            'title' => null,
+            'url' => $url,
+            'target' => null
+        ],
+        'button_text' => $text,
+        'centred' => true
+    ];
+}
+
+function get_grants_as_content($grants) {
+    if ($grants && is_array($grants['grants']) && sizeof($grants['grants']) > 0) {
+        $showing_future_grants = $grants['is_future'];
+
+        // Build a links-to-other-posts section
+        $links = array();
+        foreach ($grants['grants'] as $grant) {
+            $links[] = [
+                'is_prominent' => false,
+                'post' => $grant,
+                'description_override' => null
+            ];
+        }
+        return [
+            'acf_fc_layout' => 'links_to_other_posts',
+            'heading' => $showing_future_grants ? 'Current and upcoming opportunities' : 'Recent opportunities',
+            'links' => $links
+        ];
+    }
+}
+
+function add_supporting_content(&$fleming_content, $supporting_content) {
+    if (!isset($fleming_content['fields']['supporting_content'])) {
+        $fleming_content['fields']['supporting_content'] = array();
+    }
+    if (!isset($fleming_content['fields']['supporting_content']['value'])) {
+        $fleming_content['fields']['supporting_content']['value'] = array();
+    }
+    $fleming_content['fields']['supporting_content']['value'][] = $supporting_content;
+}
+

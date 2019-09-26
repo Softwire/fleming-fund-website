@@ -23,6 +23,18 @@ function fleming_get_content() {
 
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
 
+    $current_grants = get_current_grants_as_content();
+    $case_study = get_case_study($fleming_content);
+
+    add_supporting_content($fleming_content, $current_grants);
+    if ($current_grants && $case_study) {
+        add_supporting_content($fleming_content, ['acf_fc_layout' => 'horizontal_line', 'emphasis' => true]);
+    }
+    if ($case_study) {
+        add_supporting_content($fleming_content, $case_study);
+        add_supporting_content($fleming_content, get_link_button('/knowledge-resources/?type=case-study', 'See All Case Studies'));
+    }
+
     return $fleming_content;
 }
 

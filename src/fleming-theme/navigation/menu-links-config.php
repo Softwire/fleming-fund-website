@@ -41,10 +41,6 @@ class MenuLinksConfig
             'target' => '/grants-funding/',
 
             'children' => [
-                'global-grant' => [
-                    'title' => 'Global Grants',
-                    'target' => '/grants-funding/global-grants/',
-                ],
                 'regional-grant' => [
                     'title' => 'Regional Grants',
                     'target' => '/grants-funding/regional-grants/',

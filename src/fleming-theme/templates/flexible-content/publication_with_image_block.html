@@ -1,0 +1,7 @@
+{% if content_block.heading %}
+  <h3>{{ content_block.heading }}</h3>
+{% endif %}
+
+<div class="card-container cover">
+  {% include 'cards/entities/publication-with-image.html' with {'publication': content_block.publication} %}
+</div>

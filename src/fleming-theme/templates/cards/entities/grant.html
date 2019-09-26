@@ -7,6 +7,7 @@
     'title': grant.data.post_title,
     'content': grant.overview,
     'cta_title': (grant.nextEvent and grant.nextEvent.apply_now_valid) ? 'Apply now' : 'Read more',
-    'link_target': grant.permalink
+    'link_target': grant.permalink,
+    'overview': 'Budget: ' ~ (grant.fields.funds_available.value ? '£' ~ grant.fields.funds_available.value|format_number : 'N/A') ~ '\nStatus: ' ~ grant.status_name,
   }} %}
 {% endif %}
