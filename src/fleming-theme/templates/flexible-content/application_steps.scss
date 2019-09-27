@@ -1,42 +1,51 @@
-.application-content-inner {
-  margin: 1.2em 2.5em;
-  // Temporary bold here whilst I figure out how to pass this into markdown!
+.application-steps-heading {
+  @extend .large-text;
+}
+
+.application-steps-container.collapsible {
+  background: none;
+  border: 1px solid black;
+  border-top: none;
+  padding: 3em;
+}
+
+.application-step-heading {
   font-weight: bold;
 }
 
-.application-label-inner {
-  margin-top: 1.1em;
-  font-size: 1.2em;
-}
-
 .application-step {
-  position: relative;
-}
-
-.final-label {
-  height: 1.2em;
-}
-
-.light-step {
+  padding: 1.5em 2em;
   background: $light-grey;
-  margin-bottom: 2em;
   position: relative;
 
-  &:after {
-    content: "";
-    height: 0;
-    width: 0;
-    border: 2em solid transparent;
-    border-top-color: $light-grey;
-    position: absolute;
-    bottom: -4em;
-    left: 50%;
-    transform: translateX(-50%);
+  &:not(:last-child) {
+    margin-bottom: 3em;
+
+    &:after {
+      content: "";
+      height: 0;
+      width: 0;
+      border: 2em solid transparent;
+      border-top-color: $light-grey;
+      position: absolute;
+      bottom: -4em;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  &:last-child {
+    font-weight: bold;
+    padding-left: 5em;
   }
 }
 
-.dark-step {
-  color: white;
+.application-step-tick {
+  height: 2em;
+  margin: 0;
+  position: absolute;
+  top: calc(50% - 1em);
+  left: 1.5em;
 }
 
 @each $configName, $colourConfig in $colourConfigs {
@@ -45,22 +54,20 @@
       color: map-get($colourConfig, intense);
     }
 
-    .dark-step {
-      background: map-get($colourConfig, intense);
-    }
-
-    .application-label-inner {
-      color: map-get($colourConfig, intense);
-    }
-
-    .final-label {
+    .application-step-tick {
       fill: map-get($colourConfig, intense);
     }
   }
 }
 
 @media (#{$max-width-tablet}) {
-  .application-label-inner {
+  .application-step-heading {
     text-align: center;
+  }
+}
+
+@media (#{$max-width-mobile}) {
+  .application-steps-container.collapsible {
+    padding: 1.5em;
   }
 }

@@ -1020,6 +1020,25 @@
             "display": "block",
             "sub_fields": [
               {
+                "key": "field_5d8de2e3161f9",
+                "label": "Heading",
+                "name": "heading",
+                "type": "text",
+                "instructions": "Text to go in the heading of the collapsible section",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                  "width": "",
+                  "class": "",
+                  "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "prepend": "How to apply:",
+                "append": "",
+                "maxlength": ""
+              },
+              {
                 "key": "field_5b46189ab31cc",
                 "label": "Steps",
                 "name": "steps",
@@ -1038,6 +1057,25 @@
                 "layout": "table",
                 "button_label": "",
                 "sub_fields": [
+                  {
+                    "key": "field_5d8de59b72488",
+                    "label": "Heading",
+                    "name": "heading",
+                    "type": "text",
+                    "instructions": "Appears at the top of the box for the step, except for the last step",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                      "width": "",
+                      "class": "",
+                      "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "Step X:",
+                    "append": "",
+                    "maxlength": ""
+                  },
                   {
                     "key": "field_5b461cd1b31cd",
                     "label": "Step",

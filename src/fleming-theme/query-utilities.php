@@ -241,7 +241,7 @@ function get_current_grants_as_content() {
     return get_grants_as_content($current_grants);
 }
 
-// For a grant type page (Country Grants, Regional Grants, Fellowships)
+// For a grant type page (Country Grants, Regional Grants, Fellowships) TODO: other
 // show two example grants of this type. The examples are cached for half an hour.
 function show_grants_for_page(&$fleming_content) {
     $post_id = get_post()->ID;
