@@ -1,0 +1,43 @@
+.grant-filters {
+  position: relative;
+
+  .filters-heading {
+    color: $mid-turquoise;
+    font-size: 0.9em;
+    font-weight: 500;
+    margin-bottom: 1.1em;
+  }
+
+  .clear-all-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    input {
+      padding: 0;
+      margin: 0;
+      height: auto;
+      border: none;
+      font-size: inherit;
+      letter-spacing: normal;
+      line-height: normal;
+      font-weight: inherit;
+    }
+  }
+
+  .filter-dropdown {
+    cursor: pointer;
+    @include perRow(4);
+  }
+
+  @media (#{$max-width-tablet}) {
+    .filter-dropdown {
+      @include perRow(2);
+    }
+  }
+  @media (#{$max-width-mobile}) {
+    .filter-dropdown {
+      @include perRow(1);
+    }
+  }
+}

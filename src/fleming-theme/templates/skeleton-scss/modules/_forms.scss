@@ -19,6 +19,10 @@ select {
   box-sizing: border-box;
 }
 
+select {
+  height: 40px;
+}
+
 // Removes awkward default styles on some inputs for iOS
 input {
   &[type="email"],

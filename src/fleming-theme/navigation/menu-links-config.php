@@ -50,14 +50,17 @@ class MenuLinksConfig
                     'target' => '/grants-funding/country-grants/',
                 ],
                 'fellowship' => [
-                    'title' => 'Fellowships Scheme',
+                    'title' => 'Professional Fellowships',
                     'target' => '/grants-funding/fellowships/',
                 ],
-                // We don't have any of these at time of writing.
-                // 'other' => [
-                //     'title' => 'Other Opportunities',
-                //     'target' => '/other-opportunities/',
-                // ],
+                'other' => [
+                    'title' => 'Other Activities',
+                    'target' => '/grants-funding/other-activities/',
+                ],
+                'grants' => [
+                    'title' => 'View All',
+                    'target' => '/grants/',
+                ],
                 'apply' => [
                     'title' => 'How to Apply',
                     'target' => '/application-process/',

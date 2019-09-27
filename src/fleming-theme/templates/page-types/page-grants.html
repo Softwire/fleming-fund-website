@@ -5,33 +5,13 @@
 
 {% include 'flexible_content.twig' with { 'flexible_content': fields.flexible_content.value } %}
 
-<div class="grant-filters">
-  <form action="" method="get">
-    <span>Show me</span>
-    <select name="filter">
-      <option value="" {% if filter_string is empty %} selected {% endif %}>All</option>
-      <option value="current" {% if filter_string == "current" %} selected {% endif %}>All open grants</option>
-      {% for grant_type in grant_types %}
-        <option
-            value="{{ grant_type.post_name }}" {% if filter_string == grant_type.post_name %} selected {% endif %} >{{ grant_type.post_title }}</option>
-      {% endfor %}
-    </select>
-    <input type="submit" value="Apply"/>
-  </form>
-</div>
-
 <script>
     function updateFilter() {
-        var url = '/grants/';
-        var filter = $(".grant-filters select[name='filter']").val();
-        if (filter) {
-            url += '?filter=' + filter
-        }
-        document.location = url;
+        $('#search-grants-form').submit();
     }
 
     $(function () {
-        $(".grant-filters input[type='submit']").hide();
+        $(".grant-filters .apply-filter-button").hide();
         $(".grant-filters select").on("change", updateFilter);
     });
 </script>
@@ -39,12 +19,45 @@
 {% embed 'layout/supporting-content.html' with {'tight': true} %}
   {% block content %}
 
-    {% include 'flexible_content.twig' with { 'flexible_content': fields.supporting_content.value } %}
+    <div class="grant-filters">
+      <div class="filters-heading">
+        <span>FILTER BY</span>
+
+        <form class="clear-all-button" action="" method="get">
+          <input type="submit" value="CLEAR ALL"/>
+        </form>
+      </div>
+      <form action="" method="get" id="search-grants-form">
+        <select name="type" class="filter-dropdown">
+          <option value="" {% if type_query is empty %} selected {% endif %}> - Grant Type - </option>
+          {% for grant_type in grant_types %}
+          <option value="{{ grant_type.post_name }}" {% if type_query == grant_type.post_name %} selected {% endif %} >{{ grant_type.post_title }}</option>
+          {% endfor %}
+        </select><select name="region" class="filter-dropdown">
+          <option value="" {% if region_query is empty %} selected {% endif %}> - Region - </option>
+          {% for region in regions %}
+          <option value="{{ region.post_name }}" {% if region_query == region.post_name %} selected {% endif %} >{{ region.post_title }}</option>
+          {% endfor %}
+        </select><select name="country" class="filter-dropdown">
+          <option value="" {% if country_query is empty %} selected {% endif %}> - Country - </option>
+          {% for country in countries %}
+          <option value="{{ country.post_name }}" {% if country_query == country.post_name %} selected {% endif %} >{{ country.post_title }}</option>
+          {% endfor %}
+        </select><select name="status" class="filter-dropdown">
+          <option value="" {% if status_query is empty %} selected {% endif %}> - Status - </option>
+          {% for status in statuses %}
+          <option value="{{ status.filter_string }}" {% if status_query == status.query_string %} selected {% endif %} >{{ status.display_string }}</option>
+          {% endfor %}
+        </select>
+        <input class="apply-filter-button" type="submit" value="Apply"/>
+      </form>
+    </div>
 
     {% include 'page-elements/list-query-result.html' %}
-    {% include 'page-elements/pagination-links.html' with {'ajax': true} %}
-
+    {% if load_more_url %}
+      {% include 'flexible-content/link_button.html' with { content_block: { link: { url: load_more_url }, button_text: 'Load more', centred: 1 } } %}
+    {% endif %}
   {% endblock %}
 {% endembed %}
-
+<!--, 'button_text': { 'Load More' }, 'centred': true-->
 {{ include('layout/footer.html') }}

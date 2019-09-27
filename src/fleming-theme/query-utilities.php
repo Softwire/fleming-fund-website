@@ -186,31 +186,25 @@ function get_all_future_grants() {
     $future_grants = get_transient($future_grants_cache_id);
 
     if (!is_array($future_grants)) {
-        $grants = get_posts(array('post_type' => 'grants', 'numberposts' => -1));
-        foreach ($grants as &$grant) {
-            $grant = grant_with_post_data_and_fields(get_post_data_and_fields($grant->ID));
-        }
+        $grants = get_full_grants(null);
         $future_grants = array_filter($grants, "grant_deadline_is_in_future");
         set_transient($future_grants_cache_id, $future_grants, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
     }
     return $future_grants;
 }
 
-function array_to_query_results($posts, $current_page=1, $page_size=10) {
+function array_to_query_results($posts, $max_number_of_results) {
     $total = count($posts);
-    $max_page = intdiv($total, $page_size) + 1;
-    $current_posts = array_slice($posts, ($current_page - 1) * $page_size, $page_size);
+    $summary = strval($total);
+    if ($total == 1) {
+        $summary .= ' result';
+    } else {
+        $summary .= ' results';
+    }
 
     return array(
-        "posts" => $current_posts,
-        "max_page" => $max_page,
-        "pagination_links" => paginate_links([
-            'show_all' => true,
-            'prev_next' => true,
-            'total' => $max_page,
-            'current' => $current_page
-        ]),
-        "summary" => query_summary($total, $page_size, $current_page, $max_page)
+        "posts" => array_slice($posts, 0, $max_number_of_results),
+        "summary" => $summary,
     );
 }
 
@@ -230,12 +224,7 @@ function get_current_grants_as_content() {
     $cache_id = 'current_grants';
     $current_grants = get_transient($cache_id);
     if (!is_array($current_grants)) {
-        // No cached data
-        $grants_query_args = [
-            'post_type' => 'grants',
-            'posts_per_page' => 1
-        ];
-        $current_grants = get_upcoming_or_else_most_recent_grants($grants_query_args, null);
+        $current_grants = get_upcoming_or_else_most_recent_grants(null);
         set_transient($cache_id, $current_grants, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
     }
     return get_grants_as_content($current_grants);
@@ -268,23 +257,9 @@ function show_grants_for_page(&$fleming_content) {
 
             if ($grant_types && sizeof($grant_types) >= 1 && isset($grant_types[0])) {
                 // Found the grant type ID
-                $grant_type_id = $grant_types[0]->ID;
-                $grant_type_name = $grant_types[0]->post_name;
-
                 // Look up all grants of this type. We only want two but we can't currently order this
                 // in the query :-( so we'll read them all in and filter / sort in code
-                $all_grants_of_type_query_args = [
-                    'post_type' => 'grants',
-                    'posts_per_page' => -1,
-                    'meta_query' => array(
-                        array(
-                            'key' => 'type',
-                            'value' => $grant_type_id,
-                            'compare' => '='
-                        )
-                    )
-                ];
-                $current_grants = get_upcoming_or_else_most_recent_grants($all_grants_of_type_query_args, $grant_type_name);
+                $current_grants = get_upcoming_or_else_most_recent_grants($grant_types[0]);
             } else {
                 // We couldn't read the grant type. Cache something as a failure.
                 $current_grants = [
@@ -303,7 +278,18 @@ function show_grants_for_page(&$fleming_content) {
     }
 }
 
-function get_upcoming_or_else_most_recent_grants($query_args, $grant_type_name) {
+function get_full_grants($grant_type_id) {
+    $query_args = [
+        'post_type' => 'grants',
+        'numberposts' => -1
+    ];
+    if ($grant_type_id) {
+        $query_args['meta_query'] = [[
+            'key' => 'type',
+            'value' => $grant_type_id,
+            'compare' => '='
+        ]];
+    }
     $grants = get_posts($query_args);
 
     // Read extra fields and process dates etc.
@@ -312,10 +298,15 @@ function get_upcoming_or_else_most_recent_grants($query_args, $grant_type_name) 
         $full_grants[] = grant_with_post_data_and_fields(get_post_data_and_fields($grant->ID));
     }
 
+    return $full_grants;
+}
+
+function get_upcoming_or_else_most_recent_grants($grant_type) {
+    $full_grants = get_full_grants($grant_type->ID);
+    $showing_future_grants = false;
+
     // Find any future grants
     $future_grants = array_filter($full_grants, "grant_deadline_is_in_future");
-
-    $showing_future_grants = false;
     if ($future_grants && sizeof($future_grants) >= 1) {
         // We have future grants. Sort them earliest deadline first.
         sort_future_grants($future_grants);
@@ -327,7 +318,7 @@ function get_upcoming_or_else_most_recent_grants($query_args, $grant_type_name) 
     }
 
     return [
-        'grant_type' => $grant_type_name,
+        'grant_type' => $grant_type ? $grant_type->post_name : null,
         'grants' => array_slice($full_grants, 0, 2),
         'is_future' => $showing_future_grants
     ];
@@ -344,6 +335,17 @@ function get_link_button($url, $text = 'View More') {
         'button_text' => $text,
         'centred' => true
     ];
+}
+
+function array_of_posts_contains_name($array_of_posts, $target_name) {
+    if (!$array_of_posts) {
+        return false;
+    }
+    $names = array_map(function($country_post) {
+        return $country_post->post_name;
+    }, $array_of_posts);
+
+    return in_array($target_name, $names);
 }
 
 function get_grants_as_content($grants) {

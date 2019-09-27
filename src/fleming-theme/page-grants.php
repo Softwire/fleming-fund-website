@@ -21,55 +21,86 @@ function fleming_get_content()
         "fields" => get_field_objects(),
         'nav'    => get_nav_builder()
             ->withMenuRoute('grants')
-            ->withAdditionalBreadcrumb(get_raw_title())
+            ->withAdditionalBreadcrumb('View All')
             ->build(),
     );
 
+    $type_query = (isset($_GET["type"]) ? $_GET["type"] : null);
+    $country_query = (isset($_GET["country"]) ? $_GET["country"] : null);
+    $region_query = (isset($_GET["region"]) ? $_GET["region"] : null);
+    $status_query = (isset($_GET["status"]) ? $_GET["status"] : null);
+    $max_number_of_results = isset($_GET["max-number-of-results"]) ? $_GET["max-number-of-results"] : 4;
+
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
 
-    $current_page = get_query_var('paged') ?: 1;
+    $grant_type = get_page_by_path($type_query, 'OBJECT', 'grant_types');
+    $grant_type_id = ($grant_type != null && $grant_type->post_status == 'publish') ? $grant_type->ID : null;
+    $grants = get_full_grants($grant_type_id);
+    if ($country_query) {
+        $grants = array_filter($grants, function($grant) use ($country_query) {
+            return array_of_posts_contains_name($grant['fields']['countries']['value'], $country_query);
+        });
+    }
 
-    $query_args = [
-        'post_type' => 'grants',
-        'paged'     => $current_page,
-    ];
-    $filter_string = isset($_GET["filter"]) ? $_GET["filter"] : (isset($_GET["type"]) ? $_GET["type"] : null);
+    if ($region_query) {
+        $grants = array_filter($grants, function($grant) use ($region_query) {
+            return array_of_posts_contains_name($grant['fields']['region']['value'], $region_query);
+        });
+    }
 
-    $query_result = null;
+    if ($status_query) {
 
-    if ($filter_string == "current") {
-        $query_result = array_to_query_results(
-            get_all_future_grants(),
-            $current_page,
-            10
-        );
-    } else {
-        $grantType = get_page_by_path($filter_string, 'OBJECT', 'grant_types');
-        if ($grantType != null && $grantType->post_status == 'publish') {
-            $fleming_content['selected_grant_type'] = $grantType;
-            $query_args["meta_query"]               = array(
-                array(
-                    'key'   => 'type',
-                    'value' => $grantType->ID,
-                ),
-            );
+        if ($status_query == 'open') {
+            $grants = array_filter($grants, 'grant_deadline_is_in_future');
         }
-
-        if ($current_page == 1 && empty($fleming_content['selected_grant_type'])) {
-            process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
-        }
-
-        $query = new WP_Query($query_args);
-        $query_result = get_query_results($query);
-
-        foreach ($query_result['posts'] as &$grant) {
-            $grant = grant_with_post_data_and_fields($grant);
+        if ($status_query == 'closed') {
+            $grants = array_filter($grants, function($grant) {
+                return !grant_deadline_is_in_future($grant);
+            });
         }
     }
 
-    $fleming_content['filter_string'] = $filter_string;
+    $total_number_of_results = count($grants);
+     min($total_number_of_results, $max_number_of_results);
+    $query_result = array_to_query_results(
+        $grants,
+        $max_number_of_results
+    );
+    $fleming_content['type_query'] = $type_query;
+    $fleming_content['country_query'] = $country_query;
+    $fleming_content['region_query'] = $region_query;
+    $fleming_content['status_query'] = $status_query;
     $fleming_content['query_result']  = $query_result;
-    $fleming_content['grant_types']   = get_posts(array('post_type' => 'grant_types', 'numberposts' => -1));
+    $fleming_content['max_number_of_results']  = $max_number_of_results;
+    if ($max_number_of_results < $total_number_of_results) {
+        $next_max_number_of_results = $max_number_of_results + 4;
+        $fleming_content['load_more_url']  = "/grants/?type=$type_query&country=$country_query&region=$region_query&status=$status_query&max-number-of-results=$next_max_number_of_results";
+    }
+    $fleming_content['grant_types'] = get_posts([
+        'post_type'   => 'grant_types',
+        'numberposts' => -1,
+        'post_status' => 'publish',
+    ]);
+    $fleming_content['countries'] = get_posts([
+        'post_type'          => 'countries',
+        'numberposts'        => -1,
+        'ignore_custom_sort' => true,
+        'orderby'            => 'name',
+        'order'              => 'ASC',
+        'post_status'        => 'publish',
+    ]);
+    $fleming_content['regions'] = get_posts([
+        'post_type'          => 'regions',
+        'numberposts'        => -1,
+        'ignore_custom_sort' => true,
+        'orderby'            => 'name',
+        'order'              => 'ASC',
+        'post_status'        => 'publish',
+    ]);
+    $fleming_content['statuses'] = [
+        ['query_string' => 'open', 'display_string' => 'Open'],
+        ['query_string' => 'closed', 'display_string' => 'Closed']
+    ];
 
     return $fleming_content;
 }
