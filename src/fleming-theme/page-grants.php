@@ -90,7 +90,7 @@ function fleming_get_content()
         'post_status'        => 'publish',
     ]);
     $fleming_content['statuses'] = [
-        ['query_string' => 'open', 'display_string' => 'Open'],
+        ['query_string' => 'open', 'display_string' => 'Applications Open'],
         ['query_string' => 'active', 'display_string' => 'Active']
     ];
 

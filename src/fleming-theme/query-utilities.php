@@ -257,7 +257,6 @@ function show_grants_for_page(&$fleming_content) {
         return;
     }
 
-    // Look up cached example grants for this page
     $cache_id = 'grants_by_type_' . $post_id;
     $grant_numbers = get_transient($cache_id);
 
@@ -265,7 +264,6 @@ function show_grants_for_page(&$fleming_content) {
         // No cached data.
         $grant_type = get_grant_type_for_page($post_id);
         if ($grant_type) {
-            // Found the grant type ID
             // Look up all grants of this type. We only want two but we can't currently order this
             // in the query :-( so we'll read them all in and filter / sort in code
             $all_grants = get_full_grants($grant_type->ID);
@@ -297,43 +295,50 @@ function show_activity_for_page(&$fleming_content) {
     if (!$post_id) {
         return;
     }
+    $cache_id = 'recent_activity_' . $post_id;
     $page_grant_type = get_grant_type_for_page($post_id);
-    $query_args = [
-        'post_type'  => ['events', 'publications'],
-        'orderby' => 'date',
-        'order' => 'DESC',
-    ];
-    $query_result = get_query_results(new WP_Query($query_args));
-    $filtered_activities = array_filter($query_result['posts'], function($activity) use ($page_grant_type) {
-        if (!isset($activity['fields']['grants'])) {
-            return false;
-        }
-        $activity_grants = $activity['fields']['grants']['value'];
-        foreach($activity_grants as $grant) {
-            $activity_grant_type = get_field_objects($grant->ID)['type']['value'];
-            if ($activity_grant_type && $activity_grant_type->ID == $page_grant_type->ID) {
-                return true;
+    $grant_type_name = $page_grant_type->post_name;
+
+    $recent_activity_content = get_transient($cache_id);
+    if (!is_array($recent_activity_content)) {
+        // No cached data:
+        $query_args = [
+            'post_type'  => ['events', 'publications'],
+            'orderby' => 'date',
+            'order' => 'DESC',
+        ];
+        $query_result = get_query_results(new WP_Query($query_args));
+        $filtered_activities = array_filter($query_result['posts'], function($activity) use ($page_grant_type) {
+            if (!isset($activity['fields']['grants'])) {
+                return false;
             }
-        }
-        return false;
-    });
-    $recent_activities = array_slice($filtered_activities, 0 , 3);
-    if ($recent_activities && is_array($recent_activities) && sizeof($recent_activities) > 0) {
-        $links = array();
-        foreach ($recent_activities as $recent_activity) {
-            $links[] = [
+            $activity_grants = $activity['fields']['grants']['value'];
+            foreach($activity_grants as $grant) {
+                $activity_grant_type = get_field_objects($grant->ID)['type']['value'];
+                if ($activity_grant_type && $activity_grant_type->ID == $page_grant_type->ID) {
+                    return true;
+                }
+            }
+            return false;
+        });
+        $recent_activities = array_slice($filtered_activities, 0 , 3);
+        $links = array_map(function($recent_activity) {
+            return [
                 'is_prominent' => false,
                 'post' => publication_with_post_data_and_fields($recent_activity),
                 'description_override' => null
             ];
-        }
+        }, $recent_activities);
         $recent_activity_content = [
             'acf_fc_layout' => 'links_to_other_posts',
             'heading' => 'Latest Activity from ' . get_post()->post_title,
             'links' => $links,
             'max_per_row' => 'three-max'
         ];
-        $grant_type_name = $page_grant_type->post_name;
+        set_transient($cache_id, $recent_activity_content, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
+    }
+
+    if ($recent_activity_content && count($recent_activity_content['links']) > 0) {
         add_supporting_content($fleming_content, $recent_activity_content);
         add_supporting_content($fleming_content, get_link_button("/activity/?grant_type=$grant_type_name", 'View all'));
     }
