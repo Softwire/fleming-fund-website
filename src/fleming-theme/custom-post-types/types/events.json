@@ -179,6 +179,28 @@
                 "prepend": "",
                 "append": "",
                 "maxlength": ""
+            },
+            {
+                "key": "field_5d92095fb7216",
+                "label": "Grants",
+                "name": "grants",
+                "type": "post_object",
+                "instructions": "A list of grants associated with this event",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "grants"
+                ],
+                "taxonomy": "",
+                "allow_null": 1,
+                "multiple": 1,
+                "return_format": "object",
+                "ui": 1
             }
         ],
         "location": [

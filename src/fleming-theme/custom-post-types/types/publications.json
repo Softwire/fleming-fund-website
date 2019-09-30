@@ -398,6 +398,28 @@
                         "maxlength": ""
                     }
                 ]
+            },
+            {
+                "key": "field_5d92095fb6694",
+                "label": "Grants",
+                "name": "grants",
+                "type": "post_object",
+                "instructions": "A list of grants associated with this publication",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "grants"
+                ],
+                "taxonomy": "",
+                "allow_null": 1,
+                "multiple": 1,
+                "return_format": "object",
+                "ui": 1
             }
         ],
         "location": [
@@ -415,7 +437,7 @@
         "label_placement": "top",
         "instruction_placement": "label",
         "hide_on_screen": "",
-        "active": 1,
+        "active": true,
         "description": ""
     }
 ]

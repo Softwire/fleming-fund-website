@@ -247,7 +247,7 @@
       @include perRow(2);
     }
     &.three-max .card {
-      @include perRow(3);
+      @include perRow(2);
     }
     &.four-max .card {
       @include perRow(2);

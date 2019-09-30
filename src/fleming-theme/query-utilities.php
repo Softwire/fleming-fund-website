@@ -230,51 +230,112 @@ function get_current_grants_as_content() {
     return get_grants_as_content($current_grants);
 }
 
-// For a grant type page (Country Grants, Regional Grants, Fellowships) TODO: other
-// show two example grants of this type. The examples are cached for half an hour.
+function get_grant_type_for_page($post_id) {
+    $grant_types_query_args = [
+        'post_type' => 'grant_types',
+        'posts_per_page' => 1,
+        'meta_query' => array(
+            array(
+                'key' => 'overview_page',
+                'value' => $post_id,
+                'compare' => '='
+            )
+        )
+    ];
+    $grant_types = get_posts($grant_types_query_args);
+
+    if ($grant_types && sizeof($grant_types) >= 1 && isset($grant_types[0])) {
+        return $grant_types[0];
+    }
+    return null;
+}
+
+// For a grant type page (Country Grants, Regional Grants) show counts for grants of this type.
 function show_grants_for_page(&$fleming_content) {
     $post_id = get_post()->ID;
-    if ($post_id) {
-        // Look up cached example grants for this page
-        $cache_id = 'current_grants_' . $post_id;
-        $current_grants = get_transient($cache_id);
+    if (!$post_id) {
+        return;
+    }
 
-        if (!is_array($current_grants)) {
-            // No cached data.
-            // First look up which grant type has this page configured as its overview page.
-            $grant_types_query_args = [
-                'post_type' => 'grant_types',
-                'posts_per_page' => 1,
-                'meta_query' => array(
-                    array(
-                        'key' => 'overview_page',
-                        'value' => $post_id,
-                        'compare' => '='
-                    )
-                )
+    // Look up cached example grants for this page
+    $cache_id = 'grants_by_type_' . $post_id;
+    $grant_numbers = get_transient($cache_id);
+
+    if (!is_array($grant_numbers)) {
+        // No cached data.
+        $grant_type = get_grant_type_for_page($post_id);
+        if ($grant_type) {
+            // Found the grant type ID
+            // Look up all grants of this type. We only want two but we can't currently order this
+            // in the query :-( so we'll read them all in and filter / sort in code
+            $all_grants = get_full_grants($grant_type->ID);
+            $open_grants = array_filter($all_grants, "grant_is_open");
+            $active_grants = array_filter($all_grants, "grant_is_active");
+            $grant_numbers = [
+                'grant_type' => $grant_type->post_name,
+                'total_number_of_grants' => count($all_grants),
+                'number_of_open_grants' => count($open_grants),
+                'number_of_active_grants' => count($active_grants),
             ];
-            $grant_types = get_posts($grant_types_query_args);
+        } else {
+            // We couldn't read the grant type. Cache something as a failure.
+            $grant_numbers = [
+                'grant_type' => 'error'
+            ];
+        }
+        set_transient($cache_id, $grant_numbers, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
+    }
 
-            if ($grant_types && sizeof($grant_types) >= 1 && isset($grant_types[0])) {
-                // Found the grant type ID
-                // Look up all grants of this type. We only want two but we can't currently order this
-                // in the query :-( so we'll read them all in and filter / sort in code
-                $current_grants = get_upcoming_or_else_most_recent_grants($grant_types[0]);
-            } else {
-                // We couldn't read the grant type. Cache something as a failure.
-                $current_grants = [
-                    'grant_type' => 'error',
-                    'grants' => []
-                ];
+    $fleming_content['total_number_of_grants'] = $grant_numbers['total_number_of_grants'];
+    $fleming_content['number_of_open_grants'] = $grant_numbers['number_of_open_grants'];
+    $fleming_content['number_of_active_grants'] = $grant_numbers['number_of_active_grants'];
+}
+
+// For a grant type page (Country Grants, Regional Grants) show some recent activity for this type.
+function show_activity_for_page(&$fleming_content) {
+    $post_id = get_post()->ID;
+    if (!$post_id) {
+        return;
+    }
+    $page_grant_type = get_grant_type_for_page($post_id);
+    $query_args = [
+        'post_type'  => ['events', 'publications'],
+        'orderby' => 'date',
+        'order' => 'DESC',
+    ];
+    $query_result = get_query_results(new WP_Query($query_args));
+    $filtered_activities = array_filter($query_result['posts'], function($activity) use ($page_grant_type) {
+        if (!isset($activity['fields']['grants'])) {
+            return false;
+        }
+        $activity_grants = $activity['fields']['grants']['value'];
+        foreach($activity_grants as $grant) {
+            $activity_grant_type = get_field_objects($grant->ID)['type']['value'];
+            if ($activity_grant_type && $activity_grant_type->ID == $page_grant_type->ID) {
+                return true;
             }
-            set_transient($cache_id, $current_grants, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
         }
-
-        add_supporting_content($fleming_content, get_grants_as_content($current_grants));
-        $grant_type = $current_grants['grant_type'];
-        if ($grant_type != 'error') {
-            add_supporting_content($fleming_content, get_link_button('/grants/?type=' . $current_grants['grant_type']));
+        return false;
+    });
+    $recent_activities = array_slice($filtered_activities, 0 , 3);
+    if ($recent_activities && is_array($recent_activities) && sizeof($recent_activities) > 0) {
+        $links = array();
+        foreach ($recent_activities as $recent_activity) {
+            $links[] = [
+                'is_prominent' => false,
+                'post' => publication_with_post_data_and_fields($recent_activity),
+                'description_override' => null
+            ];
         }
+        $recent_activity_content = [
+            'acf_fc_layout' => 'links_to_other_posts',
+            'heading' => 'Latest Activity from ' . get_post()->post_title,
+            'links' => $links,
+            'max_per_row' => 'three-max'
+        ];
+        $grant_type_name = $page_grant_type->post_name;
+        add_supporting_content($fleming_content, $recent_activity_content);
+        add_supporting_content($fleming_content, get_link_button("/activity/?grant_type=$grant_type_name", 'View all'));
     }
 }
 
@@ -302,7 +363,7 @@ function get_full_grants($grant_type_id) {
 }
 
 function get_upcoming_or_else_most_recent_grants($grant_type) {
-    $full_grants = get_full_grants($grant_type->ID);
+    $full_grants = get_full_grants($grant_type ? $grant_type->ID : null);
     $showing_future_grants = false;
 
     // Find any future grants

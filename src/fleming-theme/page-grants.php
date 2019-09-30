@@ -49,28 +49,20 @@ function fleming_get_content()
     }
 
     if ($status_query) {
-
         if ($status_query == 'open') {
-            $grants = array_filter($grants, 'grant_deadline_is_in_future');
+            $grants = array_filter($grants, 'grant_is_open');
         }
-        if ($status_query == 'closed') {
-            $grants = array_filter($grants, function($grant) {
-                return !grant_deadline_is_in_future($grant);
-            });
+        if ($status_query == 'active') {
+            $grants = array_filter($grants, 'grant_is_active');
         }
     }
 
     $total_number_of_results = count($grants);
-     min($total_number_of_results, $max_number_of_results);
-    $query_result = array_to_query_results(
-        $grants,
-        $max_number_of_results
-    );
     $fleming_content['type_query'] = $type_query;
     $fleming_content['country_query'] = $country_query;
     $fleming_content['region_query'] = $region_query;
     $fleming_content['status_query'] = $status_query;
-    $fleming_content['query_result']  = $query_result;
+    $fleming_content['query_result']  = array_to_query_results($grants, $max_number_of_results);
     $fleming_content['max_number_of_results']  = $max_number_of_results;
     if ($max_number_of_results < $total_number_of_results) {
         $next_max_number_of_results = $max_number_of_results + 4;
@@ -99,7 +91,7 @@ function fleming_get_content()
     ]);
     $fleming_content['statuses'] = [
         ['query_string' => 'open', 'display_string' => 'Open'],
-        ['query_string' => 'closed', 'display_string' => 'Closed']
+        ['query_string' => 'active', 'display_string' => 'Active']
     ];
 
     return $fleming_content;

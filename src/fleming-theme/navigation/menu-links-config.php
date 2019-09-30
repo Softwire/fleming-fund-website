@@ -54,8 +54,8 @@ class MenuLinksConfig
                     'target' => '/grants-funding/fellowships/',
                 ],
                 'other' => [
-                    'title' => 'Other Activities',
-                    'target' => '/grants-funding/other-activities/',
+                    'title' => 'Other Work',
+                    'target' => '/grants-funding/other/',
                 ],
                 'grants' => [
                     'title' => 'View All',

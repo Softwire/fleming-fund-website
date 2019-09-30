@@ -1,0 +1,48 @@
+.grant-number-boxes {
+  color: white;
+  margin-bottom: 10px;
+
+  .grant-number-box {
+    background: $mid-turquoise;
+    margin-bottom: 30px;
+
+    .number-of-grants {
+      display: inline-block;
+      width: 40%;
+      font-weight: bold;
+      font-size: 3em;
+      text-align: center;
+      vertical-align: middle;
+      margin: 18px 0;
+    }
+
+    .grant-type-label {
+      display: inline-block;
+      width: 55%;
+      font-size: 1.5em;
+      line-height: 1.2em;
+      vertical-align: middle;
+    }
+
+    .button {
+      display: block;
+      background: $light-turquoise;
+      text-align: right;
+      margin: 0;
+      border: none;
+
+      &::after {
+        content:">";
+        padding-left: 1em;
+        font-weight: 900;
+      }
+    }
+  }
+}
+
+@media (#{$max-width-tablet}) {
+  .grant-number-boxes .grant-number-box .number-of-grants {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}

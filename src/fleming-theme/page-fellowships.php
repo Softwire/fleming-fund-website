@@ -33,5 +33,5 @@ function fleming_get_content() {
     return $fleming_content;
 }
 
-$template_name = 'page';
+$template_name = pathinfo(__FILE__)['filename'];
 include __DIR__ . '/use-templates.php';

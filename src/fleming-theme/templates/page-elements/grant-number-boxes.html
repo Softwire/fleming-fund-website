@@ -1,0 +1,23 @@
+<div class="grant-number-boxes">
+    {% if total_number_of_grants is defined %}
+    <div class="grant-number-box four columns">
+        <div class="number-of-grants">{{ total_number_of_grants }}</div>
+        <div class="grant-type-label">TOTAL GRANT{{total_number_of_grants != 1 ? 'S' : ''}}</div>
+        <a class="button" href="/grants/?type={{grant_type}}">View all</a>
+    </div>
+    {% endif %}
+    {% if number_of_open_grants is defined %}
+    <div class="grant-number-box four columns">
+        <div class="number-of-grants">{{ number_of_open_grants }}</div>
+        <div class="grant-type-label">OPEN GRANT{{number_of_open_grants != 1 ? 'S' : ''}}</div>
+        <a class="button" href="/grants/?type={{grant_type}}&status=open">View all</a>
+    </div>
+    {% endif %}
+    {% if number_of_active_grants is defined %}
+    <div class="grant-number-box four columns">
+        <div class="number-of-grants">{{ number_of_active_grants }}</div>
+        <div class="grant-type-label">ACTIVE GRANT{{number_of_active_grants != 1 ? 'S' : ''}}</div>
+        <a class="button" href="/activity/?grant_type={{grant_type}}">View activity</a>
+    </div>
+    {% endif %}
+</div>

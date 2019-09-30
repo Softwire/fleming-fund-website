@@ -29,9 +29,10 @@ function fleming_get_content() {
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
 
     show_grants_for_page($fleming_content);
+    show_activity_for_page($fleming_content);
 
     return $fleming_content;
 }
 
-$template_name = 'page';
+$template_name = pathinfo(__FILE__)['filename'];
 include __DIR__ . '/use-templates.php';

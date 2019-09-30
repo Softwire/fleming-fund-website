@@ -229,7 +229,7 @@ function grant_with_post_data_and_fields($grant) {
         });
 
         // Find the next event in the dates list
-        // We'll also use this for the 'status' if present, else we'll use the final event.
+        // We'll also use this for the 'status' if present, else we'll use the final event.get
         $today = mktime(0, 0, 0); // midnight on today's date
         foreach ($events as &$event) {
             $timestamp = $event['timestamp'];
@@ -268,6 +268,14 @@ function grant_with_post_data_and_fields($grant) {
 function grant_deadline_is_in_future($grant) {
     $today = mktime(0, 0, 0);
     return isset($grant['deadlineEvent']) && $grant['deadlineEvent']['timestamp'] >= $today;
+}
+
+function grant_is_active($grant) {
+    return $grant['nextEvent'] == null;
+}
+
+function grant_is_open($grant) {
+    return $grant['nextEvent'] && $grant['nextEvent']['apply_now_valid'];
 }
 
 // Sort grant records by deadline ascending
@@ -370,6 +378,10 @@ function publication_with_post_data_and_fields($publication) {
     $publication['can_display_prominently'] = $publication['picture_large_url'] != null;
 
     return $publication;
+}
+
+function activity_has_grant_type($activity, $grant_type) {
+
 }
 
 function country_with_post_data_and_fields($country) {

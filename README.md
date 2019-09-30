@@ -108,6 +108,8 @@ Stop any `./dev--build-and-run` scripts first - they will conflict otherwise.
 
 * CFGs can be easily created in the Wordpress admin interface, but should be exported as .json files (see Custom Fields -> Tools) and stored in src/fleming-theme/custom-post-types as [field group name].php, and the CPT should then be deleted from the database.
 
+* To modify a CFG, you can either edit the JSON directly, or import the JSON via Custom Fields -> Tools to modify it through the UI and then export it again to save it to the code base.
+
 * Both CPTs and CFGs should be loaded via load-custom-post-types-and-acf-fields.php in src/fleming-theme. Just add an include and/or load_acf_fields call inside the eponymous function similar to the ones already there.
 
 * Be careful about underscores and hyphens when naming custom components and files.
