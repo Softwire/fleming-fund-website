@@ -27,6 +27,8 @@ function fleming_get_content() {
 
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
 
+    add_supporting_content($fleming_content, get_other_grants_as_content());
+
     return $fleming_content;
 }
 

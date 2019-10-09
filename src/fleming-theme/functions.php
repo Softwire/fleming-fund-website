@@ -171,14 +171,11 @@ function grant_with_post_data_and_fields($grant) {
     } else {
         $identifier = 'Grant';
     }
+    $grant['colour_scheme'] = 'base';
 
-    if (!is_object($grantType)) {
-        $grant['colour_scheme'] = 'base';
-    } else {
-
+    if (is_object($grantType)) {
         $countries = $grant['fields']['countries']['value'];
         $regions = $grant['fields']['region']['value'];
-
         if (empty($countries)) {
             $regionCount = is_array($regions) ? count($regions) : 0;
             if ($regionCount >= 1) {
@@ -189,10 +186,8 @@ function grant_with_post_data_and_fields($grant) {
                     $regions
                 ));
             }
-            if ($regionCount == 1) {
-                $grant['colour_scheme'] = region_slug_to_colour_scheme_name($regions[0]->post_name);
-            } else {
-                $grant['colour_scheme'] = 'base';
+            if ($regionCount == 1 && !$grant['colour_scheme']) {
+                $grant['colour_scheme'] = $grant['colour_scheme'] || region_slug_to_colour_scheme_name($regions[0]->post_name);
             }
         } else {
             $countryTitles = [];
@@ -204,11 +199,13 @@ function grant_with_post_data_and_fields($grant) {
             }
             $identifier .= ' › '.implode(' | ', $countryTitles);
             $associatedRegions = array_unique($associatedRegions);
-            if (count($associatedRegions) == 1) {
+            if (count($associatedRegions) == 1 && !$grant['colour_scheme']) {
                 $grant['colour_scheme'] = region_slug_to_colour_scheme_name($associatedRegions[0]);
-            } else {
-                $grant['colour_scheme'] = 'base';
             }
+        }
+
+        if ($grantType->post_title == 'Other Work') {
+            $grant['colour_scheme'] = 'dark-card';
         }
     }
 
@@ -273,7 +270,7 @@ function grant_deadline_is_in_future($grant) {
 }
 
 function grant_is_active($grant) {
-    return $grant['nextEvent'] == null;
+    return isset($grant['fields']['is_active']) && $grant['fields']['is_active']['value'];
 }
 
 function grant_is_open($grant) {

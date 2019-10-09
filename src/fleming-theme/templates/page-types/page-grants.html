@@ -29,22 +29,22 @@
       </div>
       <form action="" method="get" id="search-grants-form">
         <select name="type" class="filter-dropdown">
-          <option value="" {% if type_query is empty %} selected {% endif %}> - Grant Type - </option>
+          <option value="" {% if type_query is empty %} selected {% endif %}> All Types </option>
           {% for grant_type in grant_types %}
           <option value="{{ grant_type.post_name }}" {% if type_query == grant_type.post_name %} selected {% endif %} >{{ grant_type.post_title }}</option>
           {% endfor %}
         </select><select name="region" class="filter-dropdown">
-          <option value="" {% if region_query is empty %} selected {% endif %}> - Region - </option>
+          <option value="" {% if region_query is empty %} selected {% endif %}> All Regions </option>
           {% for region in regions %}
           <option value="{{ region.post_name }}" {% if region_query == region.post_name %} selected {% endif %} >{{ region.post_title }}</option>
           {% endfor %}
         </select><select name="country" class="filter-dropdown">
-          <option value="" {% if country_query is empty %} selected {% endif %}> - Country - </option>
+          <option value="" {% if country_query is empty %} selected {% endif %}> All Countries </option>
           {% for country in countries %}
           <option value="{{ country.post_name }}" {% if country_query == country.post_name %} selected {% endif %} >{{ country.post_title }}</option>
           {% endfor %}
         </select><select name="status" class="filter-dropdown">
-          <option value="" {% if status_query is empty %} selected {% endif %}> - Status - </option>
+          <option value="" {% if status_query is empty %} selected {% endif %}> All Statuses </option>
           {% for status in statuses %}
           <option value="{{ status.filter_string }}" {% if status_query == status.query_string %} selected {% endif %} >{{ status.display_string }}</option>
           {% endfor %}

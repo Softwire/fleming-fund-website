@@ -1,10 +1,14 @@
 .application-steps-heading {
   @extend .large-text;
+
+  .application-steps-heading-prefix {
+    font-weight: 500;
+  }
 }
 
 .application-steps-container.collapsible {
   background: none;
-  border: 1px solid black;
+  border: 1px solid $turquoise;
   border-top: none;
   padding: 3em;
 }
@@ -17,6 +21,10 @@
   padding: 1.5em 2em;
   background: $light-grey;
   position: relative;
+
+  p {
+    margin: 0.5em 0;
+  }
 
   &:not(:last-child) {
     margin-bottom: 3em;
@@ -37,6 +45,7 @@
   &:last-child {
     font-weight: bold;
     padding-left: 5em;
+    border: 1px solid #009898;
   }
 }
 
