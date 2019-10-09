@@ -108,7 +108,7 @@
 
   &.decorated {
     background: $light-grey;
-    border-top: 1ex solid $light-grey;
+    border-top: 8px solid $light-grey;
 
     @each $configName, $colourConfig in $colourConfigs {
 

@@ -14,8 +14,11 @@ require_once 'navigation/index.php';
  * VIEWs are located in the ./templates folder and have a .html file extension
  */
 
+
 function fleming_get_content()
 {
+    static $DEFAULT_NUMBER_OF_RESULTS = 4;
+
     $fleming_content = array(
         "title"  => get_raw_title(),
         "fields" => get_field_objects(),
@@ -25,16 +28,15 @@ function fleming_get_content()
             ->build(),
     );
 
-    $number_of_results_per_batch = 4;
 
     $type_query = (isset($_GET["type"]) ? $_GET["type"] : null);
     $country_query = (isset($_GET["country"]) ? $_GET["country"] : null);
     $region_query = (isset($_GET["region"]) ? $_GET["region"] : null);
     $status_query = (isset($_GET["status"]) ? $_GET["status"] : null);
-    $max_number_of_results = isset($_GET["max-number-of-results"]) ? $_GET["max-number-of-results"] : $number_of_results_per_batch;
+    $max_number_of_results = isset($_GET["max-number-of-results"]) ? $_GET["max-number-of-results"] : $DEFAULT_NUMBER_OF_RESULTS;
     $load_more_counter = (isset($_GET["load_more"]) ? $_GET["load_more"] : 0); // This query parameter is set when making an ajax request for more results
     if ($load_more_counter) {
-        $max_number_of_results = $max_number_of_results + $load_more_counter * $number_of_results_per_batch;
+        $max_number_of_results = $max_number_of_results + $load_more_counter * $DEFAULT_NUMBER_OF_RESULTS;
     }
 
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
@@ -71,30 +73,32 @@ function fleming_get_content()
     $fleming_content['query_result']  = array_to_query_results($grants, $max_number_of_results);
     $fleming_content['max_number_of_results']  = $max_number_of_results;
     if ($max_number_of_results < $total_number_of_results) {
-        $next_max_number_of_results = $max_number_of_results + $number_of_results_per_batch;
+        $next_max_number_of_results = $max_number_of_results + $DEFAULT_NUMBER_OF_RESULTS;
         $fleming_content['load_more_url']  = "/grants/?type=$type_query&country=$country_query&region=$region_query&status=$status_query&max-number-of-results=$next_max_number_of_results";
     }
-    $fleming_content['grant_types'] = get_posts([
+    $fleming_content['types'] = array_map('map_post_to_filter_option', get_posts([
         'post_type'   => 'grant_types',
         'numberposts' => -1,
+        'orderby'     => 'name',
+        'order'       => 'ASC',
         'post_status' => 'publish',
-    ]);
-    $fleming_content['countries'] = get_posts([
+    ]));
+    $fleming_content['countries'] = array_map('map_post_to_filter_option', get_posts([
         'post_type'          => 'countries',
         'numberposts'        => -1,
         'ignore_custom_sort' => true,
         'orderby'            => 'name',
         'order'              => 'ASC',
         'post_status'        => 'publish',
-    ]);
-    $fleming_content['regions'] = get_posts([
+    ]));
+    $fleming_content['regions'] = array_map('map_post_to_filter_option', get_posts([
         'post_type'          => 'regions',
         'numberposts'        => -1,
         'ignore_custom_sort' => true,
         'orderby'            => 'name',
         'order'              => 'ASC',
         'post_status'        => 'publish',
-    ]);
+    ]));
     $fleming_content['statuses'] = [
         ['query_string' => 'open', 'display_string' => 'Applications Open'],
         ['query_string' => 'active', 'display_string' => 'Active']

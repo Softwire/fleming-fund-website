@@ -181,18 +181,6 @@ function compare_date_strings($string1, $string2) {
     return 0;
 }
 
-function get_all_future_grants() {
-    $future_grants_cache_id = 'all_future_grants';
-    $future_grants = get_transient($future_grants_cache_id);
-
-    if (!is_array($future_grants)) {
-        $grants = get_full_grants(null);
-        $future_grants = array_filter($grants, "grant_deadline_is_in_future");
-        set_transient($future_grants_cache_id, $future_grants, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
-    }
-    return $future_grants;
-}
-
 function array_to_query_results($posts, $max_number_of_results) {
     $total = count($posts);
     $summary = strval($total);
@@ -206,38 +194,6 @@ function array_to_query_results($posts, $max_number_of_results) {
         "posts" => array_slice($posts, 0, $max_number_of_results),
         "summary" => $summary,
     );
-}
-
-function get_case_study($fleming_content) {
-    if ($fleming_content['fields']['case_study'] && $fleming_content['fields']['case_study']['value']) {
-        $case_study = get_post_data_and_fields($fleming_content['fields']['case_study']['value']->ID);
-        return [
-            'acf_fc_layout' => 'feature_case_study',
-            'publication' => $case_study
-        ];
-    }
-    return null;
-}
-
-function get_current_grants_as_content() {
-    $cache_id = 'current_grants';
-    $grants_content = get_transient($cache_id);
-    if (!is_array($grants_content)) {
-        $current_grants = get_upcoming_or_else_most_recent_grants();
-        $grants_content = get_grants_as_content($current_grants['grants'], $current_grants['heading']);
-        set_transient($cache_id, $grants_content, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
-    }
-    return $grants_content;
-}
-
-function get_other_grants_as_content() {
-    $cache_id = 'other_grants';
-//    $grants_content = get_transient($cache_id);
-//    if (!is_array($grants_content)) {
-        $grants_content = get_grants_as_content(get_other_grants(), 'Our Other Grants');
-        set_transient($cache_id, $grants_content, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
-//    }
-    return $grants_content;
 }
 
 function get_grant_type_for_page($post_id) {
@@ -307,18 +263,11 @@ function show_activity_for_page(&$fleming_content) {
     }
     $cache_id = 'recent_activity_' . $post_id;
     $page_grant_type = get_grant_type_for_page($post_id);
-    $grant_type_name = $page_grant_type->post_name;
 
     $recent_activity_content = get_transient($cache_id);
     if (!is_array($recent_activity_content)) {
         // No cached data:
-        $query_args = [
-            'post_type'  => ['events', 'publications'],
-            'orderby' => 'date',
-            'order' => 'DESC',
-        ];
-        $query_result = get_query_results(new WP_Query($query_args));
-        $filtered_activities = filter_publications_or_events_by_grant_type($query_result['posts'], $page_grant_type);
+        $filtered_activities = get_activity_for_grant_type($page_grant_type);
         $recent_activities = array_slice($filtered_activities, 0 , 3);
         $links = array_map(function($recent_activity) {
             return [
@@ -338,8 +287,18 @@ function show_activity_for_page(&$fleming_content) {
 
     if ($recent_activity_content && count($recent_activity_content['links']) > 0) {
         add_supporting_content($fleming_content, $recent_activity_content);
-        add_supporting_content($fleming_content, get_link_button("/activity/?grant_type=$grant_type_name", 'View all'));
+        add_supporting_content($fleming_content, get_link_button("activity", 'View all'));
     }
+}
+
+function get_activity_for_grant_type($grant_type) {
+    $query_args = [
+        'post_type'  => ['events', 'publications'],
+        'orderby' => 'date',
+        'order' => 'DESC',
+    ];
+    $query_result = get_query_results(new WP_Query($query_args));
+    return filter_publications_or_events_by_grant_type($query_result['posts'], $grant_type);
 }
 
 function filter_publications_or_events_by_grant_type($publications_or_events, $grant_type) {
@@ -402,14 +361,6 @@ function get_upcoming_or_else_most_recent_grants() {
     ];
 }
 
-function get_other_grants() {
-    $post_id = get_post()->ID;
-    $other_grant_type = get_grant_type_for_page($post_id);
-    $full_grants = get_full_grants($other_grant_type->ID);
-
-    return sort_past_grants($full_grants);
-}
-
 function get_link_button($url, $text = 'View More') {
     return [
         'acf_fc_layout' => 'link_button',
@@ -463,3 +414,9 @@ function add_supporting_content(&$fleming_content, $supporting_content) {
     $fleming_content['fields']['supporting_content']['value'][] = $supporting_content;
 }
 
+function map_post_to_filter_option($post) {
+    return [
+        'query_string' => $post->post_name,
+        'display_string' => $post->post_title
+    ];
+}

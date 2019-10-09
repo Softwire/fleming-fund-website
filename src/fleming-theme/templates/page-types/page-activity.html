@@ -4,5 +4,6 @@
 {% include 'page-elements/in-page-links.html' with {'clean_if_no_links': true} %}
 
 {% include 'flexible_content.twig' with { 'flexible_content': fields.flexible_content.value } %}
+{% include 'page-elements/list-query-with-dropdowns.html' with { override_class: 'three-max' } %}
 
 {{ include('layout/footer.html') }}

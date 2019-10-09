@@ -32,5 +32,21 @@ function fleming_get_content() {
     return $fleming_content;
 }
 
+function get_other_grants_as_content() {
+    $cache_id = 'other_grants';
+    $grants_content = get_transient($cache_id);
+    if (!is_array($grants_content)) {
+        $post_id = get_post()->ID;
+        $other_grant_type = get_grant_type_for_page($post_id);
+        $full_grants = get_full_grants($other_grant_type->ID);
+
+        $sorted_grants = sort_past_grants($full_grants);
+
+        $grants_content = get_grants_as_content($sorted_grants, 'Our Other Grants');
+        set_transient($cache_id, $grants_content, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
+    }
+    return $grants_content;
+}
+
 $template_name = 'page';
 include __DIR__ . '/use-templates.php';

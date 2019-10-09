@@ -1,0 +1,70 @@
+<script>
+    function updateFilter() {
+        $('#filter-search-form').submit();
+    }
+
+    $(function () {
+        var loadMoreResultsCounter = 0;
+
+        $('.filter-dropdowns-container .apply-filter-button').hide();
+        $('.filter-dropdowns-container select').on('change', updateFilter);
+
+        $('.load-more-button').click(function (e) {
+            loadMoreResultsCounter++;
+
+            $.get(window.location.href, { load_more: loadMoreResultsCounter }, function(data) {
+                $('.list-query-result-container').html(data);
+            });
+
+            e.preventDefault();
+            return false;
+        });
+    });
+</script>
+
+{% embed 'layout/supporting-content.html' with {'tight': true} %}
+  {% block content %}
+
+    <div class="filter-dropdowns-container {{ statuses ? '' : 'three-filters' }}">
+      <div class="filters-heading">
+        <span>FILTER BY</span>
+
+        <form class="clear-all-button" action="" method="get">
+          <input type="submit" value="CLEAR ALL"/>
+        </form>
+      </div>
+      <form action="" method="get" id="filter-search-form">
+        <select name="type" class="filter-dropdown">
+          <option value="" {% if type_query is empty %} selected {% endif %}> All Types </option>
+          {% for type in types %}
+          <option value="{{ type.query_string }}" {% if type_query == type.query_string %} selected {% endif %} >{{ type.display_string }}</option>
+          {% endfor %}
+        </select><select name="region" class="filter-dropdown">
+          <option value="" {% if region_query is empty %} selected {% endif %}> All Regions </option>
+          {% for region in regions %}
+          <option value="{{ region.query_string }}" {% if region_query == region.query_string %} selected {% endif %} >{{ region.display_string }}</option>
+          {% endfor %}
+        </select><select name="country" class="filter-dropdown">
+          <option value="" {% if country_query is empty %} selected {% endif %}> All Countries </option>
+          {% for country in countries %}
+          <option value="{{ country.query_string }}" {% if country_query == country.query_string %} selected {% endif %} >{{ country.display_string }}</option>
+          {% endfor %}
+        </select>{% if statuses %}<select name="status" class="filter-dropdown">
+          <option value="" {% if status_query is empty %} selected {% endif %}> All Statuses </option>
+          {% for status in statuses %}
+          <option value="{{ status.query_string }}" {% if status_query == status.query_string %} selected {% endif %} >{{ status.display_string }}</option>
+          {% endfor %}
+        </select>
+        {% endif %}
+        <input class="apply-filter-button" type="submit" value="Apply"/>
+      </form>
+    </div>
+
+    <div class="list-query-result-container">
+      {% include 'page-elements/list-query-result.html' %}
+    </div>
+    {% if load_more_url %}
+      {% include 'flexible-content/link_button.html' with { content_block: { link: { url: load_more_url, extra_class: 'load-more-button' }, button_text: 'Load more', centred: 1 } } %}
+    {% endif %}
+  {% endblock %}
+{% endembed %}

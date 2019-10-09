@@ -1,6 +1,6 @@
 {% if query_result %}
   <p class="query-result-summary">{{ query_result.summary }}</p>
-  <div class="card-container two-max">
+  <div class="card-container {{ override_class ? override_class : 'two-max' }} ">
     {% for post in query_result.posts %}
       {% include 'cards/entities/single-post.html' %}
     {% endfor %}

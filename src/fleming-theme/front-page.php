@@ -29,5 +29,17 @@ function fleming_get_content()
     return $fleming_content;
 }
 
+function get_all_future_grants() {
+    $future_grants_cache_id = 'all_future_grants';
+    $future_grants = get_transient($future_grants_cache_id);
+
+    if (!is_array($future_grants)) {
+        $grants = get_full_grants(null);
+        $future_grants = array_filter($grants, "grant_deadline_is_in_future");
+        set_transient($future_grants_cache_id, $future_grants, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
+    }
+    return $future_grants;
+}
+
 $template_name = pathinfo(__FILE__)['filename'];
 include __DIR__ . '/use-templates.php';
