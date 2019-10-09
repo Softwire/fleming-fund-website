@@ -1013,12 +1013,63 @@
             "min": "",
             "max": ""
           },
+          "5b34b1c47937a": {
+            "key": "5b34b1c47937a",
+            "name": "feature_case_study_block",
+            "label": "Feature Case Study",
+            "display": "block",
+            "sub_fields": [
+              {
+                "key": "field_57cdb82e864c2",
+                "label": "Publication",
+                "name": "publication",
+                "type": "post_object",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                  "width": "",
+                  "class": "",
+                  "id": ""
+                },
+                "post_type": [
+                  "publications"
+                ],
+                "taxonomy": [],
+                "allow_null": 0,
+                "multiple": 0,
+                "return_format": "object",
+                "ui": 1
+              }
+            ],
+            "min": "",
+            "max": ""
+          },
           "5b461497c5436": {
             "key": "5b461497c5436",
             "name": "application_steps",
             "label": "Application Steps",
             "display": "block",
             "sub_fields": [
+              {
+                "key": "field_5d8de2e3161f1",
+                "label": "Heading Prefix",
+                "name": "heading_prefix",
+                "type": "text",
+                "instructions": "Bold text shown at the start of the header, e.g. How to Apply",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                  "width": "",
+                  "class": "",
+                  "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "prepend": "",
+                "append": ":",
+                "maxlength": ""
+              },
               {
                 "key": "field_5d8de2e3161f9",
                 "label": "Heading",
@@ -1034,7 +1085,7 @@
                 },
                 "default_value": "",
                 "placeholder": "",
-                "prepend": "How to apply:",
+                "prepend": "",
                 "append": "",
                 "maxlength": ""
               },

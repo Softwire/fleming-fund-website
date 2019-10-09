@@ -95,6 +95,8 @@ function process_flexible_content(&$fields, &$content, $force_in_page_links = fa
                         );
                     }
                 }
+            } elseif ($type == 'feature_case_study_block') {
+                $content_block['publication'] = get_post_data_and_fields($content_block['publication']->ID);
             }
         }
         $fields["fields"]["supporting_content"]["value"] = split_supporting_content($content['value']);

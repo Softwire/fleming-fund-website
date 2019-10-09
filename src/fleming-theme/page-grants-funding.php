@@ -32,7 +32,6 @@ function fleming_get_content() {
     }
     if ($case_study) {
         add_supporting_content($fleming_content, $case_study);
-        add_supporting_content($fleming_content, get_link_button('/knowledge-resources/?type=case-study', 'See All Case Studies'));
     }
 
     return $fleming_content;

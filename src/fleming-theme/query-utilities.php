@@ -212,8 +212,7 @@ function get_case_study($fleming_content) {
     if ($fleming_content['fields']['case_study'] && $fleming_content['fields']['case_study']['value']) {
         $case_study = get_post_data_and_fields($fleming_content['fields']['case_study']['value']->ID);
         return [
-            'acf_fc_layout' => 'publication_with_image_block',
-            'heading' => 'Feature Case Study',
+            'acf_fc_layout' => 'feature_case_study',
             'publication' => $case_study
         ];
     }

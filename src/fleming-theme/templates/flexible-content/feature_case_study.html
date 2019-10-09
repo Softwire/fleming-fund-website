@@ -1,0 +1,7 @@
+<h3>Feature Case Study</h3>
+
+<div class="card-container cover">
+  {% include 'cards/entities/publication-with-image.html' with {'publication': content_block.publication} %}
+</div>
+
+{% include 'flexible-content/link_button.html' with { content_block: { link: { url: '/knowledge-resources/?type=case-study' }, button_text: 'See All Case Studies', centred: 1 } } %}

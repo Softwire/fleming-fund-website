@@ -1,0 +1,10 @@
+.feature-case-study-block {
+  @extend .supporting-content;
+  margin-left: -4em;
+  margin-right: -4em;
+  padding: 3em 4em;
+
+  .prominent-button {
+    margin-bottom: 0;
+  }
+}
