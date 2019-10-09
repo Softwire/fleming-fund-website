@@ -1,4 +1,4 @@
-.grant-filters {
+.filter-dropdowns-container {
   position: relative;
 
   .filters-heading {
@@ -28,6 +28,12 @@
   .filter-dropdown {
     cursor: pointer;
     @include perRow(4);
+  }
+
+  &.three-filters {
+    .filter-dropdown {
+      @include perRow(3);
+    }
   }
 
   @media (#{$max-width-tablet}) {

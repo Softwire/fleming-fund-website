@@ -28,13 +28,13 @@ function fleming_get_content() {
 
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
 
-    show_grant_numbers_for_page($fleming_content);
+    get_case_studies_supporting_content($fleming_content);
 
     return $fleming_content;
 }
 
 function get_case_studies_supporting_content(&$fleming_content) {
-    $cache_id = 'fellowship_case_studies';
+    $cache_id = 'fellowship_case_studies_q';
     $post_id = get_post()->ID;
     $fellowship_grant_type = get_grant_type_for_page($post_id);
     $grant_type_name = $fellowship_grant_type->post_name;
@@ -42,13 +42,15 @@ function get_case_studies_supporting_content(&$fleming_content) {
     $content = get_transient($cache_id);
     if (!is_array($content)) {
         // No cached data:
-        $cast_study_types = get_posts([
+        $case_study_types = get_posts([
             'post_type' => 'publication_types',
-            's' => 'Case Study'
+            'post_status' => 'publish',
+            'title' => 'Case Study'
         ]);
-        if (count($cast_study_types) == 0) {
+        if (count($case_study_types) == 0) {
             return;
         }
+
         $case_studies_query_args = [
             'post_type'  => ['publications'],
             'orderby' => 'date',
@@ -56,7 +58,7 @@ function get_case_studies_supporting_content(&$fleming_content) {
             'meta_query' => array(
                 array(
                     'key' => 'type',
-                    'value' => $cast_study_types[0]->ID,
+                    'value' => $case_study_types[0]->ID,
                     'compare' => '='
                 )
             )

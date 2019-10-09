@@ -13,8 +13,8 @@
 
 function fleming_get_content() {
     $fleming_content = array(
-        "title" => get_raw_title(),
-        "fields" => get_field_objects()
+        "title" => "",
+        "fields" => []
     );
 
     return $fleming_content;

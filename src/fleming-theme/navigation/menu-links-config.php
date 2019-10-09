@@ -55,7 +55,7 @@ class MenuLinksConfig
                 ],
                 'other' => [
                     'title' => 'Other Work',
-                    'target' => '/grants-funding/other-work/',
+                    'target' => '/grants-funding/other-w/',
                 ],
                 'grants' => [
                     'title' => 'View All',

@@ -25,22 +25,14 @@ function fleming_get_content()
             ->build(),
     );
 
-    $number_of_results_per_batch = 4;
-
     $type_query = (isset($_GET["type"]) ? $_GET["type"] : null);
     $country_query = (isset($_GET["country"]) ? $_GET["country"] : null);
     $region_query = (isset($_GET["region"]) ? $_GET["region"] : null);
-    $status_query = (isset($_GET["status"]) ? $_GET["status"] : null);
-    $max_number_of_results = isset($_GET["max-number-of-results"]) ? $_GET["max-number-of-results"] : $number_of_results_per_batch;
-    $load_more_counter = (isset($_GET["load_more"]) ? $_GET["load_more"] : 0); // This query parameter is set when making an ajax request for more results
-    if ($load_more_counter) {
-        $max_number_of_results = $max_number_of_results + $load_more_counter * $number_of_results_per_batch;
-    }
+    $max_number_of_results = isset($_GET["max-number-of-results"]) ? $_GET["max-number-of-results"] : 6;
 
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
 
-    $grant_type = get_page_by_path($type_query, 'OBJECT', 'grant_types');
-    $grant_type_id = ($grant_type != null && $grant_type->post_status == 'publish') ? $grant_type->ID : null;
+    $grant_type_id = null;
     $grants = get_full_grants($grant_type_id);
     if ($country_query) {
         $grants = array_filter($grants, function($grant) use ($country_query) {
@@ -54,24 +46,14 @@ function fleming_get_content()
         });
     }
 
-    if ($status_query) {
-        if ($status_query == 'open') {
-            $grants = array_filter($grants, 'grant_is_open');
-        }
-        if ($status_query == 'active') {
-            $grants = array_filter($grants, 'grant_is_active');
-        }
-    }
-
     $total_number_of_results = count($grants);
     $fleming_content['type_query'] = $type_query;
     $fleming_content['country_query'] = $country_query;
     $fleming_content['region_query'] = $region_query;
-    $fleming_content['status_query'] = $status_query;
     $fleming_content['query_result']  = array_to_query_results($grants, $max_number_of_results);
     $fleming_content['max_number_of_results']  = $max_number_of_results;
     if ($max_number_of_results < $total_number_of_results) {
-        $next_max_number_of_results = $max_number_of_results + $number_of_results_per_batch;
+        $next_max_number_of_results = $max_number_of_results + 4;
         $fleming_content['load_more_url']  = "/grants/?type=$type_query&country=$country_query&region=$region_query&status=$status_query&max-number-of-results=$next_max_number_of_results";
     }
     $fleming_content['grant_types'] = get_posts([
@@ -95,16 +77,12 @@ function fleming_get_content()
         'order'              => 'ASC',
         'post_status'        => 'publish',
     ]);
-    $fleming_content['statuses'] = [
-        ['query_string' => 'open', 'display_string' => 'Applications Open'],
-        ['query_string' => 'active', 'display_string' => 'Active']
-    ];
 
     return $fleming_content;
 }
 
-$template_name = pathinfo(__FILE__)['filename'];
-if (isset($_GET['load_more'])) {
+$template_name = 'page-activity';
+if (isset($_GET['ajax'])) {
     $template_name = 'ajax-' . $template_name;
 }
 include __DIR__ . '/use-templates.php';

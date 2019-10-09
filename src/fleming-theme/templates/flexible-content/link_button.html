@@ -1,5 +1,5 @@
 <div class="row prominent-button {{ content_block.centred ? 'centred' }}">
-  <a class="button" href="{{ content_block.link.url }}">
+  <a class="button {{ content_block.link.extra_class}}" href="{{ content_block.link.url }}">
     {{ content_block.button_text | default(content_block.link.title) | default(content_block.link.url) }}
   </a>
 </div>
