@@ -162,6 +162,28 @@
                 "ui": 1
             },
             {
+                "key": "field_5b06962b6ae1js123",
+                "label": "Regions",
+                "name": "regions",
+                "type": "post_object",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "regions"
+                ],
+                "taxonomy": [],
+                "allow_null": 1,
+                "multiple": 1,
+                "return_format": "object",
+                "ui": 1
+            },
+            {
                 "key": "field_5b068aa2e16d8",
                 "label": "Summary",
                 "name": "summary",

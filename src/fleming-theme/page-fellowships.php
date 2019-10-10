@@ -84,7 +84,7 @@ function get_case_studies_supporting_content(&$fleming_content) {
 
     if ($content && count($content['links']) > 0) {
         add_supporting_content($fleming_content, $content);
-        add_supporting_content($fleming_content, get_link_button("/grants-funding/fellowships/activity", 'View all'));
+        add_supporting_content($fleming_content, get_link_button("/knowledge-resources/?type=case-study", 'View all'));
     }
 }
 

@@ -181,7 +181,7 @@ function compare_date_strings($string1, $string2) {
     return 0;
 }
 
-function array_to_query_results($posts, $max_number_of_results) {
+function get_query_results_from_array($posts, $max_number_of_results) {
     $total = count($posts);
     $summary = strval($total);
     if ($total == 1) {
@@ -292,13 +292,57 @@ function show_activity_for_page(&$fleming_content) {
 }
 
 function get_activity_for_grant_type($grant_type) {
-    $query_args = [
-        'post_type'  => ['events', 'publications'],
-        'orderby' => 'date',
-        'order' => 'DESC',
-    ];
-    $query_result = get_query_results(new WP_Query($query_args));
-    return filter_publications_or_events_by_grant_type($query_result['posts'], $grant_type);
+    return get_activity_for_grant_type_and_post_type($grant_type, null);
+}
+
+function get_activity_for_grant_type_and_post_type($grant_type, $activity_type) {
+    if (!$activity_type) {
+        $query_args = [
+            'post_type'  => ['events', 'publications'],
+            'post_status' => 'publish',
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'numberposts' => -1
+        ];
+    } elseif ($activity_type == 'event') {
+        $query_args = [
+            'post_type'  => ['events'],
+            'post_status' => 'publish',
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'numberposts' => -1,
+        ];
+    } else {
+        $publication_types = get_posts([
+            'post_type' => 'publication_types',
+            'post_status' => 'publish',
+            'name' => $activity_type
+        ]);
+        if (count($publication_types) == 0) {
+            // searching for an unrecognised activity type -> no matches
+            return [];
+        }
+        $query_args = [
+            'post_type'  => ['publications'],
+            'post_status' => 'publish',
+            'orderby' => 'date',
+            'order' => 'DESC',
+            'numberposts' => -1,
+            'meta_query' => [
+                [
+                    'key' => 'type',
+                    'value' => $publication_types[0]->ID,
+                    'compare' => '='
+                ]
+            ]
+        ];
+    }
+    $activity_posts = get_posts($query_args);
+    $activity_posts_with_fields = array_map(function($post) {
+        return get_post_data_and_fields($post->ID);
+    }, $activity_posts);
+    $results_filtered_by_grant_type = filter_publications_or_events_by_grant_type($activity_posts_with_fields, $grant_type);
+    return array_map('publication_with_post_data_and_fields', $results_filtered_by_grant_type);
 }
 
 function filter_publications_or_events_by_grant_type($publications_or_events, $grant_type) {
@@ -419,4 +463,40 @@ function map_post_to_filter_option($post) {
         'query_string' => $post->post_name,
         'display_string' => $post->post_title
     ];
+}
+
+function process_list_query(&$fleming_content, $initial_number_of_results, $posts, $type, $country, $region, $status) {
+    $max_number_of_results = isset($_GET["max-number-of-results"]) ? $_GET["max-number-of-results"] : $initial_number_of_results;
+    $load_more_counter = (isset($_GET["load_more"]) ? $_GET["load_more"] : 0); // This query parameter is set when making an ajax request for more results
+    if ($load_more_counter) {
+        $max_number_of_results = $max_number_of_results + $load_more_counter * $initial_number_of_results;
+    }
+
+    $total_number_of_results = count($posts);
+    $fleming_content['type_query'] = $type;
+    $fleming_content['country_query'] = $country;
+    $fleming_content['region_query'] = $region;
+    $fleming_content['status_query'] = $status;
+    $fleming_content['query_result']  = get_query_results_from_array($posts, $max_number_of_results);
+    $fleming_content['max_number_of_results']  = $max_number_of_results;
+    if ($max_number_of_results < $total_number_of_results) {
+        $next_max_number_of_results = $max_number_of_results + $initial_number_of_results;
+        $fleming_content['load_more_url']  = "?type=$type&country=$country&region=$region&status=$status&max-number-of-results=$next_max_number_of_results";
+    }
+    $fleming_content['countries'] = array_map('map_post_to_filter_option', get_posts([
+        'post_type'          => 'countries',
+        'numberposts'        => -1,
+        'ignore_custom_sort' => true,
+        'orderby'            => 'name',
+        'order'              => 'ASC',
+        'post_status'        => 'publish',
+    ]));
+    $fleming_content['regions'] = array_map('map_post_to_filter_option', get_posts([
+        'post_type'          => 'regions',
+        'numberposts'        => -1,
+        'ignore_custom_sort' => true,
+        'orderby'            => 'name',
+        'order'              => 'ASC',
+        'post_status'        => 'publish',
+    ]));
 }
