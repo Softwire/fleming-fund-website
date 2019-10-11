@@ -1,11 +1,11 @@
 {% if level < current_status %}
-<div class="progress-box past">
+  {% set box_class = 'past' %}
 {% elseif level == current_status %}
-<div class="progress-box now">
+  {% set box_class = 'now' %}
 {% elseif level > current_status %}
-<div class="progress-box future">
+  {% set box_class = 'future' %}
 {% endif %}
-
+<div class="progress-box {{box_class}}">
   {% if level < current_status %}
     <div class="tick">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 23 23">

@@ -270,7 +270,7 @@ function grant_deadline_is_in_future($grant) {
 }
 
 function grant_is_active($grant) {
-    return isset($grant['fields']['is_active']) && $grant['fields']['is_active']['value'];
+    return isset($grant['fields']['status']) && $grant['fields']['status']['value'] == 5;
 }
 
 function grant_is_open($grant) {

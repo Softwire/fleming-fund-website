@@ -168,10 +168,6 @@ function get_related_posts($post, $limit=2, $same_post_type_only) {
     return $related_posts;
 }
 
-function get_type() {
-    return get_field_objects()['type']['value']->post_name;
-}
-
 function compare_date_strings($string1, $string2) {
     $date1 = explode("/", $string1["date"]);
     $date2 = explode("/", $string2["date"]);

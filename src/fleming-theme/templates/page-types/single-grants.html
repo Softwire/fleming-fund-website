@@ -4,8 +4,39 @@
 
 {% include 'page-elements/in-page-links.html' %}
 
-{% if fields.dates.value is not empty %}
-<div class="country-timeline">
+{% if fields.status.value > 2 %}
+<div class="grant-timeline">
+  {% include 'page-elements/status-box.html' with {
+  'level': 1,
+  'current_status': fields.status.value,
+  'status': 'Scoping Activities'
+  } %}
+  {% include 'page-elements/status-box.html' with {
+  'level': 2,
+  'current_status': fields.status.value,
+  'status': 'Request For Proposal Published'
+  } %}
+  {% include 'page-elements/status-box.html' with {
+  'level': 3,
+  'current_status': fields.status.value,
+  'status': 'Proposals Under Review'
+  } %}
+  {% include 'page-elements/status-box.html' with {
+  'level': 4,
+  'current_status': fields.status.value,
+  'status': 'Approved'
+  } %}
+  {% include 'page-elements/status-box.html' with {
+  'level': 5,
+  'current_status': fields.status.value,
+  'status': 'Active',
+  'last': true
+  } %}
+</div>
+{% endif %}
+
+{% if fields.dates.value is not empty and fields.status.value <= 2 %}
+<div class="grant-timeline">
   {% for date in fields.dates.value %}
     {% include 'page-elements/status-box.html' with {
       'level': loop.index,
@@ -64,11 +95,14 @@
     {% include 'flexible_content.twig' with { 'flexible_content': fields.supporting_content.value } %}
 
     {% if similar_proposals %}
-    <h3>Other grants</h3>
-    <div class="card-container two-max">
-      {% include 'cards/entities/grant.html' with {'grant': similar_proposals[0]} %}
-      {% include 'cards/entities/grant.html' with {'grant': similar_proposals[1]} %}
-    </div>
+      {% if fields.supporting_content.value %}
+        {% include 'flexible-content/horizontal_line.html' with { content_block: { emphasis: true } } %}
+      {% endif %}
+      <h3>Other grants</h3>
+      <div class="card-container two-max">
+        {% include 'cards/entities/grant.html' with {'grant': similar_proposals[0]} %}
+        {% include 'cards/entities/grant.html' with {'grant': similar_proposals[1]} %}
+      </div>
     {% endif %}
 
   {% endblock %}

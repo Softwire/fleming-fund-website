@@ -41,7 +41,7 @@ $tick-size: 25px;
   }
 }
 
-.country-timeline {
+.grant-timeline {
   @include country_timeline_with_tick_spacing(0.75em);
 
   margin-top: 4rem;
@@ -120,7 +120,7 @@ $tick-size: 25px;
 
 @each $configName, $colourConfig in $colourConfigs {
   .#{$configName} {
-    .country-timeline {
+    .grant-timeline {
       .past {
         background-color: map_get($colourConfig, intense);
         border-color: map_get($colourConfig, intense);
@@ -135,7 +135,7 @@ $tick-size: 25px;
 }
 
 @media (#{$max-width-tablet}) {
-  .country-timeline {
+  .grant-timeline {
     @include country_timeline_with_tick_spacing(0.5em);
 
     .progress-box {
@@ -151,7 +151,7 @@ $tick-size: 25px;
 }
 
 @media (#{$max-width-mobile}) {
-  .country-timeline {
+  .grant-timeline {
     flex-flow: column nowrap;
 
     $proportion-of-tick-size-as-spacing: 0.2;

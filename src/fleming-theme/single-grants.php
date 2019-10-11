@@ -21,12 +21,14 @@ function fleming_get_content() {
         && ($fields["criteria"]["value"]["text_block_inner"] || $fields["criteria"]["value"]["criteria"]);
     $have_application_steps = $fields["application_steps"]["value"];
 
+    $grant_type = get_type();
+
     $fleming_content = array(
         "css_filename" => get_css_filename(),
         "title" => get_raw_title(),
         "fields" => get_field_objects(),
         "nav" => get_nav_builder()
-            ->withMenuRoute('grants', get_type())
+            ->withMenuRoute('grants', $grant_type->post_name)
             ->withAdditionalBreadcrumb(get_raw_title())
             ->build(),
         "have_eligibility" => $have_eligibility,
@@ -37,7 +39,6 @@ function fleming_get_content() {
             true
         )
     );
-
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content'],
         $have_eligibility || $have_application_steps);
 
@@ -73,9 +74,62 @@ function fleming_get_content() {
         $post = entity_with_post_data_and_fields($post);
     }
 
+    if ($grant_type->post_name == 'country-grant' || $grant_type->post_name == 'regional-grant') {
+        add_latest_activity_supporting_content($fleming_content, $grant_type);
+    }
     return $fleming_content;
 }
 
+function get_type() {
+    return get_field_objects()['type']['value'];
+}
+
+function add_latest_activity_supporting_content(&$fleming_content, $grant_type) {
+    $post_id = get_post()->ID;
+    $latest_activity_posts = get_posts([
+        'post_type' => ['events', 'publications'],
+        'post_status' => 'publish',
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'numberposts' => 3,
+        'meta_query' => [
+            'relation' => 'OR',
+            array(
+                'key' => 'grants',
+                'value' => $post_id,
+                'compare' => '='
+            ),
+            array(
+                'key' => 'grants',
+                'value' => serialize(strval($post_id)),
+                'compare' => 'LIKE'
+            )
+        ]
+    ]);
+
+    if (!is_array($latest_activity_posts) || count($latest_activity_posts) == 0) {
+        return;
+    }
+    $latest_activity_with_data = array_map(function ($post) {
+        return get_post_data_and_fields($post->ID);
+    }, $latest_activity_posts);
+
+    $links = array_map(function ($activity) {
+        return [
+            'is_prominent' => false,
+            'post' => publication_with_post_data_and_fields($activity),
+            'description_override' => null
+        ];
+    }, $latest_activity_with_data);
+    $recent_activity_content = [
+        'acf_fc_layout' => 'links_to_other_posts',
+        'heading' => 'Latest Activity from ' . get_post()->post_title,
+        'links' => $links,
+        'max_per_row' => 'three-max'
+    ];
+    add_supporting_content($fleming_content, $recent_activity_content);
+    add_supporting_content($fleming_content, get_link_button(get_field_objects($grant_type->ID)['overview_page']['value'] . 'activity', 'View all'));
+}
 
 $template_name = pathinfo(__FILE__)['filename'];
 include __DIR__ . '/use-templates.php';

@@ -419,11 +419,11 @@
                 ]
             },
             {
-                "key": "field_5b0698416ae25",
-                "label": "Is Active",
-                "name": "is_active",
-                "type": "true_false",
-                "instructions": "Tick this box to indicate that this grant is currently \"Active\"",
+                "key": "field_5b324b018d83f",
+                "label": "Status",
+                "name": "status",
+                "type": "select",
+                "instructions": "",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -431,11 +431,21 @@
                     "class": "",
                     "id": ""
                 },
-                "message": "",
-                "default_value": 0,
+                "choices": [
+                    "Not active",
+                    "Scoping activities",
+                    "Request For Proposal published",
+                    "Proposals under review",
+                    "Approved",
+                    "Active"
+                ],
+                "default_value": [],
+                "allow_null": 0,
+                "multiple": 0,
                 "ui": 0,
-                "ui_on_text": "",
-                "ui_off_text": ""
+                "ajax": 0,
+                "return_format": "value",
+                "placeholder": ""
             }
         ],
         "location": [
