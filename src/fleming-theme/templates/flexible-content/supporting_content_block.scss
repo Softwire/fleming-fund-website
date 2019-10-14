@@ -1,0 +1,18 @@
+.upper-page-supporting-block {
+  @extend .supporting-content;
+  margin-left: -4em;
+  margin-right: -4em;
+  padding: 3em 4em;
+
+  > h3:first-child {
+    margin-top: 0;
+  }
+
+  > .prominent-button:last-child {
+    margin-bottom: 0;
+
+    a {
+      margin-bottom: 0;
+    }
+  }
+}
