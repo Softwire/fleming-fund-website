@@ -205,7 +205,7 @@ function grant_with_post_data_and_fields($grant) {
         }
 
         if ($grantType->post_title == 'Other Work') {
-            $grant['colour_scheme'] = 'dark-card';
+            $grant['colour_scheme'] = 'dark';
         }
     }
 

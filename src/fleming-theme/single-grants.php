@@ -75,7 +75,7 @@ function fleming_get_content() {
     }
 
     if ($grant_type->post_name == 'country-grant' || $grant_type->post_name == 'regional-grant') {
-        add_latest_activity_supporting_content($fleming_content, $grant_type);
+        add_latest_activity_to_flexible_content($fleming_content, $grant_type);
     }
     return $fleming_content;
 }
@@ -84,7 +84,7 @@ function get_type() {
     return get_field_objects()['type']['value'];
 }
 
-function add_latest_activity_supporting_content(&$fleming_content, $grant_type) {
+function add_latest_activity_to_flexible_content(&$fleming_content, $grant_type) {
     $post_id = get_post()->ID;
     $latest_activity_posts = get_posts([
         'post_type' => ['events', 'publications'],
@@ -122,13 +122,22 @@ function add_latest_activity_supporting_content(&$fleming_content, $grant_type) 
         ];
     }, $latest_activity_with_data);
     $recent_activity_content = [
-        'acf_fc_layout' => 'links_to_other_posts',
+        'acf_fc_layout' => 'latest_activity_block',
         'heading' => 'Latest Activity from ' . get_post()->post_title,
         'links' => $links,
-        'max_per_row' => 'three-max'
+        'max_per_row' => 'three-max',
+        'link_url' => get_field_objects($grant_type->ID)['overview_page']['value'] . 'activity'
     ];
-    add_supporting_content($fleming_content, $recent_activity_content);
-    add_supporting_content($fleming_content, get_link_button(get_field_objects($grant_type->ID)['overview_page']['value'] . 'activity', 'View all'));
+
+    $position_offset = 0;
+    if ($fleming_content['fields']['flexible_content']['value'][0]['acf_fc_layout'] === 'overview_text') {
+        if ($fleming_content['fields']['flexible_content']['value'][1]['acf_fc_layout'] === 'supporting_text_block') {
+            $position_offset = 2;
+        } else {
+            $position_offset = 1;
+        }
+    }
+    array_splice( $fleming_content['fields']['flexible_content']['value'], $position_offset, 0, [$recent_activity_content]);
 }
 
 $template_name = pathinfo(__FILE__)['filename'];
