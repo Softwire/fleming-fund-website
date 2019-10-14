@@ -34,10 +34,9 @@ function fleming_get_content() {
 }
 
 function get_case_studies_supporting_content(&$fleming_content) {
-    $cache_id = 'fellowship_case_studies_q';
+    $cache_id = 'fellowship_case_studies';
     $post_id = get_post()->ID;
     $fellowship_grant_type = get_grant_type_for_page($post_id);
-    $grant_type_name = $fellowship_grant_type->post_name;
 
     $content = get_transient($cache_id);
     if (!is_array($content)) {
