@@ -1,4 +1,11 @@
 {% if grant %}
+  {% if (grant.nextEvent and grant.nextEvent.apply_now_valid)  %}
+    {% set card_title = 'Apply now' %}
+  {% elseif grant.is_active %}
+    {% set card_title = 'View activity' %}
+  {% else %}
+    {% set card_title = 'Read more' %}
+  {% endif %}
   {% include 'cards/base.html' with {'card': {
     'decorated': true,
     'colour_scheme': grant.colour_scheme ?? 'base',
@@ -6,7 +13,7 @@
     'identifier': grant.identifier,
     'title': grant.data.post_title,
     'content': grant.overview,
-    'cta_title': (grant.nextEvent and grant.nextEvent.apply_now_valid) ? 'Apply now' : 'Read more',
+    'cta_title': card_title,
     'link_target': grant.permalink,
     'overview': (grant.fields.funds_available.value ? 'Budget: £' ~ grant.fields.funds_available.value|format_number ~ '\n' : '') ~
                 (grant.status_name ? 'Status: ' ~ grant.status_name : ''),

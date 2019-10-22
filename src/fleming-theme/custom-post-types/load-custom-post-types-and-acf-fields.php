@@ -156,4 +156,9 @@ function add_extra_content_to_index_of_post($content, $post) {
 }
 add_filter('relevanssi_content_to_index', 'add_extra_content_to_index_of_post', 10, 2);
 
+add_filter('acf/load_field/name=section', function($field) {
+    $field['value'] = $field['value'] || 'knowledge_resources';
+    return $field;
+});
+
 include __DIR__ . "/acf-validation.php";

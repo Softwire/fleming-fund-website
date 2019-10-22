@@ -243,7 +243,7 @@ function show_grant_numbers_for_page(&$fleming_content) {
                 'grant_type' => 'error'
             ];
         }
-        set_transient($cache_id, $grant_numbers, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
+        set_transient($cache_id, $grant_numbers, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
     }
 
     $fleming_content['total_number_of_grants'] = $grant_numbers['total_number_of_grants'];
@@ -278,7 +278,7 @@ function show_activity_for_page(&$fleming_content) {
             'links' => $links,
             'max_per_row' => 'three-max'
         ];
-        set_transient($cache_id, $recent_activity_content, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
+        set_transient($cache_id, $recent_activity_content, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
     }
 
     if ($recent_activity_content && count($recent_activity_content['links']) > 0) {
@@ -291,20 +291,58 @@ function get_activity_for_grant_type($grant_type) {
     return get_activity_for_grant_type_and_post_type($grant_type, null);
 }
 
+function get_news_events_meta_query() {
+    // Determines what appears on the news & events page and also what appears in "latest activity" sections.
+    $news_type   = get_page_by_path('news', 'OBJECT', 'publication_types');
+
+    return [
+            'relation' => 'OR',
+            [ // Absent "type" field implies the post is an event and should be included
+                'key' => 'type',
+                'compare' => 'NOT EXISTS'
+            ],
+            [ // Publications assigned to this page
+                'key' => 'section',
+                'value' => 'news-events',
+                'compare' => '='
+            ],
+            [ // Publications not assigned to a section yet, with type "news". Once live data has all been updated this clause can be removed
+                'relation' => 'AND',
+                [
+                    'key' => 'section',
+                    'compare' => 'NOT EXISTS'
+                ],
+                [
+                    'key' => 'type',
+                    'value' => $news_type->ID,
+                    'compare' => '='
+                ]
+            ]
+        ];
+}
+
+function get_news_events_query_args() {
+    return [
+        'post_type'  => ['events', 'publications'],
+        'meta_query' => get_news_events_meta_query()
+    ];
+}
+
 function get_activity_for_grant_type_and_post_type($grant_type, $activity_type) {
     if (!$activity_type) {
         $query_args = [
             'post_type'  => ['events', 'publications'],
             'post_status' => 'publish',
-            'orderby' => 'date',
+            'orderby' => 'publication_date',
             'order' => 'DESC',
-            'numberposts' => -1
+            'numberposts' => -1,
+            'meta_query' => get_news_events_meta_query()
         ];
     } elseif ($activity_type == 'event') {
         $query_args = [
             'post_type'  => ['events'],
             'post_status' => 'publish',
-            'orderby' => 'date',
+            'orderby' => 'publication_date',
             'order' => 'DESC',
             'numberposts' => -1,
         ];
@@ -321,15 +359,17 @@ function get_activity_for_grant_type_and_post_type($grant_type, $activity_type) 
         $query_args = [
             'post_type'  => ['publications'],
             'post_status' => 'publish',
-            'orderby' => 'date',
+            'orderby' => 'publication_date',
             'order' => 'DESC',
             'numberposts' => -1,
             'meta_query' => [
+                'relation' => 'AND',
                 [
                     'key' => 'type',
                     'value' => $publication_types[0]->ID,
                     'compare' => '='
-                ]
+                ],
+                get_news_events_meta_query()
             ]
         ];
     }
@@ -381,6 +421,12 @@ function get_full_grants($grant_type_id) {
 }
 
 function get_upcoming_or_else_most_recent_grants() {
+    $cache_id = "upcoming_or_recent_grants";
+    $result = get_transient($cache_id);
+    if (is_array($result)) {
+        return $result;
+    }
+
     $full_grants = get_full_grants(null);
     $showing_future_grants = false;
 
@@ -395,10 +441,14 @@ function get_upcoming_or_else_most_recent_grants() {
         sort_past_grants($full_grants);
     }
 
-    return [
+    $result = [
         'grants' => array_slice($full_grants, 0, 2),
         'heading' => $showing_future_grants ? 'Current and Upcoming Opportunities' : 'Recent Opportunities'
     ];
+
+    set_transient($cache_id, $result, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
+
+    return $result;
 }
 
 function get_link_button($url, $text = 'View More') {

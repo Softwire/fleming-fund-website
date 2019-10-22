@@ -43,7 +43,7 @@ function get_current_grants_as_content() {
     if (!is_array($grants_content)) {
         $current_grants = get_upcoming_or_else_most_recent_grants();
         $grants_content = get_grants_as_content($current_grants['grants'], $current_grants['heading']);
-        set_transient($cache_id, $grants_content, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
+        set_transient($cache_id, $grants_content, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
     }
     return $grants_content;
 }

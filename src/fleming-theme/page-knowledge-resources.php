@@ -28,16 +28,29 @@ function fleming_get_content() {
         'post_type' => 'publications',
         'paged' => $current_page,
         'meta_query' => array(
+            'relation' => 'OR',
             array(
-                'key' => 'type',
-                'value' => $newsType->ID,
-                'compare' => '!='
+                'key' => 'section',
+                'value' => 'knowledge-resources',
+                'compare' => '='
+            ),
+            array(
+                'relation' => 'AND',
+                array( // Publications not assigned to a section yet, with type other than "news". Once live data has all been updated this clause can be removed
+                    'key' => 'section',
+                    'compare' => 'NOT EXISTS'
+                ),
+                array(
+                    'key' => 'type',
+                    'value' => $newsType->ID,
+                    'compare' => '!='
+                )
             )
         )
     ];
 
     // filter
-    $publicationType = get_page_by_path($_GET["type"], 'OBJECT', 'publication_types');
+    $publicationType = isset($_GET["type"]) ? get_page_by_path($_GET["type"], 'OBJECT', 'publication_types') : NULL;
     if ($publicationType != NULL && $publicationType->post_status == 'publish') {
         $fleming_content['selected_publication_type'] = $publicationType;
 

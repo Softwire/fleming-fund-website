@@ -89,7 +89,7 @@ function add_latest_activity_to_flexible_content(&$fleming_content, $grant_type)
     $latest_activity_posts = get_posts([
         'post_type' => ['events', 'publications'],
         'post_status' => 'publish',
-        'orderby' => 'date',
+        'orderby' => 'publication_date',
         'order' => 'DESC',
         'numberposts' => 3,
         'meta_query' => [

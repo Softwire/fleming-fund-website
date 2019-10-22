@@ -6,7 +6,7 @@
             {
                 "key": "field_5b068a6ee16d6",
                 "label": "Date",
-                "name": "date",
+                "name": "publication_date",
                 "type": "date_picker",
                 "instructions": "",
                 "required": 0,

@@ -204,9 +204,11 @@ function grant_with_post_data_and_fields($grant) {
             }
         }
 
-        if ($grantType->post_title == 'Other Work') {
+        if ($grantType->post_title == 'Other Projects') {
             $grant['colour_scheme'] = 'dark';
         }
+
+        $grant['is_active'] = grant_is_active($grant);
     }
 
     $grant['identifier'] = $identifier;

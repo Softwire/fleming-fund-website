@@ -100,7 +100,7 @@
                 "label": "Type",
                 "name": "type",
                 "type": "post_object",
-                "instructions": "",
+                "instructions": "The activity page lets the user filter results by this type. It is also displayed on each publication card",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -116,6 +116,31 @@
                 "multiple": 0,
                 "return_format": "object",
                 "ui": 1
+            },
+            {
+                "key": "field_5b06a1224fb0f",
+                "label": "Section",
+                "name": "section",
+                "type": "select",
+                "instructions": "Which page should this post appear on?",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "knowledge-resources": "Knowledge & Resources",
+                    "news-events": "News & Events"
+                },
+                "default_value": "knowledge-resources",
+                "allow_null": 0,
+                "multiple": 0,
+                "ui": 0,
+                "ajax": 0,
+                "return_format": "value",
+                "placeholder": ""
             },
             {
                 "key": "field_5b06a1484fa9f",

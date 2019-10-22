@@ -52,7 +52,7 @@ function get_case_studies_supporting_content(&$fleming_content) {
 
         $case_studies_query_args = [
             'post_type'  => ['publications'],
-            'orderby' => 'date',
+            'orderby' => 'publication_date',
             'order' => 'DESC',
             'meta_query' => array(
                 array(
@@ -78,7 +78,7 @@ function get_case_studies_supporting_content(&$fleming_content) {
             'links' => $links,
             'max_per_row' => 'three-max'
         ];
-        set_transient($cache_id, $content, min(MAX_CACHE_SECONDS, HOUR_IN_SECONDS / 2));
+        set_transient($cache_id, $content, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
     }
 
     if ($content && count($content['links']) > 0) {
