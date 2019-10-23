@@ -4,49 +4,29 @@
 
 {% include 'page-elements/in-page-links.html' %}
 
-{% if fields.status.value > 2 %}
-<div class="grant-timeline">
-  {% include 'page-elements/status-box.html' with {
-  'level': 1,
-  'current_status': fields.status.value,
-  'status': 'Scoping Activities'
-  } %}
-  {% include 'page-elements/status-box.html' with {
-  'level': 2,
-  'current_status': fields.status.value,
-  'status': 'Request For Proposal Published'
-  } %}
-  {% include 'page-elements/status-box.html' with {
-  'level': 3,
-  'current_status': fields.status.value,
-  'status': 'Proposals Under Review'
-  } %}
-  {% include 'page-elements/status-box.html' with {
-  'level': 4,
-  'current_status': fields.status.value,
-  'status': 'Approved'
-  } %}
-  {% include 'page-elements/status-box.html' with {
-  'level': 5,
-  'current_status': fields.status.value,
-  'status': 'Active',
-  'last': true
-  } %}
-</div>
-{% endif %}
-
-{% if fields.dates.value is not empty and fields.status.value <= 2 %}
-<div class="grant-timeline">
-  {% for date in fields.dates.value %}
-    {% include 'page-elements/status-box.html' with {
-      'level': loop.index,
-      'current_status': timeline_level,
-      'status': date.event_name,
-      'date': date.date,
-      'last': loop.last
-    } %}
-  {% endfor %}
-</div>
+{% if fields.status and fields.status.value == 1 or fields.status.value >= 3 %}
+  <div class="grant-timeline">
+    {% for i in range(1,5) %}
+      {% include 'page-elements/status-box.html' with {
+        'level': i,
+        'current_status': fields.status.value,
+        'status': fields.status.choices[i],
+        'last': loop.last
+      } %}
+    {% endfor %}
+  </div>
+{% elseif fields.dates.value is not empty %}
+  <div class="grant-timeline">
+    {% for date in fields.dates.value %}
+      {% include 'page-elements/status-box.html' with {
+        'level': loop.index,
+        'current_status': timeline_level,
+        'status': date.event_name,
+        'date': date.date,
+        'last': loop.last
+      } %}
+    {% endfor %}
+  </div>
 {% endif %}
 
 {% embed 'flexible_content.twig' with { 'flexible_content': fields.flexible_content.value } %}

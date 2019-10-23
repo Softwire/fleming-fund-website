@@ -251,10 +251,16 @@ function grant_with_post_data_and_fields($grant) {
     $grant['deadlineEvent'] = $deadlineEvent;
     $statusEvent = $nextEvent ?? $finalEvent;
 
-    if ($statusEvent) {
-        $grant['status'] = $statusEvent['event_name'] . ' ' . $statusEvent['date'];
+
+    if (isset($grant['fields']['status'])) {
+        $status_field = $grant['fields']['status'];
+        $status_index = $status_field['value'];
+        $status_string_value = $status_field['choices'][$status_index];
+        $grant['status_name'] = $status_string_value;
+    } elseif ($statusEvent) {
         $grant['status_name'] = $statusEvent['event_name'];
     }
+
     if ($deadlineEvent) {
         $grant['deadlineStatus'] = $deadlineEvent['event_name'] . ' ' . $deadlineEvent['date'];
     }

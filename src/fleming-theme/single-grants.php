@@ -45,6 +45,7 @@ function fleming_get_content() {
             true
         )
     );
+
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content'],
         $have_eligibility || $have_application_steps);
 
