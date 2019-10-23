@@ -15,6 +15,12 @@ require_once 'query-utilities.php';
  */
 
 function fleming_get_content() {
+    if (isset($_GET["ajax"])) {
+        return [
+            "content_block" => get_latest_activity_as_content_block()
+        ];
+    }
+
     $fields = get_field_objects();
 
     $have_eligibility = $fields["criteria"]["value"]
@@ -84,51 +90,7 @@ function get_type() {
     return get_field_objects()['type']['value'];
 }
 
-function add_latest_activity_to_flexible_content(&$fleming_content, $grant_type) {
-    $post_id = get_post()->ID;
-    $latest_activity_posts = get_posts([
-        'post_type' => ['events', 'publications'],
-        'post_status' => 'publish',
-        'orderby' => 'publication_date',
-        'order' => 'DESC',
-        'numberposts' => 3,
-        'meta_query' => [
-            'relation' => 'OR',
-            array(
-                'key' => 'grants',
-                'value' => $post_id,
-                'compare' => '='
-            ),
-            array(
-                'key' => 'grants',
-                'value' => serialize(strval($post_id)),
-                'compare' => 'LIKE'
-            )
-        ]
-    ]);
-
-    if (!is_array($latest_activity_posts) || count($latest_activity_posts) == 0) {
-        return;
-    }
-    $latest_activity_with_data = array_map(function ($post) {
-        return get_post_data_and_fields($post->ID);
-    }, $latest_activity_posts);
-
-    $links = array_map(function ($activity) {
-        return [
-            'is_prominent' => false,
-            'post' => publication_with_post_data_and_fields($activity),
-            'description_override' => null
-        ];
-    }, $latest_activity_with_data);
-    $recent_activity_content = [
-        'acf_fc_layout' => 'latest_activity_block',
-        'heading' => 'Latest Activity from ' . get_post()->post_title,
-        'links' => $links,
-        'max_per_row' => 'three-max',
-        'link_url' => get_field_objects($grant_type->ID)['overview_page']['value'] . 'activity'
-    ];
-
+function add_latest_activity_to_flexible_content(&$fleming_content) {
     $position_offset = 0;
     if ($fleming_content['fields']['flexible_content']['value'][0]['acf_fc_layout'] === 'overview_text') {
         if ($fleming_content['fields']['flexible_content']['value'][1]['acf_fc_layout'] === 'supporting_text_block') {
@@ -137,8 +99,59 @@ function add_latest_activity_to_flexible_content(&$fleming_content, $grant_type)
             $position_offset = 1;
         }
     }
-    array_splice( $fleming_content['fields']['flexible_content']['value'], $position_offset, 0, [$recent_activity_content]);
+    array_splice( $fleming_content['fields']['flexible_content']['value'], $position_offset, 0, [get_latest_activity_as_content_block()]);
+}
+
+function get_latest_activity_as_content_block() {
+    $number_of_results_per_batch = 3;
+    $grant_id = get_post()->ID;
+    $selected_activity_type = isset($_GET["type"]) ? $_GET["type"] : null;
+    $max_number_of_results = isset($_GET["max_number_of_results"]) ? $_GET["max_number_of_results"] : $number_of_results_per_batch;
+    $ajax_load_more_results_counter = isset($_GET["load_more_activities"]) ? $_GET["load_more_activities"] : 0;
+    $max_number_of_results = $max_number_of_results + $ajax_load_more_results_counter * $number_of_results_per_batch;
+    $latest_activity_posts = get_activity_for_grant_type_and_post_type(null, $selected_activity_type, $grant_id);
+
+    $links = array_map(function ($activity) {
+        return [
+            'is_prominent' => false,
+            'post' => $activity,
+            'description_override' => null
+        ];
+    }, array_slice($latest_activity_posts, 0, $max_number_of_results));
+
+    $next_max_number_of_results = $max_number_of_results + $number_of_results_per_batch;
+    $load_more_url = count($latest_activity_posts) > $max_number_of_results ?
+        "?type=$selected_activity_type&max_number_of_results=$next_max_number_of_results" :
+        null;
+
+    return [
+        'acf_fc_layout' => 'single_grant_latest_activity',
+        'heading' => 'Latest Activity from ' . get_post()->post_title,
+        'links' => $links,
+        'max_per_row' => 'three-max',
+        'activity_types' => get_activity_type_options(),
+        'selected_activity_type' => $selected_activity_type,
+        'load_more_url' => $load_more_url
+    ];
+}
+
+function get_activity_type_options() {
+    $activity_types = get_posts(array('post_type' => 'publication_types', 'numberposts' => -1));
+    $activity_types = array_map(function($activity_type) {
+        return [
+            'query_string' => $activity_type->post_name,
+            'display_string' => $activity_type->post_title
+        ];
+    }, $activity_types);
+    $activity_types[] = [
+        'query_string' => 'event',
+        'display_string' => 'Event'
+    ];
+    return $activity_types;
 }
 
 $template_name = pathinfo(__FILE__)['filename'];
+if (isset($_GET['ajax'])) {
+    $template_name = 'ajax-single-grant-latest-activity';
+}
 include __DIR__ . '/use-templates.php';

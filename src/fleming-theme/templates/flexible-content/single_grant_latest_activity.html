@@ -1,0 +1,5 @@
+{% if content_block.selected_activity_type or content_block.links is not empty %}
+  <div class="upper-page-supporting-block single-grant-latest-activity">
+    {% include 'page-types/ajax-single-grant-latest-activity.html' %}
+  </div>
+{% endif %}

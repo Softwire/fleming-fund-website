@@ -73,7 +73,7 @@ function fleming_get_content()
     ]));
     $fleming_content['types'][] = [
         'query_string' => 'event',
-        'display_string' => 'Events'
+        'display_string' => 'Event'
     ];
 
     return $fleming_content;

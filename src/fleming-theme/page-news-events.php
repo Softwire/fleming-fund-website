@@ -32,8 +32,14 @@ function fleming_get_content()
 
     $current_page = get_query_var('paged') ?: 1;
 
-    $query_args = get_news_events_query_args();
-    $query_args['paged'] = $current_page;
+    $query_args = [
+        'post_type'  => ['events', 'publications'],
+        'post_status' => 'publish',
+        'orderby' => 'publication_date',
+        'order' => 'DESC',
+        'paged' => $current_page,
+        'meta_query' => get_news_events_meta_query()
+    ];
     $country = null;
     if (isset($_GET["country"])) {
         $country = get_page_by_path($_GET["country"], 'OBJECT', 'countries');

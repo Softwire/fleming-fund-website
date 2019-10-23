@@ -296,39 +296,32 @@ function get_news_events_meta_query() {
     $news_type   = get_page_by_path('news', 'OBJECT', 'publication_types');
 
     return [
-            'relation' => 'OR',
-            [ // Absent "type" field implies the post is an event and should be included
-                'key' => 'type',
+        'relation' => 'OR',
+        [ // Absent "type" field implies the post is an event and should be included
+            'key' => 'type',
+            'compare' => 'NOT EXISTS'
+        ],
+        [ // Publications assigned to this page
+            'key' => 'section',
+            'value' => 'news-events',
+            'compare' => '='
+        ],
+        [ // Publications not assigned to a section yet, with type "news". Once live data has all been updated this clause can be removed
+            'relation' => 'AND',
+            [
+                'key' => 'section',
                 'compare' => 'NOT EXISTS'
             ],
-            [ // Publications assigned to this page
-                'key' => 'section',
-                'value' => 'news-events',
+            [
+                'key' => 'type',
+                'value' => $news_type->ID,
                 'compare' => '='
-            ],
-            [ // Publications not assigned to a section yet, with type "news". Once live data has all been updated this clause can be removed
-                'relation' => 'AND',
-                [
-                    'key' => 'section',
-                    'compare' => 'NOT EXISTS'
-                ],
-                [
-                    'key' => 'type',
-                    'value' => $news_type->ID,
-                    'compare' => '='
-                ]
             ]
-        ];
-}
-
-function get_news_events_query_args() {
-    return [
-        'post_type'  => ['events', 'publications'],
-        'meta_query' => get_news_events_meta_query()
+        ]
     ];
 }
 
-function get_activity_for_grant_type_and_post_type($grant_type, $activity_type) {
+function get_activity_for_grant_type_and_post_type($grant_type = null, $activity_type = null, $grant_id = null) {
     if (!$activity_type) {
         $query_args = [
             'post_type'  => ['events', 'publications'],
@@ -345,6 +338,7 @@ function get_activity_for_grant_type_and_post_type($grant_type, $activity_type) 
             'orderby' => 'publication_date',
             'order' => 'DESC',
             'numberposts' => -1,
+            'meta_query' => get_news_events_meta_query()
         ];
     } else {
         $publication_types = get_posts([
@@ -373,12 +367,36 @@ function get_activity_for_grant_type_and_post_type($grant_type, $activity_type) 
             ]
         ];
     }
-    $activity_posts = get_posts($query_args);
-    $activity_posts_with_fields = array_map(function($post) {
+
+    if ($grant_id) {
+        $query_args['meta_query'] = [
+            'relation' => 'AND',
+            [
+                'relation' => 'OR',
+                [
+                    'key' => 'grants',
+                    'value' => $grant_id,
+                    'compare' => '='
+                ],
+                [
+                    'key' => 'grants',
+                    'value' => serialize(strval($grant_id)),
+                    'compare' => 'LIKE'
+                ]
+            ],
+            $query_args['meta_query']
+        ];
+    }
+
+    $activity_posts = array_map(function($post) {
         return get_post_data_and_fields($post->ID);
-    }, $activity_posts);
-    $results_filtered_by_grant_type = filter_publications_or_events_by_grant_type($activity_posts_with_fields, $grant_type);
-    return array_map('publication_with_post_data_and_fields', $results_filtered_by_grant_type);
+    }, get_posts($query_args));
+
+    if ($grant_type) {
+        $activity_posts = filter_publications_or_events_by_grant_type($activity_posts, $grant_type);
+    }
+
+    return array_map('publication_with_post_data_and_fields', $activity_posts);
 }
 
 function filter_publications_or_events_by_grant_type($publications_or_events, $grant_type) {

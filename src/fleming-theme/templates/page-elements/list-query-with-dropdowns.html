@@ -4,16 +4,16 @@
     }
 
     $(function () {
-        var loadMoreResultsCounter = 0;
+        var loadMoreResultsCounter = 1;
 
         $('.filter-dropdowns-container .apply-filter-button').hide();
         $('.filter-dropdowns-container select').on('change', updateFilter);
 
         $('.load-more-button').click(function (e) {
-            loadMoreResultsCounter++;
-
             $.get(window.location.href, { load_more: loadMoreResultsCounter }, function(data) {
                 $('.list-query-result-container').html(data);
+
+                loadMoreResultsCounter++;
             });
 
             e.preventDefault();

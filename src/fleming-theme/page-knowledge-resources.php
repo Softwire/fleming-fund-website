@@ -35,8 +35,9 @@ function fleming_get_content() {
                 'compare' => '='
             ),
             array(
+                // Publications not assigned to a section yet, with type other than "news". Once live data has all been updated this clause can be removed
                 'relation' => 'AND',
-                array( // Publications not assigned to a section yet, with type other than "news". Once live data has all been updated this clause can be removed
+                array(
                     'key' => 'section',
                     'compare' => 'NOT EXISTS'
                 ),
@@ -49,40 +50,16 @@ function fleming_get_content() {
         )
     ];
 
-    // filter
-    $publicationType = isset($_GET["type"]) ? get_page_by_path($_GET["type"], 'OBJECT', 'publication_types') : NULL;
-    if ($publicationType != NULL && $publicationType->post_status == 'publish') {
-        $fleming_content['selected_publication_type'] = $publicationType;
-
-        $query_args["meta_query"] = array(
-            'relation' => 'AND',
-            $query_args["meta_query"],
-            array(
-                'key'   => 'type',
-                'value' => $publicationType->ID
-            )
-        );
-    }
-
-    if ($current_page == 1 && empty($fleming_content['selected_publication_type'])) {
+    if ($current_page == 1) {
         process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
     }
 
     $query = new WP_Query($query_args);
     $query_result = get_query_results($query);
-
     foreach($query_result['posts'] as &$publication) {
         $publication = publication_with_post_data_and_fields($publication);
     }
-
     $fleming_content['query_result'] = $query_result;
-
-    $fleming_content['publication_types'] = get_posts(array('post_type' => 'publication_types', 'numberposts' => -1));
-    foreach($fleming_content['publication_types'] as $index => $publication_type) {
-        if ($publication_type->ID == $newsType->ID) {
-            unset($fleming_content['publication_types'][$index]);
-        }
-    }
 
     return $fleming_content;
 }

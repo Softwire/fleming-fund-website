@@ -204,7 +204,7 @@ function grant_with_post_data_and_fields($grant) {
             }
         }
 
-        if ($grantType->post_title == 'Other Projects') {
+        if ($grantType->post_title == 'Other Project') {
             $grant['colour_scheme'] = 'dark';
         }
 

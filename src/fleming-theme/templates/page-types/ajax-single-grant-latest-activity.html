@@ -1,0 +1,55 @@
+<script>
+    $(function () {
+        $('.activity-filter-options a').click(function(e) {
+            var href = this.href;
+
+            $.get(href, { ajax: true }, function(data) {
+                $('.single-grant-latest-activity').html(data);
+            });
+
+            e.preventDefault();
+            return false;
+        });
+
+        var loadMoreResultsCounter = 1;
+        $('.load-more-button').click(function (e) {
+            $.get(window.location.href, { ajax: true, load_more_activities: loadMoreResultsCounter }, function(data) {
+                $('.single-grant-latest-activity').html(data);
+
+                loadMoreResultsCounter++;
+            });
+
+            e.preventDefault();
+            return false;
+        });
+    });
+</script>
+
+<div class="activity-types-filter">
+    <span class="show-me">Show me:</span>
+    <ul class="activity-filter-options">
+        {% include 'nav/link-item-text.html' with {'link': {
+        'title': 'All',
+        'target': '?type=',
+        'active': content_block.selected_activity_type == null
+        }} %}
+        {% for type in content_block.activity_types %}
+        {% set type_url = '?type=' ~ type.query_string %}
+        {% include 'nav/link-item-text.html' with {'link': {
+        'title': type.display_string,
+        'target': type_url,
+        'active': content_block.selected_activity_type == type.query_string
+        }} %}
+        {% endfor %}
+    </ul>
+</div>
+<div class="activity_cards_container">
+    {% if content_block.links is empty %}
+    <p> No results </p>
+    {% else %}
+    {% include 'flexible-content/links_to_other_posts.html' %}
+    {% endif %}
+</div>
+{% if content_block.load_more_url %}
+    {% include 'flexible-content/link_button.html' with { content_block: { link: { url: content_block.load_more_url, extra_class: 'load-more-button' }, button_text: 'Load More', centred: true } } %}
+{% endif %}

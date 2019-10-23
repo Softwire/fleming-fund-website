@@ -122,7 +122,7 @@
                 "label": "Section",
                 "name": "section",
                 "type": "select",
-                "instructions": "Which page should this post appear on?",
+                "instructions": "Where should this post appear?",
                 "required": 1,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -132,7 +132,7 @@
                 },
                 "choices": {
                     "knowledge-resources": "Knowledge & Resources",
-                    "news-events": "News & Events"
+                    "news-events": "News & Events / Latest Activity"
                 },
                 "default_value": "knowledge-resources",
                 "allow_null": 0,

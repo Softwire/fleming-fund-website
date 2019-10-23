@@ -5,25 +5,6 @@
 
 {% include 'flexible_content.twig' with { 'flexible_content': fields.flexible_content.value } %}
 
-<div class="publications-filter">
-  <span class="show-me">Show me:</span>
-  <ul>
-    {% include 'nav/link-item-text.html' with {'link': {
-      'title': 'All',
-      'target': nav.publicationsLink.target,
-      'active': selected_publication_type.ID == null
-    }} %}
-    {% for publication_type in publication_types %}
-      {% set type_url = nav.publicationsLink.target ~ '?type=' ~ publication_type.post_name %}
-      {% include 'nav/link-item-text.html' with {'link': {
-        'title': publication_type.post_title,
-        'target': type_url,
-        'active': selected_publication_type.ID == publication_type.ID
-      }} %}
-    {% endfor %}
-  </ul>
-</div>
-
 {% embed 'layout/supporting-content.html' with {'tight': true} %}
   {% block content %}
     {% include 'page-elements/list-query-result.html' %}

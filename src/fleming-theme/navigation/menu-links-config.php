@@ -41,13 +41,13 @@ class MenuLinksConfig
             'target' => '/grants-funding/',
 
             'children' => [
-                'regional-grant' => [
-                    'title' => 'Regional Grants',
-                    'target' => '/grants-funding/regional-grants/',
-                ],
                 'country-grant' => [
                     'title' => 'Country Grants',
                     'target' => '/grants-funding/country-grants/',
+                ],
+                'regional-grant' => [
+                    'title' => 'Regional Grants',
+                    'target' => '/grants-funding/regional-grants/',
                 ],
                 'fellowship' => [
                     'title' => 'Professional Fellowships',
