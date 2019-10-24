@@ -73,6 +73,7 @@ $tick-size: 25px;
     padding-bottom: 0.9em;
     overflow: hidden;
     display: block;
+    min-height: 2.5em;
   }
 
   p {
@@ -102,7 +103,7 @@ $tick-size: 25px;
     width: 1px;
     height: 1px;
     position: absolute;
-    top: 50%;
+    top: calc(50% - 9px);
     right: 0;
     background: #fff;
 
