@@ -5,18 +5,25 @@
 
     $(function () {
         var loadMoreResultsCounter = 1;
+        var loading = false;
 
         $('.filter-dropdowns-container .apply-filter-button').hide();
         $('.filter-dropdowns-container select').on('change', updateFilter);
 
         $('.load-more-button').click(function (e) {
-            $.get(window.location.href, { load_more: loadMoreResultsCounter }, function(data) {
-                $('.list-query-result-container').html(data);
-
-                loadMoreResultsCounter++;
-            });
-
             e.preventDefault();
+
+            if (!loading) {
+                loading = true;
+
+                $.get(window.location.href, { load_more: loadMoreResultsCounter }, function(data) {
+                    $('.list-query-result-container').html(data);
+
+                    loadMoreResultsCounter++;
+                    loading = false;
+                });
+            }
+
             return false;
         });
     });

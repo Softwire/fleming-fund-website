@@ -420,10 +420,10 @@
             },
             {
                 "key": "field_5b324b018d83f",
-                "label": "Status",
+                "label": "Status - COUNTRY AND REGIONAL",
                 "name": "status",
                 "type": "select",
-                "instructions": "",
+                "instructions": "This is used by Country and Regional grants, shown on the grant card and as a timeline on the individual grant page. If the status is \"RFP published\" then the grant page timeline shows the above dates instead",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -432,12 +432,40 @@
                     "id": ""
                 },
                 "choices": [
-                    "Not active",
+                    "None",
                     "Scoping activities",
                     "Request For Proposal published",
                     "Proposals under review",
                     "Approved",
                     "Active"
+                ],
+                "default_value": [],
+                "allow_null": 0,
+                "multiple": 0,
+                "ui": 0,
+                "ajax": 0,
+                "return_format": "value",
+                "placeholder": ""
+            },
+            {
+                "key": "field_5b324b018e38b",
+                "label": "Status - OTHER PROJECT",
+                "name": "status_other_project",
+                "type": "select",
+                "instructions": "This is used by Country and Regional grants, shown on the grant card and as a timeline on the individual project page",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": [
+                    "None",
+                    "Scoping Activities",
+                    "Project Design",
+                    "Project Active",
+                    "Project Complete"
                 ],
                 "default_value": [],
                 "allow_null": 0,

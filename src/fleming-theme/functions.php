@@ -252,11 +252,10 @@ function grant_with_post_data_and_fields($grant) {
     $statusEvent = $nextEvent ?? $finalEvent;
 
 
-    if (isset($grant['fields']['status'])) {
-        $status_field = $grant['fields']['status'];
-        $status_index = $status_field['value'];
-        $status_string_value = $status_field['choices'][$status_index];
-        $grant['status_name'] = $status_string_value;
+    if (isset($grant['fields']['status']) && $grant['fields']['status']['value'] != 0) {
+        $grant['status_name'] = get_string_from_simple_select_field($grant['fields']['status']);
+    } elseif (isset($grant['fields']['status_other_project']) && $grant['fields']['status_other_project']['value'] != 0) {
+        $grant['status_name'] = get_string_from_simple_select_field($grant['fields']['status_other_project']);
     } elseif ($statusEvent) {
         $grant['status_name'] = $statusEvent['event_name'];
     }
@@ -272,13 +271,20 @@ function grant_with_post_data_and_fields($grant) {
     return $grant;
 }
 
+function get_string_from_simple_select_field($select_field) {
+    $index = $select_field['value'];
+    $string_value = $select_field['choices'][$index];
+    return $string_value;
+}
+
 function grant_deadline_is_in_future($grant) {
     $today = mktime(0, 0, 0);
     return isset($grant['deadlineEvent']) && $grant['deadlineEvent']['timestamp'] >= $today;
 }
 
 function grant_is_active($grant) {
-    return isset($grant['fields']['status']) && $grant['fields']['status']['value'] == 5;
+    return (isset($grant['fields']['status']) && $grant['fields']['status']['value'] == 5) ||
+        (isset($grant['fields']['status_other_project']) && $grant['fields']['status_other_project']['value'] == 3);
 }
 
 function grant_is_open($grant) {

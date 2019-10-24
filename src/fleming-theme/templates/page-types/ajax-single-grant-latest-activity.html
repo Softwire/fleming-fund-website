@@ -1,25 +1,37 @@
 <script>
     $(function () {
+        var loading = false;
+        var loadMoreResultsCounter = 1;
+
         $('.activity-filter-options a').click(function(e) {
-            var href = this.href;
-
-            $.get(href, { ajax: true }, function(data) {
-                $('.single-grant-latest-activity').html(data);
-            });
-
             e.preventDefault();
+
+            if (!loading) {
+                loading = true;
+                var href = this.href;
+
+                $.get(href, { ajax: true }, function(data) {
+                    $('.single-grant-latest-activity').html(data);
+                    loading = false;
+                    loadMoreResultsCounter = 1;
+                });
+            }
+
             return false;
         });
 
-        var loadMoreResultsCounter = 1;
         $('.load-more-button').click(function (e) {
-            $.get(window.location.href, { ajax: true, load_more_activities: loadMoreResultsCounter }, function(data) {
-                $('.single-grant-latest-activity').html(data);
-
-                loadMoreResultsCounter++;
-            });
-
             e.preventDefault();
+
+            if (!loading) {
+                loading = true;
+                $.get(window.location.href, { ajax: true, load_more_activities: loadMoreResultsCounter }, function(data) {
+                    $('.single-grant-latest-activity').html(data);
+                    loading = false;
+                    loadMoreResultsCounter++;
+                });
+            }
+
             return false;
         });
     });
