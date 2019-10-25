@@ -452,7 +452,7 @@
                 "label": "Status - OTHER PROJECT",
                 "name": "status_other_project",
                 "type": "select",
-                "instructions": "This is used by Country and Regional grants, shown on the grant card and as a timeline on the individual project page",
+                "instructions": "This is used by Other Projects, shown on the grant card and as a timeline on the individual project page",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
