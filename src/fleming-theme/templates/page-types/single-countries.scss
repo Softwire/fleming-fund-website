@@ -92,7 +92,7 @@ $tick-size: 25px;
 
     svg {
       position: absolute;
-      top: 50%;
+      top: calc(50% - 9px);;
       fill: #fff;
       width: $tick-size;
       height: $tick-size;
@@ -103,7 +103,7 @@ $tick-size: 25px;
     width: 1px;
     height: 1px;
     position: absolute;
-    top: calc(50% - 9px);
+    top: 50%;
     right: 0;
     background: #fff;
 

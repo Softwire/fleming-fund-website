@@ -96,7 +96,7 @@ function process_flexible_content(&$fields, &$content, $force_in_page_links = fa
                     }
                 }
             } elseif ($type == 'feature_case_study_block') {
-                $content_block['publication'] = get_post_data_and_fields($content_block['publication']->ID);
+                $content_block['publication'] = publication_with_post_data_and_fields(get_post_data_and_fields($content_block['publication']->ID));
             }
         }
         $fields["fields"]["supporting_content"]["value"] = split_supporting_content($content['value']);
@@ -171,7 +171,6 @@ function grant_with_post_data_and_fields($grant) {
     } else {
         $identifier = 'Grant';
     }
-    $grant['colour_scheme'] = 'base';
 
     if (is_object($grantType)) {
         $countries = $grant['fields']['countries']['value'];
@@ -186,8 +185,8 @@ function grant_with_post_data_and_fields($grant) {
                     $regions
                 ));
             }
-            if ($regionCount == 1 && !$grant['colour_scheme']) {
-                $grant['colour_scheme'] = $grant['colour_scheme'] || region_slug_to_colour_scheme_name($regions[0]->post_name);
+            if ($regionCount == 1 && !!isset($grant['colour_scheme'])) {
+                $grant['colour_scheme'] = region_slug_to_colour_scheme_name($regions[0]->post_name);
             }
         } else {
             $countryTitles = [];
@@ -199,7 +198,7 @@ function grant_with_post_data_and_fields($grant) {
             }
             $identifier .= ' › '.implode(' | ', $countryTitles);
             $associatedRegions = array_unique($associatedRegions);
-            if (count($associatedRegions) == 1 && !$grant['colour_scheme']) {
+            if (count($associatedRegions) == 1 && !isset($grant['colour_scheme'])) {
                 $grant['colour_scheme'] = region_slug_to_colour_scheme_name($associatedRegions[0]);
             }
         }
@@ -211,6 +210,9 @@ function grant_with_post_data_and_fields($grant) {
         $grant['is_active'] = grant_is_active($grant);
     }
 
+    if (!isset($grant['colour_scheme'])) {
+        $grant['colour_scheme'] = 'base';
+    }
     $grant['identifier'] = $identifier;
 
     $events = $grant['fields']['dates']['value'];
