@@ -81,7 +81,7 @@ function fleming_get_content() {
         $post = entity_with_post_data_and_fields($post);
     }
 
-    if ($grant_type->post_name == 'country-grant' || $grant_type->post_name == 'regional-grant') {
+    if ($grant_type->post_name != 'fellowship') {
         add_latest_activity_to_flexible_content($fleming_content, $grant_type);
     }
     return $fleming_content;

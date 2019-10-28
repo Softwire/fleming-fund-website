@@ -401,7 +401,7 @@ function get_activity_for_grant_type_and_post_type($grant_type = null, $activity
 
 function filter_publications_or_events_by_grant_type($publications_or_events, $grant_type) {
     return array_filter($publications_or_events, function($activity) use ($grant_type) {
-        if (!isset($activity['fields']['grants'])) {
+        if (!isset($activity['fields']['grants']) || !isset($activity['fields']['grants']['value']) || !is_array($activity['fields']['grants']['value'])) {
             return false;
         }
         $activity_grants = $activity['fields']['grants']['value'];
