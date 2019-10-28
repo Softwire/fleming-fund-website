@@ -120,7 +120,7 @@
             {
                 "key": "field_5b06a1224fb0f",
                 "label": "Section",
-                "name": "section",
+                "name": "publication_section",
                 "type": "select",
                 "instructions": "Where should this post appear?",
                 "required": 1,
@@ -134,7 +134,7 @@
                     "knowledge-resources": "Knowledge & Resources",
                     "news-events": "News & Events / Latest Activity"
                 },
-                "default_value": "knowledge-resources",
+                "default_value": [],
                 "allow_null": 0,
                 "multiple": 0,
                 "ui": 0,

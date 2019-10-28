@@ -302,14 +302,14 @@ function get_news_events_meta_query() {
             'compare' => 'NOT EXISTS'
         ],
         [ // Publications assigned to this page
-            'key' => 'section',
+            'key' => 'publication_section',
             'value' => 'news-events',
             'compare' => '='
         ],
         [ // Publications not assigned to a section yet, with type "news". Once live data has all been updated this clause can be removed
             'relation' => 'AND',
             [
-                'key' => 'section',
+                'key' => 'publication_section',
                 'compare' => 'NOT EXISTS'
             ],
             [

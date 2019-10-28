@@ -30,7 +30,7 @@ function fleming_get_content() {
         'meta_query' => array(
             'relation' => 'OR',
             array(
-                'key' => 'section',
+                'key' => 'publication_section',
                 'value' => 'knowledge-resources',
                 'compare' => '='
             ),
@@ -38,7 +38,7 @@ function fleming_get_content() {
                 // Publications not assigned to a section yet, with type other than "news". Once live data has all been updated this clause can be removed
                 'relation' => 'AND',
                 array(
-                    'key' => 'section',
+                    'key' => 'publication_section',
                     'compare' => 'NOT EXISTS'
                 ),
                 array(
