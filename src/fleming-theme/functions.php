@@ -185,7 +185,7 @@ function grant_with_post_data_and_fields($grant) {
                     $regions
                 ));
             }
-            if ($regionCount == 1 && !!isset($grant['colour_scheme'])) {
+            if ($regionCount == 1 && !isset($grant['colour_scheme'])) {
                 $grant['colour_scheme'] = region_slug_to_colour_scheme_name($regions[0]->post_name);
             }
         } else {
