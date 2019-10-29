@@ -38,12 +38,7 @@ function fleming_get_content() {
             ->withAdditionalBreadcrumb(get_raw_title())
             ->build(),
         "have_eligibility" => $have_eligibility,
-        "have_application_steps" => $have_application_steps,
-        "similar_proposals" => get_related_posts(
-            get_current_post_data_and_fields(),
-            2,
-            true
-        )
+        "have_application_steps" => $have_application_steps
     );
 
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content'],
@@ -77,13 +72,17 @@ function fleming_get_content() {
 
     $fleming_content["timeline_level"] = $timeline_level;
 
-    foreach ($fleming_content['similar_proposals'] as &$post) {
-        $post = entity_with_post_data_and_fields($post);
+    $fleming_content['grant_has_activity'] = $thisGrant['is_active'] && add_latest_activity_to_flexible_content($fleming_content, $grant_type);
+
+    if (!$fleming_content['grant_has_activity']) {
+        $related_posts = get_related_posts(
+            get_current_post_data_and_fields(),
+            2,
+            true
+        );
+        $fleming_content['similar_proposals'] = array_map('entity_with_post_data_and_fields', $related_posts);
     }
 
-    if ($grant_type->post_name != 'fellowship') {
-        add_latest_activity_to_flexible_content($fleming_content, $grant_type);
-    }
     return $fleming_content;
 }
 
@@ -91,7 +90,11 @@ function get_type() {
     return get_field_objects()['type']['value'];
 }
 
-function add_latest_activity_to_flexible_content(&$fleming_content) {
+function add_latest_activity_to_flexible_content(&$fleming_content, $grant_type) {
+    if ($grant_type->post_name == 'fellowship') {
+        return false;
+    }
+
     $position_offset = 0;
     if ($fleming_content['fields']['flexible_content']['value'][0]['acf_fc_layout'] === 'overview_text') {
         if ($fleming_content['fields']['flexible_content']['value'][1]['acf_fc_layout'] === 'supporting_text_block') {
@@ -100,7 +103,13 @@ function add_latest_activity_to_flexible_content(&$fleming_content) {
             $position_offset = 1;
         }
     }
-    array_splice( $fleming_content['fields']['flexible_content']['value'], $position_offset, 0, [get_latest_activity_as_content_block()]);
+    $latest_activity = get_latest_activity_as_content_block();
+    if (!$latest_activity['selected_activity_type'] && !$latest_activity['links']) {
+        return false;
+    }
+
+    array_splice( $fleming_content['fields']['flexible_content']['value'], $position_offset, 0, [$latest_activity]);
+    return true;
 }
 
 function get_latest_activity_as_content_block() {

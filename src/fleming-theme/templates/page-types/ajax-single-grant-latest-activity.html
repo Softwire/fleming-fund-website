@@ -37,29 +37,51 @@
     });
 </script>
 
-<div class="activity-types-filter">
-    <span class="show-me">Show me:</span>
-    <ul class="activity-filter-options">
-        {% include 'nav/link-item-text.html' with {'link': {
-        'title': 'All',
-        'target': '?type=',
-        'active': content_block.selected_activity_type == null
-        }} %}
-        {% for type in content_block.activity_types %}
-        {% set type_url = '?type=' ~ type.query_string %}
-        {% include 'nav/link-item-text.html' with {'link': {
-        'title': type.display_string,
-        'target': type_url,
-        'active': content_block.selected_activity_type == type.query_string
-        }} %}
-        {% endfor %}
-    </ul>
-</div>
-<div class="activity_cards_container">
+<div class="activity-cards-container">
+    {% embed 'flexible-content/links_to_other_posts.html' %}
+        {% block after_heading %}
+            <div class="activity-types-filter">
+                <span class="show-me">Show me:</span>
+                <ul class="activity-filter-options">
+                    {% include 'nav/link-item-text.html' with {'link': {
+                        'title': 'All',
+                        'target': '?type=',
+                        'active': content_block.selected_activity_type == null
+                    }} %}
+                    {% for type in content_block.activity_types %}
+                        {% set type_url = '?type=' ~ type.query_string %}
+                        {% include 'nav/link-item-text.html' with {'link': {
+                            'title': type.display_string,
+                            'target': type_url,
+                            'active': content_block.selected_activity_type == type.query_string
+                        }} %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endblock %}
+    {% endembed %}
+
     {% if content_block.links is empty %}
-    <p> No results </p>
-    {% else %}
-    {% include 'flexible-content/links_to_other_posts.html' %}
+        <h3 class="row-title">{{ content_block.heading }}</h3>
+            <div class="activity-types-filter">
+                <span class="show-me">Show me:</span>
+                <ul class="activity-filter-options">
+                    {% include 'nav/link-item-text.html' with {'link': {
+                        'title': 'All',
+                        'target': '?type=',
+                        'active': content_block.selected_activity_type == null
+                    }} %}
+                    {% for type in content_block.activity_types %}
+                        {% set type_url = '?type=' ~ type.query_string %}
+                        {% include 'nav/link-item-text.html' with {'link': {
+                            'title': type.display_string,
+                            'target': type_url,
+                            'active': content_block.selected_activity_type == type.query_string
+                        }} %}
+                    {% endfor %}
+                </ul>
+            </div>
+        <p> No results </p>
     {% endif %}
 </div>
 {% if content_block.load_more_url %}
