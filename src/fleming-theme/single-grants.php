@@ -95,31 +95,25 @@ function add_latest_activity_to_flexible_content(&$fleming_content, $grant_type)
         return false;
     }
 
-    $position_offset = 0;
-    if ($fleming_content['fields']['flexible_content']['value'][0]['acf_fc_layout'] === 'overview_text') {
-        if ($fleming_content['fields']['flexible_content']['value'][1]['acf_fc_layout'] === 'supporting_text_block') {
-            $position_offset = 2;
-        } else {
-            $position_offset = 1;
+    foreach($fleming_content['fields']['flexible_content']['value'] as $key => $content_block) {
+        if ($content_block['acf_fc_layout'] === 'single_grant_latest_activity') {
+            $latest_activity = get_latest_activity_as_content_block();
+            if ($latest_activity['links']) {
+                $fleming_content['fields']['flexible_content']['value'][$key] = get_latest_activity_as_content_block();
+                return true;
+            }
         }
     }
-    $latest_activity = get_latest_activity_as_content_block();
-    if (!$latest_activity['selected_activity_type'] && !$latest_activity['links']) {
-        return false;
-    }
-
-    array_splice( $fleming_content['fields']['flexible_content']['value'], $position_offset, 0, [$latest_activity]);
-    return true;
+    return false;
 }
 
 function get_latest_activity_as_content_block() {
     $number_of_results_per_batch = 3;
     $grant_id = get_post()->ID;
-    $selected_activity_type = isset($_GET["type"]) ? $_GET["type"] : null;
     $max_number_of_results = isset($_GET["max_number_of_results"]) ? $_GET["max_number_of_results"] : $number_of_results_per_batch;
     $ajax_load_more_results_counter = isset($_GET["load_more_activities"]) ? $_GET["load_more_activities"] : 0;
     $max_number_of_results = $max_number_of_results + $ajax_load_more_results_counter * $number_of_results_per_batch;
-    $latest_activity_posts = get_activity_for_grant_type_and_post_type(null, $selected_activity_type, $grant_id);
+    $latest_activity_posts = get_activity_for_grant_type_and_post_type(null, null, $grant_id);
 
     $links = array_map(function ($activity) {
         return [
@@ -131,7 +125,7 @@ function get_latest_activity_as_content_block() {
 
     $next_max_number_of_results = $max_number_of_results + $number_of_results_per_batch;
     $load_more_url = count($latest_activity_posts) > $max_number_of_results ?
-        "?type=$selected_activity_type&max_number_of_results=$next_max_number_of_results" :
+        "?max_number_of_results=$next_max_number_of_results" :
         null;
 
     return [
@@ -139,25 +133,8 @@ function get_latest_activity_as_content_block() {
         'heading' => 'Latest Activity from ' . get_post()->post_title,
         'links' => $links,
         'max_per_row' => 'three-max',
-        'activity_types' => get_activity_type_options(),
-        'selected_activity_type' => $selected_activity_type,
         'load_more_url' => $load_more_url
     ];
-}
-
-function get_activity_type_options() {
-    $activity_types = get_posts(array('post_type' => 'publication_types', 'numberposts' => -1));
-    $activity_types = array_map(function($activity_type) {
-        return [
-            'query_string' => $activity_type->post_name,
-            'display_string' => $activity_type->post_title
-        ];
-    }, $activity_types);
-    $activity_types[] = [
-        'query_string' => 'event',
-        'display_string' => 'Event'
-    ];
-    return $activity_types;
 }
 
 $template_name = pathinfo(__FILE__)['filename'];

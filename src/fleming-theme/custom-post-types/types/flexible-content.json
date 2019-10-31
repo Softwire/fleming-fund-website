@@ -1045,6 +1045,15 @@
             "min": "",
             "max": ""
           },
+          "5b34b1c479123": {
+            "key": "5b34b1c479123",
+            "name": "single_grant_latest_activity",
+            "label": "Latest Activity (only for grant pages)",
+            "display": "block",
+            "sub_fields": [],
+            "min": "",
+            "max": "1"
+          },
           "5b461497c5436": {
             "key": "5b461497c5436",
             "name": "application_steps",
