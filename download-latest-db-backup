@@ -262,7 +262,7 @@ async function restoreDatabase() {
             connection.query(wholeRestoreQuery, function (error) {
                 if (error) throw error;
                 console.log('Restore query executed, disabling backups and setting up user Softwire/password');
-                const localChangesQuery = fs.readFileSync("post-live-restore.sql").toString().replace("_PASSWORD_", "password");
+                const localChangesQuery = fs.readFileSync("post-live-restore.sql").toString().replace(/_PASSWORD_/g, "password");
                 connection.query(localChangesQuery, function (error) {
                     if (error) throw error;
                     resolve();

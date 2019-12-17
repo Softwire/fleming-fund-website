@@ -232,7 +232,7 @@ function grant_with_post_data_and_fields($grant) {
         });
 
         // Find the next event in the dates list
-        // We'll also use this for the 'status' if present, else we'll use the final event.get
+        // We'll also use this for the 'status' if present, else we'll use the final event.
         $today = mktime(0, 0, 0); // midnight on today's date
         foreach ($events as &$event) {
             $timestamp = $event['timestamp'];
@@ -252,6 +252,7 @@ function grant_with_post_data_and_fields($grant) {
     $grant['nextEvent'] = $nextEvent;
     $grant['deadlineEvent'] = $deadlineEvent;
     $statusEvent = $nextEvent ?? $finalEvent;
+    $grant['statusEvent'] = $statusEvent;
 
 
     if (isset($grant['fields']['status']) && $grant['fields']['status']['value'] != 0) {

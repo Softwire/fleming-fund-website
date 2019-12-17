@@ -38,10 +38,14 @@ function fleming_get_content()
 
     $fleming_content['colour_scheme'] = region_slug_to_colour_scheme_name($fleming_content["fields"]["region"]["value"]->post_name);
 
-    $fleming_content["fields"]["case_study"]["value"] = get_post_data_and_fields($fleming_content["fields"]["case_study"]["value"]->ID);
+    if ($fleming_content["fields"]["case_study"]["value"]) {
+        $fleming_content["fields"]["case_study"]["value"] = get_post_data_and_fields($fleming_content["fields"]["case_study"]["value"]->ID);
+    }
 
     $region_data = get_post_data_and_fields($fleming_content["fields"]["region"]["value"]->ID);
-    $fleming_content["coordinator"] = get_post_data_and_fields($region_data["fields"]["coordinator"]["value"]->ID);
+    if ($region_data["fields"]["coordinator"]["value"]) {
+        $fleming_content["coordinator"] = get_post_data_and_fields($region_data["fields"]["coordinator"]["value"]->ID);
+    }
 
     // qq - include region and worldwide grants?
     // qq - sort? filter?
