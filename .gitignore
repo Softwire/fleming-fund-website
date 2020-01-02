@@ -9,3 +9,7 @@ deployments/
 
 # Paid for plugins
 dependencies/plugins/
+
+# Terraform
+terraform/.terraform
+*.tfvars
