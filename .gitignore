@@ -9,3 +9,7 @@ deployments/
 yarn-error.log
 # Paid for plugins
 dependencies/plugins/
+
+# Terraform
+terraform/.terraform
+*.tfvars
