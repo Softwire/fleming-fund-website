@@ -9,8 +9,13 @@ terraform import module.shared.aws_internet_gateway.main igw-002ff6745e49bb994
 terraform import module.shared.aws_route_table_association.public-subnet subnet-0018d6b3b7c9aa4ab/rtb-0c3f1e80e58d7c16d
 terraform import module.shared.aws_network_acl.unused-subnet-acl acl-0f5c72997392b70b8
 
+terraform import module.shared.aws_security_group.webserver sg-03d7b76a0fc740586
+terraform import module.shared.aws_security_group.efs sg-036541a1c6bf2d6d3
+terraform import module.shared.aws_security_group.db sg-040b987bf3e431184
+
 terraform import module.shared.aws_elastic_beanstalk_application.app fleming-eb-stage
 
 terraform import aws_elastic_beanstalk_environment.app-env e-ptv9rimnn3
 
 terraform import aws_efs_file_system.wp-uploads fs-bcd88175
+terraform import aws_efs_mount_target.wp-uploads-webserver fsmt-e4374c2d

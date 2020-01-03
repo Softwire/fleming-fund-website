@@ -87,7 +87,7 @@ locals {
     DB_PASSWORD      = var.DB_PASSWORD
     DB_USER          = var.DB_USER
     DOMAIN           = var.DOMAIN
-    EFS_NAME         = aws_efs_file_system.wp-uploads.dns_name
+    EFS_NAME         = aws_efs_mount_target.wp-uploads-webserver.dns_name
     FLEM_ENV         = var.FLEM_ENV
     LOGGED_IN_KEY    = var.LOGGED_IN_KEY
     LOGGED_IN_SALT   = var.LOGGED_IN_SALT
@@ -102,4 +102,14 @@ locals {
 variable "email" {
   type = string
   default = "Team-FlemingFundSupport@softwire.com"
+}
+
+variable "eb-version-label" {
+  type = string
+  default = "fleming-fund-stage-app-version_2019-12-18T09:48:37.522Z"
+}
+
+variable "eb-ec2-ssh-key-name" {
+  type = string
+  default = "fleming-fund"
 }
