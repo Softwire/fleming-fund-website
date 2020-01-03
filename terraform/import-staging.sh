@@ -21,3 +21,4 @@ terraform import aws_efs_file_system.wp-uploads fs-bcd88175
 terraform import aws_efs_mount_target.wp-uploads-webserver fsmt-e4374c2d
 
 terraform import aws_db_instance.db fleming-fund-stage-db-1
+terraform import aws_db_subnet_group.db-subnet default-vpc-02a0c6b651aae14cf
