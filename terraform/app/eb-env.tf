@@ -2,11 +2,11 @@
 
 resource "aws_elastic_beanstalk_environment" "app-env" {
   name                = "FlemingEbStage-env" # qq
-  application         = module.shared.elastic_beanstalk_application_name
+  application         = var.elastic_beanstalk_application_name
   solution_stack_name = "64bit Amazon Linux 2018.03 v2.8.1 running PHP 7.2"
   tier                = "WebServer"
   tags                = {}
-  version_label       = var.eb-version-label
+  version_label       = var.eb_version_label
 
   dynamic "setting" {
     for_each = local.environment_variables
@@ -139,7 +139,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "EC2KeyName"
     namespace = "aws:autoscaling:launchconfiguration"
-    value     = var.eb-ec2-ssh-key-name
+    value     = var.eb_ec2_ssh_key_name
   }
   setting {
     name      = "ELBScheme"
@@ -149,7 +149,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "ELBSubnets"
     namespace = "aws:ec2:vpc"
-    value     = module.shared.vpc_public_subnet_id
+    value     = var.vpc_public_subnet_id
   }
   setting {
     name      = "EnableSpot"
@@ -289,7 +289,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "SecurityGroups"
     namespace = "aws:autoscaling:launchconfiguration"
-    value     = module.shared.webserver_sg_id
+    value     = var.webserver_sg_id
   }
   setting {
     name      = "ServiceRole"
@@ -314,7 +314,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "Subnets"
     namespace = "aws:ec2:vpc"
-    value     = module.shared.vpc_public_subnet_id
+    value     = var.vpc_public_subnet_id
   }
   setting {
     name      = "SystemType"
@@ -334,7 +334,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "VPCId"
     namespace = "aws:ec2:vpc"
-    value     = module.shared.vpc_id
+    value     = var.vpc_id
   }
   setting {
     name      = "allow_url_fopen"

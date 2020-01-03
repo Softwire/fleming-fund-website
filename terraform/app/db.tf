@@ -12,7 +12,7 @@ resource "aws_db_instance" "db" {
   publicly_accessible   = false
   copy_tags_to_snapshot = true
 
-  vpc_security_group_ids = [module.shared.db_sg_id]
+  vpc_security_group_ids = [var.db_sg_id]
 
   tags = {
     workload-type = "other"
@@ -21,7 +21,7 @@ resource "aws_db_instance" "db" {
 
 resource "aws_db_subnet_group" "db-subnet" {
   name       = "default-vpc-02a0c6b651aae14cf"
-  subnet_ids = [module.shared.vpc_public_subnet_id, module.shared.vpc_unused_subnet_id]
+  subnet_ids = [var.vpc_public_subnet_id, var.vpc_unused_subnet_id]
 
   tags = {
     Name = "fleming-fund-stage-db-subnet-group"
