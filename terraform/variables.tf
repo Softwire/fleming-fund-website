@@ -50,7 +50,7 @@ variable "DOMAIN" {
   type = string
 }
 variable "CLOUDFRONT_HOME" {
-  type    = string
+  type = string
 }
 variable "AUTH_KEY" {
   type = string
@@ -100,16 +100,16 @@ locals {
 }
 
 variable "email" {
-  type = string
+  type    = string
   default = "Team-FlemingFundSupport@softwire.com"
 }
 
 variable "eb-version-label" {
-  type = string
+  type    = string
   default = "fleming-fund-stage-app-version_2019-12-18T09:48:37.522Z"
 }
 
 variable "eb-ec2-ssh-key-name" {
-  type = string
+  type    = string
   default = "fleming-fund"
 }
