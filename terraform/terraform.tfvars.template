@@ -1,0 +1,14 @@
+AUTH_KEY         =
+AUTH_SALT        =
+CLOUDFRONT_HOME  = "https://stage.flemingfund.org"
+DB_PASSWORD      =
+DB_USER          =
+DOMAIN           = "stage-origin.flemingfund.org"
+FLEM_ENV         = "stage"
+LOGGED_IN_KEY    =
+LOGGED_IN_SALT   =
+NONCE_KEY        =
+NONCE_SALT       =
+SECURE_AUTH_KEY  =
+SECURE_AUTH_SALT =
+WP_HOME          = "https://stage-origin.flemingfund.org"
