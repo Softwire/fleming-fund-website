@@ -6,7 +6,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   solution_stack_name = "64bit Amazon Linux 2018.03 v2.8.1 running PHP 7.2"
   tier                = "WebServer"
   tags                = {}
-  version_label       = "fleming-fund-stage-app-version_2019-12-18T09:48:37.522Z"
+  version_label       = var.eb-version-label
 
   dynamic "setting" {
     for_each = local.environment_variables
@@ -139,7 +139,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "EC2KeyName"
     namespace = "aws:autoscaling:launchconfiguration"
-    value     = "fleming-fund"
+    value     = var.eb-ec2-ssh-key-name
   }
   setting {
     name      = "ELBScheme"
@@ -294,7 +294,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "SecurityGroups"
     namespace = "aws:autoscaling:launchconfiguration"
-    value     = "sg-03d7b76a0fc740586" # qq
+    value     = module.shared.webserver_sg_id
   }
   setting {
     name      = "ServiceRole"
