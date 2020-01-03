@@ -10,10 +10,18 @@ output "vpc_public_subnet_id" {
   value = aws_subnet.vpc-public-subnet.id
 }
 
+output "vpc_unused_subnet_id" {
+  value = aws_subnet.vpc-unused-subnet.id
+}
+
 output "webserver_sg_id" {
   value = aws_security_group.webserver.id
 }
 
 output "efs_sg_id" {
   value = aws_security_group.efs.id
+}
+
+output "db_sg_id" {
+  value = aws_security_group.db.id
 }
