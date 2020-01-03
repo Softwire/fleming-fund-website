@@ -12,3 +12,5 @@ terraform import module.shared.aws_network_acl.unused-subnet-acl acl-0f5c7299739
 terraform import module.shared.aws_elastic_beanstalk_application.app fleming-eb-stage
 
 terraform import aws_elastic_beanstalk_environment.app-env e-ptv9rimnn3
+
+terraform import aws_efs_file_system.wp-uploads fs-bcd88175

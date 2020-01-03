@@ -87,7 +87,7 @@ locals {
     DB_PASSWORD      = var.DB_PASSWORD
     DB_USER          = var.DB_USER
     DOMAIN           = var.DOMAIN
-    EFS_NAME         = "fs-bcd88175.efs.eu-west-1.amazonaws.com"
+    EFS_NAME         = aws_efs_file_system.wp-uploads.dns_name
     FLEM_ENV         = var.FLEM_ENV
     LOGGED_IN_KEY    = var.LOGGED_IN_KEY
     LOGGED_IN_SALT   = var.LOGGED_IN_SALT
@@ -97,4 +97,9 @@ locals {
     SECURE_AUTH_SALT = var.SECURE_AUTH_SALT
     WP_HOME          = var.WP_HOME
   }
+}
+
+variable "email" {
+  type = string
+  default = "Team-FlemingFundSupport@softwire.com"
 }

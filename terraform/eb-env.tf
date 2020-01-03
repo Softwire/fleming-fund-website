@@ -6,6 +6,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   solution_stack_name = "64bit Amazon Linux 2018.03 v2.8.1 running PHP 7.2"
   tier                = "WebServer"
   tags                = {}
+  version_label       = "fleming-fund-stage-app-version_2019-12-18T09:48:37.522Z"
 
   dynamic "setting" {
     for_each = local.environment_variables
@@ -148,7 +149,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "ELBSubnets"
     namespace = "aws:ec2:vpc"
-    value     = "subnet-0018d6b3b7c9aa4ab"
+    value     = module.shared.vpc_public_subnet_id
   }
   setting {
     name      = "EnableSpot"
@@ -159,16 +160,6 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
     name      = "EnvironmentType"
     namespace = "aws:elasticbeanstalk:environment"
     value     = "SingleInstance"
-  }
-  setting {
-    name      = "ExternalExtensionsS3Bucket"
-    namespace = "aws:elasticbeanstalk:environment"
-    value     = ""
-  }
-  setting {
-    name      = "ExternalExtensionsS3Key"
-    namespace = "aws:elasticbeanstalk:environment"
-    value     = ""
   }
   setting {
     name      = "HealthCheckSuccessThreshold"
@@ -258,7 +249,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "Notification Endpoint"
     namespace = "aws:elasticbeanstalk:sns:topics"
-    value     = "Team-FlemingFundSupport@softwire.com"
+    value     = var.email
   }
   setting {
     name      = "Notification Protocol"
@@ -268,9 +259,8 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "Notification Topic ARN"
     namespace = "aws:elasticbeanstalk:sns:topics"
-    value     = "arn:aws:sns:eu-west-1:382810960254:ElasticBeanstalkNotifications-Environment-FlemingEbStage-env"
+    value     = "arn:aws:sns:eu-west-1:382810960254:ElasticBeanstalkNotifications-Environment-FlemingEbStage-env" // qq
   }
-
   setting {
     name      = "RetentionInDays"
     namespace = "aws:elasticbeanstalk:cloudwatch:logs"
@@ -304,7 +294,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "SecurityGroups"
     namespace = "aws:autoscaling:launchconfiguration"
-    value     = "sg-03d7b76a0fc740586"
+    value     = "sg-03d7b76a0fc740586" # qq
   }
   setting {
     name      = "ServiceRole"
@@ -329,7 +319,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "Subnets"
     namespace = "aws:ec2:vpc"
-    value     = "subnet-0018d6b3b7c9aa4ab"
+    value     = module.shared.vpc_public_subnet_id
   }
   setting {
     name      = "SystemType"
@@ -349,7 +339,7 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   setting {
     name      = "VPCId"
     namespace = "aws:ec2:vpc"
-    value     = "vpc-02a0c6b651aae14cf"
+    value     = module.shared.vpc_id
   }
   setting {
     name      = "allow_url_fopen"
