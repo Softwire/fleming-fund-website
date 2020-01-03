@@ -257,11 +257,6 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
     value     = "email"
   }
   setting {
-    name      = "Notification Topic ARN"
-    namespace = "aws:elasticbeanstalk:sns:topics"
-    value     = "arn:aws:sns:eu-west-1:382810960254:ElasticBeanstalkNotifications-Environment-FlemingEbStage-env" // qq
-  }
-  setting {
     name      = "RetentionInDays"
     namespace = "aws:elasticbeanstalk:cloudwatch:logs"
     value     = "7"

@@ -82,7 +82,7 @@ locals {
     AUTH_KEY         = var.AUTH_KEY
     AUTH_SALT        = var.AUTH_SALT
     CLOUDFRONT_HOME  = var.CLOUDFRONT_HOME
-    DB_HOST          = "fleming-fund-stage-db-1.cfcbbvem75td.eu-west-1.rds.amazonaws.com"
+    DB_HOST          = aws_db_instance.db.address
     DB_NAME          = "wordpress"
     DB_PASSWORD      = var.DB_PASSWORD
     DB_USER          = var.DB_USER
