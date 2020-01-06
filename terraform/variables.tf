@@ -88,9 +88,8 @@ variable "email" {
   default = "Team-FlemingFundSupport@softwire.com"
 }
 
-variable "eb_version_label" {
+variable "EB_VERSION_LABEL" {
   type    = string
-  default = "fleming-fund-stage-app-version_2019-12-18T09:48:37.522Z"
 }
 
 variable "eb_ec2_ssh_key_name" {

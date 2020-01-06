@@ -22,7 +22,7 @@ module "app" {
   name_prefix                        = var.name_prefix
   ip_whitelist_map                   = var.ip_whitelist_map
   email                              = var.email
-  eb_version_label                   = var.eb_version_label
+  eb_version_label                   = var.EB_VERSION_LABEL
   eb_ec2_ssh_key_name                = var.eb_ec2_ssh_key_name
   vpc_id                             = module.network.vpc_id
   elastic_beanstalk_application_name = module.network.elastic_beanstalk_application_name

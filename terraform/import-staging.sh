@@ -24,3 +24,4 @@ terraform import module.app.aws_db_instance.db fleming-fund-stage-db-1
 terraform import module.app.aws_db_subnet_group.db-subnet default-vpc-02a0c6b651aae14cf
 
 terraform import module.cloudfront.aws_cloudfront_distribution.cf E10JKI79ED809L
+terraform import module.cloudfront.aws_s3_bucket.static-site-errors fleming-fund-stage-static-site-errors

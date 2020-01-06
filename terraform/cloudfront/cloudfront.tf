@@ -1,3 +1,7 @@
+locals {
+  s3_origin_id = "${var.name_prefix}-s3-static-site-errors"
+}
+
 resource "aws_cloudfront_distribution" "cf" {
   enabled         = true
   is_ipv6_enabled = true
@@ -22,8 +26,8 @@ resource "aws_cloudfront_distribution" "cf" {
   }
 
   origin {
-    domain_name = "fleming-fund-static-site-errors.s3.amazonaws.com"
-    origin_id   = "S3-fleming-fund-static-site-errors"
+    domain_name = aws_s3_bucket.static-site-errors.bucket_regional_domain_name
+    origin_id   = local.s3_origin_id
   }
 
   default_cache_behavior {
@@ -54,7 +58,7 @@ resource "aws_cloudfront_distribution" "cf" {
     compress               = true
     path_pattern           = "error/*"
     smooth_streaming       = false
-    target_origin_id       = "S3-fleming-fund-static-site-errors"
+    target_origin_id       = local.s3_origin_id
     trusted_signers        = []
     viewer_protocol_policy = "allow-all"
 
@@ -142,35 +146,15 @@ resource "aws_cloudfront_distribution" "cf" {
     }
   }
 
-  custom_error_response {
-    error_caching_min_ttl = 300
-    error_code            = 500
-    response_code         = 500
-    response_page_path    = "/error/500.html"
-  }
-  custom_error_response {
-    error_caching_min_ttl = 300
-    error_code            = 501
-    response_code         = 501
-    response_page_path    = "/error/501.html"
-  }
-  custom_error_response {
-    error_caching_min_ttl = 300
-    error_code            = 502
-    response_code         = 502
-    response_page_path    = "/error/502.html"
-  }
-  custom_error_response {
-    error_caching_min_ttl = 300
-    error_code            = 503
-    response_code         = 503
-    response_page_path    = "/error/503.html"
-  }
-  custom_error_response {
-    error_caching_min_ttl = 300
-    error_code            = 504
-    response_code         = 504
-    response_page_path    = "/error/504.html"
+  dynamic "custom_error_response" {
+    for_each = local.static_site_error_codes
+    iterator = status_code
+    content {
+      error_caching_min_ttl = 3600
+      error_code            = status_code.value
+      response_code         = status_code.value
+      response_page_path    = "/error/${status_code.value}.html"
+    }
   }
 
   tags = {

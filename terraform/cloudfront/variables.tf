@@ -19,3 +19,7 @@ variable "origin_domain" {
 variable "acm_certificate_arn" {
   type = string
 }
+
+locals {
+  static_site_error_codes = [500, 501, 502, 503, 504]
+}

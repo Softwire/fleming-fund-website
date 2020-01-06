@@ -7,10 +7,6 @@ resource "aws_security_group" "webserver" {
     Name = "${var.name_prefix}-secgrp-webserver"
   }
 
-  lifecycle {
-    create_before_destroy = true
-  }
-
   ingress {
     description = "NTP"
     from_port   = 123
