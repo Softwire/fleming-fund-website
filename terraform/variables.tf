@@ -76,27 +76,11 @@ variable "SECURE_AUTH_KEY" {
 variable "SECURE_AUTH_SALT" {
   type = string
 }
-
-locals {
-  environment_variables = {
-    AUTH_KEY         = var.AUTH_KEY
-    AUTH_SALT        = var.AUTH_SALT
-    CLOUDFRONT_HOME  = var.CLOUDFRONT_HOME
-    DB_HOST          = aws_db_instance.db.address
-    DB_NAME          = "wordpress"
-    DB_PASSWORD      = var.DB_PASSWORD
-    DB_USER          = var.DB_USER
-    DOMAIN           = var.DOMAIN
-    EFS_NAME         = aws_efs_mount_target.wp-uploads-webserver.dns_name
-    FLEM_ENV         = var.FLEM_ENV
-    LOGGED_IN_KEY    = var.LOGGED_IN_KEY
-    LOGGED_IN_SALT   = var.LOGGED_IN_SALT
-    NONCE_KEY        = var.NONCE_KEY
-    NONCE_SALT       = var.NONCE_SALT
-    SECURE_AUTH_KEY  = var.SECURE_AUTH_KEY
-    SECURE_AUTH_SALT = var.SECURE_AUTH_SALT
-    WP_HOME          = var.WP_HOME
-  }
+variable "CLOUDFRONT_DOMAIN" {
+  type = string
+}
+variable "CLOUDFRONT_ACM_CERTIFICATE_ARN" {
+  type = string
 }
 
 variable "email" {
@@ -104,12 +88,12 @@ variable "email" {
   default = "Team-FlemingFundSupport@softwire.com"
 }
 
-variable "eb-version-label" {
+variable "eb_version_label" {
   type    = string
   default = "fleming-fund-stage-app-version_2019-12-18T09:48:37.522Z"
 }
 
-variable "eb-ec2-ssh-key-name" {
+variable "eb_ec2_ssh_key_name" {
   type    = string
   default = "fleming-fund"
 }

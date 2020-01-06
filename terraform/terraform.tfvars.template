@@ -12,3 +12,6 @@ NONCE_SALT       =
 SECURE_AUTH_KEY  =
 SECURE_AUTH_SALT =
 WP_HOME          = "https://stage-origin.flemingfund.org"
+
+CLOUDFRONT_DOMAIN = "stage.flemingfund.org"
+CLOUDFRONT_ACM_CERTIFICATE_ARN =

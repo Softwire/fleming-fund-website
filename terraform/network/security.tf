@@ -1,10 +1,14 @@
 resource "aws_security_group" "webserver" {
-  name        = "${var.name_prefix}-secgrp-webserver"
-  description = "Fleming Fund stage webserver security group" # qq
+  name        = "${var.name_prefix}-sg-webserver"
+  description = "${var.name_prefix} Webserver security group" # "Fleming Fund stage webserver security group"
   vpc_id      = aws_vpc.main.id
 
   tags = {
     Name = "${var.name_prefix}-secgrp-webserver"
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 
   ingress {
