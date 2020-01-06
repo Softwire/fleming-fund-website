@@ -47,3 +47,11 @@ module "app" {
   SECURE_AUTH_SALT                   = var.SECURE_AUTH_SALT
 }
 
+module "cloudfront" {
+  source                    = "./cloudfront"
+  name_prefix               = var.name_prefix
+  is_production             = var.FLEM_ENV == true
+  cloudfront_domain_aliases = [var.CLOUDFRONT_DOMAIN]
+  origin_domain             = var.DOMAIN
+  acm_certificate_arn       = var.CLOUDFRONT_ACM_CERTIFICATE_ARN
+}
