@@ -23,6 +23,7 @@ resource "aws_vpc" "main" {
   cidr_block = "10.120.0.0/16"
   tags = {
     Name = "${var.name_prefix}-vpc"
+    environment = var.environment_tag
   }
 }
 
@@ -30,6 +31,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
   tags = {
     "Name" = "${var.name_prefix}-internet-gateway"
+    environment = var.environment_tag
   }
 }
 
@@ -37,6 +39,7 @@ resource "aws_route_table" "main" {
   vpc_id = aws_vpc.main.id
   tags = {
     Name = "${var.name_prefix}-main-route-table"
+    environment = var.environment_tag
   }
 }
 
@@ -46,6 +49,7 @@ resource "aws_default_network_acl" "main" {
 
   tags = {
     Name = "${var.name_prefix}-vpc-acl"
+    environment = var.environment_tag
   }
 
   egress {
@@ -112,6 +116,7 @@ resource "aws_subnet" "vpc-public-subnet" {
   availability_zone = "eu-west-1a"
   tags = {
     Name = "${var.name_prefix}-public-subnet"
+    environment = var.environment_tag
   }
 }
 
@@ -123,6 +128,7 @@ resource "aws_route_table" "public-subnet" {
   }
   tags = {
     Name = "${var.name_prefix}-public-subnet-route-table"
+    environment = var.environment_tag
   }
 }
 
@@ -137,6 +143,7 @@ resource "aws_subnet" "vpc-unused-subnet" {
   availability_zone = "eu-west-1b"
   tags = {
     Name = "${var.name_prefix}-unused-subnet"
+    environment = var.environment_tag
   }
 }
 
@@ -145,5 +152,6 @@ resource "aws_network_acl" "unused-subnet-acl" {
   subnet_ids = [aws_subnet.vpc-unused-subnet.id]
   tags = {
     Name = "${var.name_prefix}-unused-acl"
+    environment = var.environment_tag
   }
 }

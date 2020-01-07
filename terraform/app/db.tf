@@ -16,6 +16,7 @@ resource "aws_db_instance" "db" {
 
   tags = {
     workload-type = "other"
+    environment = var.environment_tag
   }
 }
 
@@ -25,5 +26,6 @@ resource "aws_db_subnet_group" "db-subnet" {
 
   tags = {
     Name = "fleming-fund-stage-db-subnet-group"
+    environment = var.environment_tag
   }
 }

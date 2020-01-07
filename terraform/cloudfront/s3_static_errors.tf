@@ -14,6 +14,7 @@ resource "aws_s3_bucket" "static-site-errors" {
 
   tags = {
     Name = local.bucket_name
+    environment = var.environment_tag
   }
 
   versioning {

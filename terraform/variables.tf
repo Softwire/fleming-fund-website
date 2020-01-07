@@ -89,7 +89,7 @@ variable "email" {
 }
 
 variable "EB_VERSION_LABEL" {
-  type    = string
+  type = string
 }
 
 variable "eb_ec2_ssh_key_name" {

@@ -158,6 +158,7 @@ resource "aws_cloudfront_distribution" "cf" {
   }
 
   tags = {
+    environment = var.environment_tag
   }
 
   restrictions {

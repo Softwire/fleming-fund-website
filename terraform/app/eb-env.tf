@@ -5,7 +5,9 @@ resource "aws_elastic_beanstalk_environment" "app-env" {
   application         = var.elastic_beanstalk_application_name
   solution_stack_name = "64bit Amazon Linux 2018.03 v2.8.1 running PHP 7.2"
   tier                = "WebServer"
-  tags                = {}
+  tags                = {
+    environment = var.environment_tag
+  }
   version_label       = var.eb_version_label
 
   dynamic "setting" {

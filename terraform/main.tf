@@ -15,6 +15,7 @@ module "network" {
   source           = "./network"
   name_prefix      = var.name_prefix
   ip_whitelist_map = var.ip_whitelist_map
+  environment_tag  = var.FLEM_ENV
 }
 
 module "app" {
@@ -45,6 +46,7 @@ module "app" {
   NONCE_SALT                         = var.NONCE_SALT
   SECURE_AUTH_KEY                    = var.SECURE_AUTH_KEY
   SECURE_AUTH_SALT                   = var.SECURE_AUTH_SALT
+  environment_tag                    = var.FLEM_ENV
 }
 
 module "cloudfront" {
@@ -54,4 +56,5 @@ module "cloudfront" {
   cloudfront_domain_aliases = [var.CLOUDFRONT_DOMAIN]
   origin_domain             = var.DOMAIN
   acm_certificate_arn       = var.CLOUDFRONT_ACM_CERTIFICATE_ARN
+  environment_tag           = var.FLEM_ENV
 }

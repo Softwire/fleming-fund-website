@@ -46,6 +46,10 @@ variable "name_prefix" {
   type        = string
 }
 
+variable "environment_tag" {
+  type = string
+}
+
 variable "ip_whitelist_map" {
   description = "CIDR blocks to allow SSH access"
   type = list(object({

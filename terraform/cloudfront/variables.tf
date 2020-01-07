@@ -20,6 +20,10 @@ variable "acm_certificate_arn" {
   type = string
 }
 
+variable "environment_tag" {
+  type = string
+}
+
 locals {
   static_site_error_codes = [500, 501, 502, 503, 504]
 }

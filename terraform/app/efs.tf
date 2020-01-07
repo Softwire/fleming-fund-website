@@ -1,6 +1,7 @@
 resource "aws_efs_file_system" "wp-uploads" {
   tags = {
     Name = "${var.name_prefix}-filesystem-wpuploads"
+    environment = var.environment_tag
   }
 }
 

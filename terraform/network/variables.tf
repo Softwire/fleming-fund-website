@@ -10,3 +10,7 @@ variable "ip_whitelist_map" {
     cidr    = string
   }))
 }
+
+variable "environment_tag" {
+  type = string
+}

@@ -5,6 +5,7 @@ resource "aws_security_group" "webserver" {
 
   tags = {
     Name = "${var.name_prefix}-secgrp-webserver"
+    environment = var.environment_tag
   }
 
   ingress {
@@ -65,6 +66,7 @@ resource "aws_security_group" "efs" {
 
   tags = {
     Name = "${var.name_prefix}-secgrp-efs"
+    environment = var.environment_tag
   }
 
   ingress {
@@ -90,6 +92,7 @@ resource "aws_security_group" "db" {
 
   tags = {
     Name = "${var.name_prefix}-secgrp-db"
+    environment = var.environment_tag
   }
 
   ingress {
