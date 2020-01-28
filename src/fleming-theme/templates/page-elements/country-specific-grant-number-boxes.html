@@ -1,0 +1,30 @@
+<div class="grant-number-boxes">
+    {% if number_of_country_grants is defined %}
+    <div class="grant-number-box four columns">
+        <div class="number-of-grants">{{ number_of_country_grants }}</div>
+        <div class="grant-type-label">COUNTRY GRANT{{number_of_country_grants != 1 ? 'S' : ''}}</div>
+        <a class="button" href="/grants/?type=country-grant&country={{country_slug}}">View all</a>
+    </div>
+    {% endif %}
+    {% if number_of_regional_grants is defined %}
+    <div class="grant-number-box four columns">
+        <div class="number-of-grants">{{ number_of_regional_grants }}</div>
+        <div class="grant-type-label">REGIONAL GRANT{{number_of_regional_grants != 1 ? 'S' : ''}}</div>
+        <a class="button" href="/grants/?type=regional-grant&country={{country_slug}}">View all</a>
+    </div>
+    {% endif %}
+    {% if number_of_fellowships is defined %}
+    <div class="grant-number-box four columns">
+        <div class="number-of-grants">{{ number_of_fellowships }}</div>
+        <div class="grant-type-label">FELLOWSHIP{{number_of_fellowships != 1 ? 'S' : ''}}</div>
+        <a class="button" href="/grants/?type=fellowshipt&country={{country_slug}}">View all</a>
+    </div>
+    {% endif %}
+    {% if number_of_global_projects is defined %}
+    <div class="grant-number-box four columns">
+        <div class="number-of-grants">{{ number_of_global_projects }}</div>
+        <div class="grant-type-label">GLOBAL PROJECT{{number_of_global_projects != 1 ? 'S' : ''}}</div>
+        <a class="button" href="/grants/?type=other-project&country={{country_slug}}"">View all</a>
+    </div>
+    {% endif %}
+</div>

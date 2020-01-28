@@ -71,6 +71,10 @@ function fleming_get_content()
 
     $fleming_content['rss_link_target'] = '/feed/country/?channel=' . $this_country['data']->post_name;
 
+    $fleming_content["country_slug"] = $this_country['data']->post_name;
+
+    show_country_specific_grant_numbers_for_page($fleming_content, $fleming_content["country_slug"]);
+
     return $fleming_content;
 }
 

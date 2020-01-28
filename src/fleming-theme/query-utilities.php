@@ -251,6 +251,25 @@ function show_grant_numbers_for_page(&$fleming_content) {
     $fleming_content['number_of_active_grants'] = $grant_numbers['number_of_active_grants'];
 }
 
+function show_country_specific_grant_numbers_for_page(&$fleming_content, $country_slug) {
+    $all_grants = get_full_grants(null);
+    $country_specific_grants = array_filter($all_grants, function($grant) use ($country_slug) {
+        return isset($all_grant['fields']['countries']) && array_of_posts_contains_name($grant['fields']['countries']['value'], $country_slug);
+    });
+
+    $grant_numbers = [
+        'number_of_country_grants' => 5, //count($country_specific_grants),
+        'number_of_regional_grants' => 1, //count($country_specific_grants),
+        'number_of_fellowships' => 7, //count($country_specific_grants),
+        'number_of_global_projects' => 8
+    ];    
+
+    $fleming_content['number_of_country_grants'] = $grant_numbers['number_of_country_grants'];
+    $fleming_content['number_of_regional_grants'] = $grant_numbers['number_of_regional_grants'];
+    $fleming_content['number_of_fellowships'] = $grant_numbers['number_of_fellowships']; 
+    $fleming_content['number_of_global_projects'] = $grant_numbers['number_of_global_projects'];
+}
+
 // For a grant type page (Country Grants, Regional Grants) show some recent activity for this type.
 function show_activity_for_page(&$fleming_content) {
     $post_id = get_post()->ID;
