@@ -42,7 +42,7 @@ function get_other_grants_as_content() {
 
         $sorted_grants = sort_past_grants($full_grants);
 
-        $grants_content = get_grants_as_content($sorted_grants, 'Our Other Grants');
+        $grants_content = get_grants_as_content($sorted_grants, 'Global Grants');
         set_transient($cache_id, $grants_content, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
     }
     return $grants_content;
