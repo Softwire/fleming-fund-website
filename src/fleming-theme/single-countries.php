@@ -69,11 +69,11 @@ function fleming_get_content()
     // qq - sort? filter?
     $fleming_content["projects"] = array_slice($allProjects, 0, 2);
 
-    $fleming_content['rss_link_target'] = '/feed/country/?channel=' . $this_country['data']->post_name;
-
     $fleming_content["country_slug"] = $this_country['data']->post_name;
 
-    show_country_specific_grant_numbers_for_page($fleming_content, $fleming_content["country_slug"]);
+    $fleming_content['rss_link_target'] = '/feed/country/?channel=' .  $fleming_content["country_slug"];
+
+    show_grant_numbers_by_type_awarded_to_country($fleming_content, $fleming_content["country_slug"]);
 
     return $fleming_content;
 }

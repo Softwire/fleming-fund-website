@@ -251,23 +251,46 @@ function show_grant_numbers_for_page(&$fleming_content) {
     $fleming_content['number_of_active_grants'] = $grant_numbers['number_of_active_grants'];
 }
 
-function show_country_specific_grant_numbers_for_page(&$fleming_content, $country_slug) {
-    $all_grants = get_full_grants(null);
-    $country_specific_grants = array_filter($all_grants, function($grant) use ($country_slug) {
-        return isset($all_grant['fields']['countries']) && array_of_posts_contains_name($grant['fields']['countries']['value'], $country_slug);
-    });
+function show_grant_numbers_by_type_awarded_to_country(&$fleming_content, $country_slug) {
+    if (!$country_slug) {
+        return;
+    }
 
-    $grant_numbers = [
-        'number_of_country_grants' => 5, //count($country_specific_grants),
-        'number_of_regional_grants' => 1, //count($country_specific_grants),
-        'number_of_fellowships' => 7, //count($country_specific_grants),
-        'number_of_global_projects' => 8
-    ];    
+    $cache_id = $country_slug . '_grant_numbers_by_type';
+    $grant_numbers = get_transient($cache_id);
+
+    if (!is_array($grant_numbers)) {
+        $all_grants = get_full_grants(null);
+        $grants_awarded_to_country = filter_grants($all_grants, "countries", $country_slug);
+        $grant_numbers = [
+            'number_of_country_grants' => count(filter_grants($grants_awarded_to_country, "type", "country-grant")),
+            'number_of_regional_grants' => count(filter_grants($grants_awarded_to_country, "type", "regional-grant")),
+            'number_of_fellowships' => count(filter_grants($grants_awarded_to_country, "type", "fellowship")), 
+            'number_of_global_projects' => count(filter_grants($grants_awarded_to_country, "type", "global-project"))
+        ];
+
+        set_transient($cache_id, $grant_numbers, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
+    }
 
     $fleming_content['number_of_country_grants'] = $grant_numbers['number_of_country_grants'];
     $fleming_content['number_of_regional_grants'] = $grant_numbers['number_of_regional_grants'];
     $fleming_content['number_of_fellowships'] = $grant_numbers['number_of_fellowships']; 
     $fleming_content['number_of_global_projects'] = $grant_numbers['number_of_global_projects'];
+}
+
+function filter_grants($grants, $field, $search_term) {
+    echo($myJSON);  
+    return array_filter($grants, function($grant) use ($field, $search_term) {
+        return isset($grant['fields'][$field]) && array_of_posts_contains_name(to_array($grant['fields'][$field]['value']), $search_term);
+    });
+}
+
+function to_array($input) {
+    return is_array($input) ? $input : to_singleton_array($input);
+}
+
+function to_singleton_array($input) {
+    return array($input);
 }
 
 // For a grant type page (Country Grants, Regional Grants) show some recent activity for this type.
@@ -506,8 +529,9 @@ function array_of_posts_contains_name($array_of_posts, $target_name) {
         return false;
     }
     $names = array_map(function($country_post) {
-        return $country_post->post_name;
-    }, $array_of_posts);
+        return is_object($country_post) ? $country_post->post_name : null;
+    }
+    , $array_of_posts);
 
     return in_array($target_name, $names);
 }
