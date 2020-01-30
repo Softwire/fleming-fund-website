@@ -306,8 +306,8 @@ function sort_future_grants($opportunities) {
 // Sort grant records by statusEvent descending
 function sort_past_grants($opportunities) {
     usort($opportunities, function ($a, $b) {
-        $aTimestamp = isset($a['statusEvent']['timestamp']) ? $a['statusEvent']['timestamp'] : to_timestamp($a['data']->post_date, 'Y-m-d H:i:s');
-        $bTimestamp = isset($b['statusEvent']['timestamp']) ? $b['statusEvent']['timestamp'] : to_timestamp($b['data']->post_date, 'Y-m-d H:i:s');
+        $aTimestamp = $a['statusEvent']['timestamp'] ?? to_timestamp($a['data']->post_date, 'Y-m-d H:i:s');
+        $bTimestamp = $b['statusEvent']['timestamp'] ?? to_timestamp($b['data']->post_date, 'Y-m-d H:i:s');
         return $bTimestamp - $aTimestamp;
     });
     return $opportunities;
