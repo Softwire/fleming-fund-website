@@ -155,9 +155,8 @@ function format_number($amount) {
     return number_format((float) $amount, 0, '.', ',');
 }
 
-function to_timestamp($date)
-{
-    return DateTime::createFromFormat('!d/m/Y', $date)->getTimestamp();
+function to_timestamp($date, $date_format = '!d/m/Y') {
+    return DateTime::createFromFormat($date_format, $date)->getTimestamp();
 }
 
 function grant_with_post_data_and_fields($grant) {
@@ -295,8 +294,7 @@ function grant_is_open($grant) {
 }
 
 // Sort grant records by deadline ascending
-function sort_future_grants($opportunities)
-{
+function sort_future_grants($opportunities) {
     usort($opportunities, function ($a, $b) {
         $aTimestamp = $a['deadlineEvent']['timestamp'];
         $bTimestamp = $b['deadlineEvent']['timestamp'];
@@ -306,12 +304,11 @@ function sort_future_grants($opportunities)
 }
 
 // Sort grant records by statusEvent descending
-function sort_past_grants($opportunities)
-{
+function sort_past_grants($opportunities) {
     usort($opportunities, function ($a, $b) {
-        $aTimestamp = isset($a['statusEvent']['timestamp']) ? $a['statusEvent']['timestamp'] : null;
-        $bTimestamp = isset($b['statusEvent']['timestamp']) ? $b['statusEvent']['timestamp'] : null;
-        return is_null($aTimestamp) || is_null($aTimestamp) ? null : $bTimestamp - $aTimestamp;
+        $aTimestamp = isset($a['statusEvent']['timestamp']) ? $a['statusEvent']['timestamp'] : to_timestamp($a['data']->post_date, 'Y-m-d H:i:s');
+        $bTimestamp = isset($b['statusEvent']['timestamp']) ? $b['statusEvent']['timestamp'] : to_timestamp($b['data']->post_date, 'Y-m-d H:i:s');
+        return $bTimestamp - $aTimestamp;
     });
     return $opportunities;
 }
