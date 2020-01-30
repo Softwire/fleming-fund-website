@@ -235,7 +235,7 @@ function grant_with_post_data_and_fields($grant) {
         // We'll also use this for the 'status' if present, else we'll use the final event.
         $today = mktime(0, 0, 0); // midnight on today's date
         foreach ($events as &$event) {
-            $timestamp = $event['timestamp'];
+            $timestamp = isset($event['timestamp']) ? $event['timestamp'] : null;
             if (isset($timestamp) && $timestamp >= $today) {
                 $nextEvent = $event;
                 break;
@@ -282,7 +282,7 @@ function get_string_from_simple_select_field($select_field) {
 
 function grant_deadline_is_in_future($grant) {
     $today = mktime(0, 0, 0);
-    return isset($grant['deadlineEvent']) && $grant['deadlineEvent']['timestamp'] >= $today;
+    return isset($grant['deadlineEvent']['timestamp']) && $grant['deadlineEvent']['timestamp'] >= $today;
 }
 
 function grant_is_active($grant) {
@@ -309,9 +309,9 @@ function sort_future_grants($opportunities)
 function sort_past_grants($opportunities)
 {
     usort($opportunities, function ($a, $b) {
-        $aTimestamp = $a['statusEvent']['timestamp'];
-        $bTimestamp = $b['statusEvent']['timestamp'];
-        return $bTimestamp - $aTimestamp;
+        $aTimestamp = isset($a['statusEvent']['timestamp']) ? $a['statusEvent']['timestamp'] : null;
+        $bTimestamp = isset($b['statusEvent']['timestamp']) ? $b['statusEvent']['timestamp'] : null;
+        return is_null($aTimestamp) || is_null($aTimestamp) ? null : $bTimestamp - $aTimestamp;
     });
     return $opportunities;
 }
