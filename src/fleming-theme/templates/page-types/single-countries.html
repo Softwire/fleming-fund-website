@@ -122,6 +122,15 @@
       </div>
     {% endif %}
 
+    {% if latest_activity is not empty %}
+      <h3>Latest Activity</h3>
+      <div class="card-container two-max">
+        {% for activity in latest_activities %}
+          {% include 'cards/entities/grant.html' with {'grant': grant} %}
+        {% endfor %}
+      </div>
+    {% endif %}
+
     {% if projects is not empty %}
       <h3>Current Projects</h3>
       <div class="card-container two-max">
