@@ -27,18 +27,18 @@ function fleming_get_content() {
 
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
 
-    add_supporting_content($fleming_content, get_other_grants_as_content());
+    add_supporting_content($fleming_content, get_global_grants_as_content());
 
     return $fleming_content;
 }
 
-function get_other_grants_as_content() {
-    $cache_id = 'other_grants';
+function get_global_grants_as_content() {
+    $cache_id = 'global_grants';
     $grants_content = get_transient($cache_id);
     if (!is_array($grants_content)) {
         $post_id = get_post()->ID;
-        $other_grant_type = get_grant_type_for_page($post_id);
-        $full_grants = get_full_grants($other_grant_type->ID);
+        $global_grant_type = get_grant_type_for_page($post_id);
+        $full_grants = get_full_grants($global_grant_type->ID);
 
         $sorted_grants = sort_past_grants($full_grants);
 

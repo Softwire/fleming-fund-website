@@ -16,13 +16,13 @@
       } %}
     {% endfor %}
   </div>
-{% elseif fields.status_other_project and fields.status_other_project.value > 0 %}
+{% elseif fields.status_global_project and fields.status_global_project.value > 0 %}
   <div class="grant-timeline">
     {% for i in range(1,4) %}
       {% include 'page-elements/status-box.html' with {
         'level': i,
-        'current_status': fields.status_other_project.value,
-        'status': fields.status_other_project.choices[i],
+        'current_status': fields.status_global_project.value,
+        'status': fields.status_global_project.choices[i],
         'last': loop.last
       } %}
     {% endfor %}

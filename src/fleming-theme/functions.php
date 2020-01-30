@@ -203,7 +203,7 @@ function grant_with_post_data_and_fields($grant) {
             }
         }
 
-        if ($grantType->post_title == 'Other Project') {
+        if ($grantType->post_title == 'Global Project') {
             $grant['colour_scheme'] = 'dark';
         }
 
@@ -257,8 +257,8 @@ function grant_with_post_data_and_fields($grant) {
 
     if (isset($grant['fields']['status']) && $grant['fields']['status']['value'] != 0) {
         $grant['status_name'] = get_string_from_simple_select_field($grant['fields']['status']);
-    } elseif (isset($grant['fields']['status_other_project']) && $grant['fields']['status_other_project']['value'] != 0) {
-        $grant['status_name'] = get_string_from_simple_select_field($grant['fields']['status_other_project']);
+    } elseif (isset($grant['fields']['status_global_project']) && $grant['fields']['status_global_project']['value'] != 0) {
+        $grant['status_name'] = get_string_from_simple_select_field($grant['fields']['status_global_project']);
     } elseif ($statusEvent) {
         $grant['status_name'] = $statusEvent['event_name'];
     }
@@ -287,7 +287,7 @@ function grant_deadline_is_in_future($grant) {
 
 function grant_is_active($grant) {
     return (isset($grant['fields']['status']) && $grant['fields']['status']['value'] == 5) ||
-        (isset($grant['fields']['status_other_project']) && $grant['fields']['status_other_project']['value'] == 3);
+        (isset($grant['fields']['status_global_project']) && $grant['fields']['status_global_project']['value'] == 3);
 }
 
 function grant_is_open($grant) {

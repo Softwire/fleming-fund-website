@@ -449,10 +449,10 @@
             },
             {
                 "key": "field_5b324b018e38b",
-                "label": "Status - OTHER PROJECT",
-                "name": "status_other_project",
+                "label": "Status - GLOBAL PROJECT",
+                "name": "status_global_project",
                 "type": "select",
-                "instructions": "This is used by Other Projects, shown on the grant card and as a timeline on the individual project page",
+                "instructions": "This is used by Global Projects, shown on the grant card and as a timeline on the individual project page",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
