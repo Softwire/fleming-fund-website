@@ -6,6 +6,6 @@ dist/
 .idea/
 .vs/
 deployments/
-
+yarn-error.log
 # Paid for plugins
 dependencies/plugins/
