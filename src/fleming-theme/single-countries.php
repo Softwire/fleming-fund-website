@@ -3,6 +3,7 @@
 require_once __DIR__ . '/php/get-css-filename.php';
 require_once 'navigation/index.php';
 require_once 'query-utilities.php';
+require_once 'functions.php';
 
 /**
  * NOTE:
@@ -33,6 +34,8 @@ function fleming_get_content()
     );
 
     $this_country = get_current_post_data_and_fields();
+
+    $country_slug = $this_country['data']->post_name;
 
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
 
@@ -69,7 +72,29 @@ function fleming_get_content()
     // qq - sort? filter?
     $fleming_content["projects"] = array_slice($allProjects, 0, 2);
 
-    $fleming_content['rss_link_target'] = '/feed/country/?channel=' . $this_country['data']->post_name;
+    $fleming_content['rss_link_target'] = '/feed/country/?channel=' . $country_slug;
+
+    //query for the events and publications of the country
+    $latest_activity_query_result = query_news_events($fleming_content, $country_slug, false);
+
+    //Select one or two posts to display
+    $activities = $latest_activity_query_result['posts'];
+
+    if (count($activities) > 1) {
+        if ($activities[0]['should_display_prominently']) {
+            $activities = [$activities[0]];
+        }
+        else if ($activities[1]['should_display_prominently']) {
+            $activities = [$activities[1]];
+        }
+        else {
+            $activities = [$activities[0], $activities[1]];
+        }
+    }
+
+    $fleming_content["latest_activity"] = $activities;
+
+    $fleming_content["view_all_activity_button"] = get_link_button("/news-events/?country=".$country_slug, "View All", "turquoise");
 
     return $fleming_content;
 }

@@ -531,6 +531,13 @@ function get_footer_organisations() {
     return $organisations;
 }
 
+function should_display_prominently($post)
+{
+    return $post['data']->post_type === 'publications'
+        && isset($post['fields']['display_card_prominently'])
+        && $post['fields']['display_card_prominently']['value']
+        && $post['can_display_prominently'];
+}
 
 // Stripped-down Markdown support
 require_once 'markdown/Parsedown.php';
