@@ -94,7 +94,7 @@ function fleming_get_content()
 
     $fleming_content["latest_activity"] = $activities;
 
-    $fleming_content["view_all_activity_button"] = get_link_button("/news-events/?country=".$country_slug, "View All", "turquoise");
+    $fleming_content["view_all_activity_button"] = get_link_button("/news-events/?country=".$country_slug, "View all", "turquoise");
 
     return $fleming_content;
 }
