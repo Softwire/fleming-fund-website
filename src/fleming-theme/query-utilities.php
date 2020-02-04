@@ -566,57 +566,46 @@ function process_list_query(&$fleming_content, $initial_number_of_results, $post
     ]));
 }
 
-function query_news_events(&$fleming_content, $country_slug = null, $paged = true) {
-
+function news_events_page_query($current_page, $posts_per_page = 10, $country_slug = null) {
     $query_args = [
         'post_type'  => ['events', 'publications'],
         'post_status' => 'publish',
         'orderby' => 'publication_date',
         'order' => 'DESC',
-        'meta_query' => get_news_events_meta_query()
+        'posts_per_page' => $posts_per_page,
+        'meta_query' => get_news_events_meta_query(),
+        'paged' => $current_page
     ];
 
-    if ($paged) {
-        $current_page = get_query_var('paged') ?: 1;
-        $query_args['paged'] = $current_page;
-    }
-
     if (isset($country_slug)) { 
-        $country = get_page_by_path($country_slug, 'OBJECT', 'countries');
-        if ($country != null && $country->post_status == 'publish') {
-            $fleming_content['selected_country'] = $country;
-            $query_args["meta_query"]            = array(
-                'relation' => 'and',
-                $query_args["meta_query"],
-                array(
-                    'relation' => 'or',
-                    array(
-                        'key'   => 'country',
-                        'value' => $country->ID,
-                    ),
-                    array(
-                        'key'     => 'country_region',
-                        'value'   => serialize(strval($country->ID)),
-                        'compare' => 'LIKE',
-                    ),
-                ),
-            );
-        }
-    }
-
-    if ($paged && $current_page == 1 && empty($fleming_content['selected_country'])) {
-        process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
+        set_query_args_to_filter_by_country_slug($country_slug, $query_args);
     }
 
     $query = new WP_Query($query_args);
     $query_result = get_query_results($query);
 
-    foreach ($query_result['posts'] as &$post) {
-        if ($post['data']->post_type === 'publications') {
-            $post = publication_with_post_data_and_fields($post);
-        }
-        $post['should_display_prominently'] = should_display_prominently($post);
-    }
-
     return $query_result;
+}
+
+function set_query_args_to_filter_by_country_slug($country_slug, &$query_args) {
+    $country = get_page_by_path($country_slug, 'OBJECT', 'countries');
+
+    if ($country != null && $country->post_status == 'publish') {
+        $query_args["meta_query"]            = array(
+            'relation' => 'and',
+            $query_args["meta_query"],
+            array(
+                'relation' => 'or',
+                array(
+                    'key'   => 'country',
+                    'value' => $country->ID,
+                ),
+                array(
+                    'key'     => 'country_region',
+                    'value'   => serialize(strval($country->ID)),
+                    'compare' => 'LIKE',
+                ),
+            ),
+        );
+    }
 }

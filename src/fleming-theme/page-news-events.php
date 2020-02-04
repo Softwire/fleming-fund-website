@@ -23,7 +23,28 @@ function fleming_get_content()
         "nav"    => get_nav_builder()->withMenuRoute('news')->build(),
     );
 
-    $query_result = query_news_events($fleming_content, $_GET["country"] ?? null);
+    $country_slug = $_GET["country"] ?? null;
+    $current_page = get_query_var('paged') ?: 1;
+
+    if (isset($country_slug)) {
+        $query_result = news_events_page_query($current_page, 10, $country_slug);
+        $country = get_page_by_path($country_slug, 'OBJECT', 'countries');
+        $fleming_content['selected_country'] = $country;
+    }
+    else {
+        $query_result = news_events_page_query($current_page, 10);
+    }
+
+    if ($current_page == 1 && empty($fleming_content['selected_country'])) {
+        process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
+    }
+
+    foreach ($query_result['posts'] as &$post) {
+        if ($post['data']->post_type === 'publications') {
+            $post = publication_with_post_data_and_fields($post);
+        }
+        $post['should_display_prominently'] = should_display_prominently($post);
+    }
     
     /*
      * Re-order the posts so that they are arranged nicely in two columns even if some of them will be 'prominent' and take an entire row.

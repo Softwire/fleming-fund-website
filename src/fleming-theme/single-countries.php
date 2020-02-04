@@ -75,24 +75,9 @@ function fleming_get_content()
     $fleming_content['rss_link_target'] = '/feed/country/?channel=' . $country_slug;
 
     //query for the events and publications of the country
-    $latest_activity_query_result = query_news_events($fleming_content, $country_slug, false);
+    $latest_activity_query_result = news_events_page_query(1, 2, $country_slug);
 
-    //Select one or two posts to display
-    $activities = $latest_activity_query_result['posts'];
-
-    if (count($activities) > 1) {
-        if ($activities[0]['should_display_prominently']) {
-            $activities = [$activities[0]];
-        }
-        else if ($activities[1]['should_display_prominently']) {
-            $activities = [$activities[1]];
-        }
-        else {
-            $activities = [$activities[0], $activities[1]];
-        }
-    }
-
-    $fleming_content["latest_activity"] = $activities;
+    $fleming_content["latest_activity"] = $latest_activity_query_result['posts'];
 
     $fleming_content["view_all_activity_button"] = get_link_button("/news-events/?country=".$country_slug, "View all", "turquoise");
 
