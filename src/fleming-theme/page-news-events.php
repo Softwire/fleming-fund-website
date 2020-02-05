@@ -27,19 +27,19 @@ function fleming_get_content()
     $current_page = get_query_var('paged') ?: 1;
 
     if (isset($country_slug)) {
-        $query_result = news_events_page_query($current_page, 10, $country_slug);
+        $news_and_events = get_news_and_events($current_page, 10, $country_slug);
         $country = get_page_by_path($country_slug, 'OBJECT', 'countries');
         $fleming_content['selected_country'] = $country;
     }
     else {
-        $query_result = news_events_page_query($current_page, 10);
+        $news_and_events = get_news_and_events($current_page, 10);
     }
 
     if ($current_page == 1 && empty($fleming_content['selected_country'])) {
         process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
     }
 
-    foreach ($query_result['posts'] as &$post) {
+    foreach ($news_and_events['posts'] as &$post) {
         if ($post['data']->post_type === 'publications') {
             $post = publication_with_post_data_and_fields($post);
         }
@@ -61,10 +61,10 @@ function fleming_get_content()
      */
     $ordered_posts  = [];
     $held_back_post = null;
-    $length         = count($query_result['posts']);
+    $length         = count($news_and_events['posts']);
     unset($post);
     for ($i = 0; $i < $length; $i++) {
-        $post = $query_result['posts'][$i];
+        $post =  $news_and_events['posts'][$i];
         if ($post['should_display_prominently']) {
             $ordered_posts[] = $post;
         } else {
@@ -81,9 +81,9 @@ function fleming_get_content()
         $ordered_posts[] = $held_back_post;
     }
 
-    $query_result['posts'] = $ordered_posts;
+    $news_and_events['posts'] = $ordered_posts;
 
-    $fleming_content['query_result'] = $query_result;
+    $fleming_content['query_result'] = $news_and_events;
     $fleming_content['countries']    = get_posts(array(
         'post_type'          => 'countries',
         'numberposts'        => -1,

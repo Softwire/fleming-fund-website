@@ -566,7 +566,7 @@ function process_list_query(&$fleming_content, $initial_number_of_results, $post
     ]));
 }
 
-function news_events_page_query($current_page, $posts_per_page = 10, $country_slug = null) {
+function get_news_and_events($current_page, $posts_per_page = 10, $country_slug = null) {
     $query_args = [
         'post_type'  => ['events', 'publications'],
         'post_status' => 'publish',

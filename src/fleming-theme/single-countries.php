@@ -75,9 +75,9 @@ function fleming_get_content()
     $fleming_content['rss_link_target'] = '/feed/country/?channel=' . $country_slug;
 
     //query for the events and publications of the country
-    $latest_activity_query_result = news_events_page_query(1, 2, $country_slug);
+    $latest_activity = get_news_and_events(1, 2, $country_slug);
 
-    $fleming_content["latest_activity"] = $latest_activity_query_result['posts'];
+    $fleming_content["latest_activity"] = $latest_activity['posts'];
 
     $fleming_content["view_all_activity_button"] = get_link_button("/news-events/?country=".$country_slug, "View all", "turquoise");
 
