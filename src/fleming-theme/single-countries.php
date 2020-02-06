@@ -3,6 +3,7 @@
 require_once __DIR__ . '/php/get-css-filename.php';
 require_once 'navigation/index.php';
 require_once 'query-utilities.php';
+require_once 'functions.php';
 
 /**
  * NOTE:
@@ -33,6 +34,8 @@ function fleming_get_content()
     );
 
     $this_country = get_current_post_data_and_fields();
+
+    $country_slug = $this_country['data']->post_name;
 
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
 
@@ -71,9 +74,16 @@ function fleming_get_content()
 
     $fleming_content["country_slug"] = $this_country['data']->post_name;
 
-    $fleming_content['rss_link_target'] = '/feed/country/?channel=' .  $fleming_content["country_slug"];
-
     show_grant_numbers_by_type_awarded_to_country($fleming_content, $fleming_content["country_slug"]);
+    
+    $fleming_content['rss_link_target'] = '/feed/country/?channel=' . $country_slug;
+
+    //query for the events and publications of the country
+    $latest_activity = get_news_and_events(1, 2, $country_slug);
+
+    $fleming_content["latest_activity"] = $latest_activity['posts'];
+
+    $fleming_content["view_all_activity_button"] = get_link_button("/news-events/?country=".$country_slug, "View all", "turquoise");
 
     return $fleming_content;
 }

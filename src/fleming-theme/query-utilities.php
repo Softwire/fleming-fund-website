@@ -506,13 +506,14 @@ function get_upcoming_or_else_most_recent_grants() {
     return $result;
 }
 
-function get_link_button($url, $text = 'View More') {
+function get_link_button($url, $text = 'View More', $extra_class = null) {
     return [
         'acf_fc_layout' => 'link_button',
         'link' => [
             'title' => null,
             'url' => $url,
-            'target' => null
+            'target' => null,
+            'extra_class' => $extra_class
         ],
         'button_text' => $text,
         'centred' => true
@@ -601,4 +602,48 @@ function process_list_query(&$fleming_content, $initial_number_of_results, $post
         'order'              => 'ASC',
         'post_status'        => 'publish',
     ]));
+}
+
+function get_news_and_events($current_page, $posts_per_page = 10, $country_slug = null) {
+    $query_args = [
+        'post_type'  => ['events', 'publications'],
+        'post_status' => 'publish',
+        'orderby' => 'publication_date',
+        'order' => 'DESC',
+        'posts_per_page' => $posts_per_page,
+        'meta_query' => get_news_events_meta_query(),
+        'paged' => $current_page
+    ];
+
+    if (isset($country_slug)) { 
+        set_query_args_to_filter_by_country_slug($country_slug, $query_args);
+    }
+
+    $query = new WP_Query($query_args);
+    $query_result = get_query_results($query);
+
+    return $query_result;
+}
+
+function set_query_args_to_filter_by_country_slug($country_slug, &$query_args) {
+    $country = get_page_by_path($country_slug, 'OBJECT', 'countries');
+
+    if ($country != null && $country->post_status == 'publish') {
+        $query_args["meta_query"]            = array(
+            'relation' => 'and',
+            $query_args["meta_query"],
+            array(
+                'relation' => 'or',
+                array(
+                    'key'   => 'country',
+                    'value' => $country->ID,
+                ),
+                array(
+                    'key'     => 'country_region',
+                    'value'   => serialize(strval($country->ID)),
+                    'compare' => 'LIKE',
+                ),
+            ),
+        );
+    }
 }
