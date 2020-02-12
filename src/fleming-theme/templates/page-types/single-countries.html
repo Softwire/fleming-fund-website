@@ -113,16 +113,18 @@
       </div>
     {% endif %}
 
-    {% if latest_activity is empty and opportunities is not empty %}
+    {% if open_grants_in_this_country is not empty %}
       <h3>Current and Upcoming Opportunities</h3>
       <div class="card-container two-max">
-        {% for grant in opportunities %}
+        {% for grant in open_grants_in_this_country %}
           {% include 'cards/entities/grant.html' with {'grant': grant} %}
         {% endfor %}
       </div>
-    {% endif %}
+      {% if open_grants_in_this_country|length > 1 %}
+        {% include 'flexible-content/link_button.html' with { 'content_block': view_all_button.open_grants_in_this_country } %}
+      {% endif %}
 
-    {% if latest_activity is not empty %}
+    {% elseif latest_activity is not empty %}
       <h3>Latest Activity</h3>
       <div class="card-container two-max">
         {% for post in latest_activity %}
@@ -130,17 +132,19 @@
         {% endfor %}
       </div>
       {% if latest_activity|length > 1 %}
-        {% include 'flexible-content/link_button.html' with { 'content_block': view_all_activity_button } %}
+        {% include 'flexible-content/link_button.html' with { 'content_block': view_all_button.latest_activity } %}
       {% endif %}
-    {% endif %}
-
-    {% if projects is not empty %}
-      <h3>Current Projects</h3>
+    
+    {% elseif grants_in_this_country is not empty %}
+      <h3>Grants in {{ title }} </h3>
       <div class="card-container two-max">
-        {% for project in projects %}
-          {% include 'cards/entities/project.html' with {'project': project} %}
+        {% for grant in grants_in_this_country %}
+          {% include 'cards/entities/grant.html' with {'grant': grant} %}
         {% endfor %}
       </div>
+      {% if grants_in_this_country|length > 1 %}
+        {% include 'flexible-content/link_button.html' with { 'content_block': view_all_button.grants_in_this_country } %}
+      {% endif %}
     {% endif %}
 
   {% endblock %}
