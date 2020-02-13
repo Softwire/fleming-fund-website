@@ -584,6 +584,8 @@ function get_news_and_events($current_page, $posts_per_page = 10, $country_slug 
     $query = new WP_Query($query_args);
     $query_result = get_query_results($query);
 
+    wtf($query_result);
+
     return $query_result;
 }
 
@@ -598,7 +600,8 @@ function set_query_args_to_filter_by_country_slug($country_slug, &$query_args) {
                 'relation' => 'or',
                 array(
                     'key'   => 'country',
-                    'value' => $country->ID,
+                    'value'   => serialize(strval($country->ID)),
+                    'compare' => 'LIKE'
                 ),
                 array(
                     'key'     => 'country_region',
