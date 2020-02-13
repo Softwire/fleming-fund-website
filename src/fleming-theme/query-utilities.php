@@ -622,8 +622,6 @@ function get_news_and_events($current_page, $posts_per_page = 10, $country_slug 
     $query = new WP_Query($query_args);
     $query_result = get_query_results($query);
 
-    wtf($query_result);
-
     return $query_result;
 }
 
