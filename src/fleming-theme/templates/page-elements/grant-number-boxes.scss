@@ -1,14 +1,14 @@
-@mixin grant_type_label_style($font-size, $line-height, $width) {
+@mixin grant_type_label_style($font-size, $line-height) {
   display: inline-block;
-  width: $width;
+  width: 60%;
   font-size: $font-size;
   line-height: $line-height;
   vertical-align: middle;
 }
 
-@mixin number_of_grants_style($font-size, $width) {
+@mixin number_of_grants_style($font-size) {
   display: inline-block;
-  width: $width;
+  width: 35%;
   font-weight: bold;
   font-size: $font-size;
   text-align: center;
@@ -26,11 +26,11 @@
 
     &.four {
       .number-of-grants {
-        @include number_of_grants_style(3em, 40%);
+        @include number_of_grants_style(3em);
       }
 
       .grant-type-label {
-        @include grant_type_label_style(1.5em, 1.2em, 55%);
+        @include grant_type_label_style(1.5em, 1.2em);
       }
     }
 
@@ -52,23 +52,19 @@
       }
 
       .number-of-grants {
-        @include number_of_grants_style(2.7em, 35%);
+        @include number_of_grants_style(2.7em);
       }
 
       .grant-type-label {
-        @include grant_type_label_style(1.2em, 1.2em, 60%);
-      }
-
-      .button {
-        text-indent: 35%;
-        text-align: left;
+        @include grant_type_label_style(1.2em, 1.2em);
       }
     }
 
     .button {
       display: block;
       background: $light-turquoise;
-      text-align: right;
+      text-align: left;
+      text-indent: 35%;
       margin: 0;
       border: none;
 
