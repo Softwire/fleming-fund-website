@@ -26,12 +26,12 @@ function get_nav_model()
 
 function fleming_get_content()
 {
-    $fleming_content = array(
+    $fleming_content = [
         "css_filename" => get_css_filename(),
         "title" => get_raw_title(),
         "fields" => get_field_objects(),
-        "nav" => get_nav_model(),
-    );
+        "nav" => get_nav_model()
+    ];
 
     $this_country = get_current_post_data_and_fields();
 
@@ -50,27 +50,9 @@ function fleming_get_content()
         $fleming_content["coordinator"] = get_post_data_and_fields($region_data["fields"]["coordinator"]["value"]->ID);
     }
 
-    // qq - include region and worldwide grants?
-    // qq - sort? filter?
-    $fleming_content["opportunities"] = array_map(
-        'grant_with_post_data_and_fields',
-        array_slice(
-            get_referring_posts(get_the_ID(), 'grants', 'countries'),
-            0,
-            2
-        )
-    );
-
-    $allProjects = [];
-    foreach ($fleming_content["opportunities"] as $grant) {
-        $projectsForGrant = array_map(
-            'project_with_post_data_and_fields',
-            get_referring_posts($grant['data']->ID, 'projects', 'grant')
-        );
-        $allProjects = array_merge($allProjects, $projectsForGrant);
-    }
-    // qq - sort? filter?
-    $fleming_content["projects"] = array_slice($allProjects, 0, 2);
+    $grants_in_this_country = array_map('grant_with_post_data_and_fields', get_referring_posts(get_the_ID(), 'grants', 'countries'));
+    $fleming_content["grants_in_this_country"] = array_slice($grants_in_this_country, 0, 2);
+    $fleming_content["open_grants_in_this_country"] =  array_slice(array_filter($grants_in_this_country, 'grant_is_open'), 0, 2);
 
     $fleming_content["country_slug"] = $this_country['data']->post_name;
 
@@ -80,10 +62,13 @@ function fleming_get_content()
 
     //query for the events and publications of the country
     $latest_activity = get_news_and_events(1, 2, $country_slug);
-
     $fleming_content["latest_activity"] = $latest_activity['posts'];
 
-    $fleming_content["view_all_activity_button"] = get_link_button("/news-events/?country=".$country_slug, "View all", "turquoise");
+    $fleming_content["view_all_button"] = [
+        "grants_in_this_country" =>  get_link_button("/grants/?&country=".$country_slug, "View all", "turquoise"),
+        "open_grants_in_this_country" => get_link_button("/grants/?&country=".$country_slug."&status=open", "View all", "turquoise"),
+        "latest_activity" => get_link_button("/news-events/?country=".$country_slug, "View all", "turquoise")
+    ];
 
     return $fleming_content;
 }

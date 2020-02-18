@@ -636,7 +636,8 @@ function set_query_args_to_filter_by_country_slug($country_slug, &$query_args) {
                 'relation' => 'or',
                 array(
                     'key'   => 'country',
-                    'value' => $country->ID,
+                    'value'   => serialize(strval($country->ID)),
+                    'compare' => 'LIKE'
                 ),
                 array(
                     'key'     => 'country_region',
