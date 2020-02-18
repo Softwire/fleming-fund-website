@@ -1,14 +1,14 @@
-@mixin grant_type_label_style($font-size, $line-height) {
+@mixin grant_type_label_style($font-size, $line-height, $width) {
   display: inline-block;
-  width: 55%;
+  width: $width;
   font-size: $font-size;
   line-height: $line-height;
   vertical-align: middle;
 }
 
-@mixin number_of_grants_style($font-size) {
+@mixin number_of_grants_style($font-size, $width) {
   display: inline-block;
-  width: 40%;
+  width: $width;
   font-weight: bold;
   font-size: $font-size;
   text-align: center;
@@ -26,21 +26,42 @@
 
     &.four {
       .number-of-grants {
-        @include number_of_grants_style(3em);
+        @include number_of_grants_style(3em, 40%);
       }
 
       .grant-type-label {
-        @include grant_type_label_style(1.5em, 1.2em);
+        @include grant_type_label_style(1.5em, 1.2em, 55%);
       }
     }
 
-    &.three {
+    &.custom-width-3 {
+      @media (min-width: 1100px) {
+        width: 23.5%;
+        margin-left: 2%;
+        &.columns:first-child {
+          margin-left: 0%;
+        }
+      }
+
+      @media ($min-width-mobile) and (max-width:1100px) {
+        width: 49%;
+        margin-left: 2%;
+        &.columns:nth-child(odd) {
+          margin-left: 0%;
+        }
+      }
+
       .number-of-grants {
-        @include number_of_grants_style(2.7em);
+        @include number_of_grants_style(2.7em, 35%);
       }
 
       .grant-type-label {
-        @include grant_type_label_style(1.2em, 1.2em);
+        @include grant_type_label_style(1.2em, 1.2em, 60%);
+      }
+
+      .button {
+        text-indent: 35%;
+        text-align: left;
       }
     }
 
