@@ -269,7 +269,7 @@ function show_grant_numbers_by_type_awarded_to_country(&$fleming_content, $count
             'number_of_global_projects' => count(filter_grants($grants_awarded_to_country, "type", "global-project"))
         ];
 
-        set_transient($cache_id, $grant_numbers, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
+        set_transient($cache_id, $grant_numbers, min(MAX_CACHE_SECONDS, 10));
     }
 
     $fleming_content['number_of_country_grants'] = $grant_numbers['number_of_country_grants'];
