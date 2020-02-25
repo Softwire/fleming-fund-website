@@ -19,21 +19,28 @@ var s3 = null;
 start();
 
 async function start() {
-    sayHello();
-    checkFolder();
-    var options = await getOptionsFromCommandLineOrUser();
+    try {
+        sayHello();
+        checkFolder();
+        var options = await getOptionsFromCommandLineOrUser();
 
-    await createTempDirIfNecessary();
+        createTempDirIfNecessary();
 
-    await loadConfigsAndTestConnections(options);
+        await loadConfigsAndTestConnections(options);
 
-    if (options.get_database) { await getDatabase(); }
-    if (options.get_files) { await getFiles(); }
+        if (options.get_database) { await getDatabase(); }
+        if (options.get_files) { await getFiles(); }
 
-    if (options.restore_database) { await restoreDatabase(); }
-    if (options.restore_files) { await restoreFiles(); }
+        if (options.restore_database) { await restoreDatabase(); }
+        if (options.restore_files) { restoreFiles(); }
 
-    sayGoodbye();
+        sayGoodbye();
+    } catch (e) {
+        console.error(e);
+        console.log('');
+        console.log('------------------------------------------------------');
+        console.error("Script failed: " + e.message);
+    }
     process.exit();
 }
 
@@ -43,6 +50,7 @@ function createTempDirIfNecessary() {
 
     makeDirIfNotExists('./.temp');
     makeDirIfNotExists('./.temp/database-backup');
+    makeDirIfNotExists('./.temp/database-backup/latest');
     makeDirIfNotExists('./.temp/file-backup');
     makeDirIfNotExists('./.temp/uploads');
 }
@@ -192,9 +200,13 @@ async function getDatabase() {
         console.log('  - file already exists - nothing to do');
     }
     else {
-        console.log('  - file does not exists - need to download');
+        console.log('  - file does not exist - need to download');
         console.log('- copying database from S3 file [' + latestDatabaseFilename + '] to local path [' + localPath + ']');
         await downloadS3FileToLocalFile(latestDatabaseFilename, localPath);
+
+        console.log('  - copying into restore folder');
+        await fs.emptyDir('./.temp/database-backup/restore');
+        await fs.copyFile(localPath, './.temp/database-backup/restore/latest.sql.gz');
 
         console.log('- unzipping file [' + localPath + ']');
         gunzip(localPath);
@@ -220,8 +232,14 @@ async function getFiles() {
     console.log('- found the latest files backup - filename is [' + latestUploadsFilename + ']');
 
     const localPath = './.temp/file-backup/' + latestUploadsFilename;
-    console.log('- copying files from S3 file [' + latestUploadsFilename + '] to local path [' + localPath + ']');
-    await downloadS3FileToLocalFile(latestUploadsFilename, localPath);
+
+    if (fs.existsSync(localPath)) {
+        console.log('  - file already exists - nothing to do');
+    }
+    else {
+        console.log('- copying files from S3 file [' + latestUploadsFilename + '] to local path [' + localPath + ']');
+        await downloadS3FileToLocalFile(latestUploadsFilename, localPath);
+    }
 }
 
 
@@ -234,43 +252,51 @@ async function restoreDatabase() {
     console.log('restoring database');
     console.log(''); // make some space in the log
 
-    const databaseBackupSqlFile = findDatabaseBackupFile();
 
-    return new Promise(resolve => {
-        var connection = mysql.createConnection({
-            host: 'localhost',
-            user: process.env['DB_USER'] || 'root',
-            password: process.env['DB_PASSWORD'] || 'password',
-            database: '',
-            multipleStatements: true
-        });
-
-        console.log('connecting to MySql');
-        connection.connect();
-        console.log('connected');
-
-        const backupQuery = fs.readFileSync(databaseBackupSqlFile);
-        const wholeRestoreQuery = "DROP SCHEMA IF EXISTS `wordpress`; CREATE SCHEMA `wordpress` DEFAULT CHARACTER SET utf8mb4; USE `wordpress`; " + backupQuery;
-
-        console.log("Trying to increase the max packet size to " + max_allowed_packet);
-        const setMaxPacketSizeQuery = `SET GLOBAL max_allowed_packet=${max_allowed_packet};`;
-
-        connection.query(setMaxPacketSizeQuery, (err) => {
-            if (err) throw err;
-            console.log("Successfully set max packet size to " + max_allowed_packet);
-            console.log("Running main restore query");
-            connection.query(wholeRestoreQuery, function (error) {
-                if (error) throw error;
-                console.log('Restore query executed, disabling backups and setting up user Softwire/password');
-                const localChangesQuery = fs.readFileSync("post-live-restore.sql").toString().replace(/_PASSWORD_/g, "password");
-                connection.query(localChangesQuery, function (error) {
-                    if (error) throw error;
-                    resolve();
-                    connection.end();
-                })
-            });
-        });
+    var connection = mysql.createConnection({
+        host: 'localhost',
+        port: process.env['DB_PORT'] ? Number(process.env['DB_PORT']) : 3306,
+        user: process.env['DB_USER'] || 'root',
+        password: process.env['DB_PASSWORD'] || 'password',
+        database: '',
+        multipleStatements: true
     });
+
+    console.log('connecting to MySql');
+    connection.connect();
+    console.log('connected');
+
+    await runRestoreQuery(connection);
+
+    console.log('Disabling backups and setting up user Softwire/password (post-live-restore.sql)');
+    const localChangesQuery = fs.readFileSync("post-live-restore.sql").toString();
+    await runDbQuery(connection, localChangesQuery);
+    console.log("Restore complete");
+    connection.end();
+}
+
+async function runRestoreQuery(connection) {
+    console.log("Reading latest database backup");
+    const databaseBackupSqlFile = findDatabaseBackupFile();
+    const backupQuery = fs.readFileSync(databaseBackupSqlFile);
+    const wholeRestoreQuery = "DROP SCHEMA IF EXISTS `wordpress`; CREATE SCHEMA `wordpress` DEFAULT CHARACTER SET utf8mb4; USE `wordpress`; " + backupQuery;
+
+    console.log("Running main restore query");
+    console.log("If this fails with a max_allowed_packet error then increase the limit: SET GLOBAL max_allowed_packet=" + 256 * 1024 * 1024);
+    await runDbQuery(connection, wholeRestoreQuery);
+    console.log("Restore query executed");
+}
+
+function runDbQuery(connection, query) {
+    return new Promise((resolve, reject) =>
+        connection.query(query, (err) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve();
+            }
+        })
+    );
 }
 
 function findDatabaseBackupFile() {

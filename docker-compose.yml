@@ -1,0 +1,32 @@
+version: '3.3'
+
+services:
+  db:
+    image: mysql:8
+    volumes:
+      - fleming_db:/var/lib/mysql
+      - ./.temp/database-backup/restore:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: wordpress
+    ports:
+      - "3308:3306"
+    command: ['mysqld', '--max_allowed_packet=1G', '--default-authentication-plugin=mysql_native_password', '--sql-mode=ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION']
+  php:
+    image: wordpress:php7.2-apache
+    depends_on:
+      - db
+    ports:
+      - "3000:80"
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: password
+      DB_NAME: wordpress
+      FLEM_ENV: "local-dev"
+      MAX_CACHE_SECONDS: "1"
+      WP_HOME: "http://localhost:3000"
+    volumes:
+      - ./dist/wordpress:/var/www/html
+volumes:
+  fleming_db:
