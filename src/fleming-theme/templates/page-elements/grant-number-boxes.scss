@@ -24,6 +24,17 @@
     background: $mid-turquoise;
     margin-bottom: 30px;
 
+    @each $configName, $colourConfig in $colourConfigs {
+      &.#{$configName} {
+        border-color: map-get($colourConfig, intense);
+        background: map-get($colourConfig, intense);
+    
+        .button {
+          background: map-get($colourConfig, subtle);
+        }
+      }
+    }
+
     &.four {
       .number-of-grants {
         @include number_of_grants_style(3em);

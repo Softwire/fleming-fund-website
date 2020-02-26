@@ -24,7 +24,7 @@
 
 {% include 'page-elements/in-page-links.html' %}
 
-{% include 'page-elements/country-specific-grant-number-boxes.html' %}
+{% include 'page-elements/country-specific-grant-number-boxes.html' with { 'colour_scheme' : colour_scheme } %}
 
 {% embed 'flexible_content.twig' with { 'flexible_content': fields.flexible_content.value } %}
   {% block aside %}
