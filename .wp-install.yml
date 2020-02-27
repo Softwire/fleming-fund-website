@@ -16,6 +16,9 @@ plugins-to-download:
   - name: disable-emojis
   - name: disable-embeds
   - name: wordpress-seo
+  - name: mailchimp
+  - name: ga-google-analytics
+  - name: contact-form-7
 
 plugins-to-copy:
   directory: dependencies/plugins
