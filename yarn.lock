@@ -6703,14 +6703,13 @@ worker-farm@^1.5.2:
   dependencies:
     errno "~0.1.7"
 
-wp-install@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/wp-install/-/wp-install-2.0.0.tgz#57287f6c9d7c607ccc169be34fda19bd1b5bb65b"
-  integrity sha512-3dKFgUdw07BF3aor4PUWWbAZGWvr9XCg+qaLr2FjjJEX7EuDc7H7v/oKpUn3AR/I4WPtwgqmjZRoAs5ARftsqg==
+wp-install@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/wp-install/-/wp-install-2.1.0.tgz#0edce4198ed5514c4865042c7a45da0f493f5561"
+  integrity sha512-ArCmuIefkcdpVfZJp9VxuYNGXZ2HiTw/4JUp+i+/EB7XBCb7OasraPrHp/6iqTDXzlbX67vFAak9TAB7/1vK0g==
   dependencies:
     fs-extra "^5.0.0"
     js-yaml "^3.11.0"
-    lodash "^4.17.10"
     request "^2.85.0"
 
 wrap-ansi@^2.0.0:
