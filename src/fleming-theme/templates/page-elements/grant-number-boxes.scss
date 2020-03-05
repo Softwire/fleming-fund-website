@@ -77,6 +77,17 @@
   }
 }
 
+@each $configName, $colourConfig in $colourConfigs {
+  .#{$configName} .country.grant-number-boxes .grant-number-box {
+    border-color: map-get($colourConfig, intense);
+    background: map-get($colourConfig, intense);
+
+    .button {
+      background: map-get($colourConfig, subtle);
+    }
+  }
+}
+
 @media (#{$max-width-tablet}) {
   .grant-number-boxes .grant-number-box .number-of-grants {
     margin-top: 0;
