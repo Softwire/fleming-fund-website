@@ -13,7 +13,8 @@ services:
       - "3308:3306"
     command: ['mysqld', '--max_allowed_packet=1G', '--default-authentication-plugin=mysql_native_password', '--sql-mode=ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION']
   php:
-    image: wordpress:php7.2-apache
+    build:
+      context: docker
     depends_on:
       - db
     ports:
@@ -26,6 +27,16 @@ services:
       FLEM_ENV: "local-dev"
       MAX_CACHE_SECONDS: "1"
       WP_HOME: "http://localhost:3000"
+      # host.docker.internal is Windows only
+      XDEBUG_CONFIG: 'idekey=PHPStorm remote_host=host.docker.internal'
+      AUTH_KEY: "l3aqbd1rSR0zk2naK2WZWJf3GDLF13nPP5uWgyyVerMVD+/OXdoFJ+wQeFVvPrTt"
+      SECURE_AUTH_KEY: "P+BpxVnVVTM9JkmtQkqLCEKoc75riL/ZwDW3fM9m4uJigqFWxr3i/gs5lzoTlWav"
+      LOGGED_IN_KEY: "6Lb8+ZesCHUiQy74JNvrwfMB9yyzbd/hJ5EQ2s3RFH3T+I0Jxv84rvfDStOMeYg8"
+      NONCE_KEY: "pMgsU7wtJVlUURNser+OqxD/UNsy6up8NQx+bUSBbty48dvZplZuXgpGGI9/88wS"
+      AUTH_SALT: "zvK9X1pN8PmnXzxRTgu8/duxqDo8/L9dvdBX3gn22Lx9Yz64NDAm3fVyuyaNKZ3A"
+      SECURE_AUTH_SALT: "hn48GBjcukT4/5WzpMWmMyVTsvve6mwvxdPiaPtQCkHQ1FnUv1+d3xODOd4y6njz"
+      LOGGED_IN_SALT: "jnZJNZsPIGAuKMDN8m8yhlfnNrUX4uU2OUvviyO9z8IR2Id9HXAed2VxQgQVFAPH"
+      NONCE_SALT: "zyN/SXhOwMY8/cOdD9CGsexTUlfqLnOIlXmxweFYtGWmbVdWP4gkto56kD90B1M1"
     volumes:
       - ./dist/wordpress:/var/www/html
 volumes:
