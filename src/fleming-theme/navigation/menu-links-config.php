@@ -50,7 +50,7 @@ class MenuLinksConfig
                     'target' => '/grants-funding/regional-grants/',
                 ],
                 'fellowship' => [
-                    'title' => 'Professional Fellowships',
+                    'title' => 'Fellowships',
                     'target' => '/grants-funding/fellowships/',
                 ],
                 'other' => [
