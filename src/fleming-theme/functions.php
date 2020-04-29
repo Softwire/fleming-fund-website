@@ -258,6 +258,8 @@ function grant_with_post_data_and_fields($grant) {
         $grant['status_name'] = get_string_from_simple_select_field($grant['fields']['status']);
     } elseif (isset($grant['fields']['status_global_project']) && $grant['fields']['status_global_project']['value'] != 0) {
         $grant['status_name'] = get_string_from_simple_select_field($grant['fields']['status_global_project']);
+    } elseif (isset($grant['fields']['status_fellowship']) && $grant['fields']['status_fellowship']['value'] != 0) {
+        $grant['status_name'] = get_string_from_simple_select_field($grant['fields']['status_fellowship']);
     } elseif ($statusEvent) {
         $grant['status_name'] = $statusEvent['event_name'];
     }
@@ -286,7 +288,8 @@ function grant_deadline_is_in_future($grant) {
 
 function grant_is_active($grant) {
     return (isset($grant['fields']['status']) && $grant['fields']['status']['value'] == 5) ||
-        (isset($grant['fields']['status_global_project']) && $grant['fields']['status_global_project']['value'] == 3);
+        (isset($grant['fields']['status_global_project']) && $grant['fields']['status_global_project']['value'] == 3) ||
+        (isset($grant['fields']['status_fellowship']) && $grant['fields']['status_fellowship']['value'] == 2);
 }
 
 function grant_is_open($grant) {

@@ -474,6 +474,33 @@
                 "ajax": 0,
                 "return_format": "value",
                 "placeholder": ""
+            },
+            {
+                "key": "field_5b324b018e38c",
+                "label": "Status - FELLOWSHIP",
+                "name": "status_fellowship",
+                "type": "select",
+                "instructions": "This is used by Fellowships",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": [
+                    "Fellowship None",
+                    "Fellowship Scoping Activities",
+                    "Fellowship Project Active",
+                    "Fellowship Project Complete"
+                ],
+                "default_value": [],
+                "allow_null": 0,
+                "multiple": 0,
+                "ui": 0,
+                "ajax": 0,
+                "return_format": "value",
+                "placeholder": ""
             }
         ],
         "location": [
