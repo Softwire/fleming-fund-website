@@ -289,7 +289,7 @@ function grant_deadline_is_in_future($grant) {
 function grant_is_active($grant) {
     return (isset($grant['fields']['status']) && $grant['fields']['status']['value'] == 5) ||
         (isset($grant['fields']['status_global_project']) && $grant['fields']['status_global_project']['value'] == 3) ||
-        (isset($grant['fields']['status_fellowship']) && $grant['fields']['status_fellowship']['value'] == 2);
+        (isset($grant['fields']['status_fellowship']) && $grant['fields']['status_fellowship']['value'] == 5);
 }
 
 function grant_is_open($grant) {

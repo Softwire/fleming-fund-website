@@ -480,7 +480,7 @@
                 "label": "Status - FELLOWSHIP",
                 "name": "status_fellowship",
                 "type": "select",
-                "instructions": "This is used by Fellowships",
+                "instructions": "This is used by Fellowships, shown on the grant card and as a timeline on the individual project page",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -489,10 +489,12 @@
                     "id": ""
                 },
                 "choices": [
-                    "Fellowship None",
-                    "Fellowship Scoping Activities",
-                    "Fellowship Project Active",
-                    "Fellowship Project Complete"
+                    "None",
+                    "Host institution approved",
+                    "Fellows selected",
+                    "Workplan development workshop",
+                    "Workplans approved",
+                    "Fellows active"
                 ],
                 "default_value": [],
                 "allow_null": 0,
