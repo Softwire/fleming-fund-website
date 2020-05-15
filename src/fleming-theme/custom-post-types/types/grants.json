@@ -490,11 +490,11 @@
                 },
                 "choices": [
                     "None",
-                    "Host institution approved",
-                    "Fellows selected",
-                    "Workplan development workshop",
-                    "Workplans approved",
-                    "Fellows active"
+                    "Host Institution Approved",
+                    "Fellows Selected",
+                    "Workplan Development Workshop",
+                    "Workplans Approved",
+                    "Fellows Active"
                 ],
                 "default_value": [],
                 "allow_null": 0,

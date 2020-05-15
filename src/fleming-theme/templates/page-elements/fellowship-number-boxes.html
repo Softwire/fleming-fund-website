@@ -1,0 +1,23 @@
+<div class="grant-number-boxes">
+    {% if total_number_of_grants is defined %}
+    <div class="grant-number-box four columns">
+        <div class="number-of-grants">{{ total_number_of_grants }}</div>
+        <div class="grant-type-label">COUNTR{{total_number_of_grants != 1 ? 'IES' : 'Y'}} INVOLVED</div>
+        <a class="button" href="/grants/?type=fellowship">View all</a>
+    </div>
+    {% endif %}
+    {% if number_of_open_grants is defined %}
+    <div class="grant-number-box four columns">
+        <div class="number-of-grants">{{ total_number_of_grants }}</div>
+        <div class="grant-type-label">TOTAL FELLOW{{total_number_of_grants != 1 ? 'S' : ''}}</div>
+        <a class="button" href="/grants/?type=fellowship">View all</a>
+    </div>
+    {% endif %}
+    {% if number_of_active_grants is defined %}
+    <div class="grant-number-box four columns">
+        <div class="number-of-grants">{{ number_of_active_grants }}</div>
+        <div class="grant-type-label">ACTIVE FELLOWSHIP{{number_of_active_grants != 1 ? 'S' : ''}}</div>
+        <a class="button" href="activity/">View activity</a>
+    </div>
+    {% endif %}
+</div>

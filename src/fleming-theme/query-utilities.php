@@ -231,11 +231,13 @@ function show_grant_numbers_for_page(&$fleming_content) {
             $all_grants = get_full_grants($grant_type->ID);
             $open_grants = array_filter($all_grants, "grant_is_open");
             $active_grants = array_filter($all_grants, "grant_is_active");
+            $different_countries = array_unique(array_merge(array_map('get_countries', $grants)));
             $grant_numbers = [
                 'grant_type' => $grant_type->post_name,
                 'total_number_of_grants' => count($all_grants),
                 'number_of_open_grants' => count($open_grants),
                 'number_of_active_grants' => count($active_grants),
+                'number_of_countries' => count($different_countries),
             ];
         } else {
             // We couldn't read the grant type. Cache something as a failure.
@@ -249,6 +251,7 @@ function show_grant_numbers_for_page(&$fleming_content) {
     $fleming_content['total_number_of_grants'] = $grant_numbers['total_number_of_grants'];
     $fleming_content['number_of_open_grants'] = $grant_numbers['number_of_open_grants'];
     $fleming_content['number_of_active_grants'] = $grant_numbers['number_of_active_grants'];
+    $fleming_content['number_of_countries'] = $grant_numbers['number_of_countries'];
 }
 
 function show_grant_numbers_by_type_awarded_to_country(&$fleming_content, $country_slug) {

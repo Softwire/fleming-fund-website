@@ -296,6 +296,10 @@ function grant_is_open($grant) {
     return $grant['nextEvent'] && $grant['nextEvent']['apply_now_valid'];
 }
 
+function get_countries($grant) {
+    return ($grant['fields']['countries']);
+}
+
 // Sort grant records by deadline ascending
 function sort_future_grants($opportunities) {
     usort($opportunities, function ($a, $b) {
