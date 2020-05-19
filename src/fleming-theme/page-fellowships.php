@@ -28,7 +28,6 @@ function fleming_get_content() {
 
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
 
-    show_grant_numbers_for_page($fleming_content);
     get_case_studies_supporting_content($fleming_content);
 
     return $fleming_content;
