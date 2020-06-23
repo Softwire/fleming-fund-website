@@ -10,29 +10,52 @@ class MenuLinksConfig
             'target' => '/about-us/',
 
             'children' => [
+                'aims' => [
+                    'title' => 'Aims & Values',
+                    'target' => '/about-us/our-aims/'
+                ],
+                'history' => [
+                    'title' => 'History',
+                    'target' => '/about-us/our-history/',
+                ],
+                'governance' => [
+                    'title' => 'Governance',
+                    'target' => '/governance/',
+                ],
+                'partners' => [
+                    'title' => 'Partners',
+                    'target' => '/about-us/partners/',
+                ],
+                'contact' => [
+                    'title' => 'Contact',
+                    'target' => '/contact-us/',
+                ],
+            ],
+        ],
+        'approach' => [
+            'title' => 'Our Approach',
+            'target' => '/our-approach/',
+
+            'children' => [
                 'about_amr' => [
                     'title' => 'About AMR',
                     'target' => '/about-us/about-amr/'
                 ],
                 'importance_of_data' => [
-                    'title' => 'Importance of Data',
+                    'title' => 'The Value of Data',
                     'target' => '/about-us/the-importance-of-data/'
                 ],
-                'investment' => [
-                    'title' => 'Investment Areas',
-                    'target' => '/investment-areas/',
+                'measuring_progress' => [
+                    'title' => 'Measuring Progress',
+                    'target' => '/measuring-progress/',
                 ],
-                'partners' => [
-                    'title' => 'Partners',
-                    'target' => '/partners/',
+                'activities' => [
+                    'title' => 'Our Activities',
+                    'target' => '/our-activities/',
                 ],
-                'advisory' => [
-                    'title' => 'Technical Advisory Group',
-                    'target' => '/technical-advisory-group/'
-                ],
-                'contact' => [
-                    'title' => 'Contact Us',
-                    'target' => '/contact-us/',
+                'programme_design' => [
+                    'title' => 'Programme Design',
+                    'target' => '/programme-design/',
                 ],
             ],
         ],
@@ -64,7 +87,7 @@ class MenuLinksConfig
                 'apply' => [
                     'title' => 'How to Apply',
                     'target' => '/application-process/',
-                ],
+                ]
             ],
         ],
         'regions' => [
