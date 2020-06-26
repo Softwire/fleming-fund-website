@@ -10,29 +10,52 @@ class MenuLinksConfig
             'target' => '/about-us/',
 
             'children' => [
-                'about_amr' => [
-                    'title' => 'About AMR',
-                    'target' => '/about-us/about-amr/'
+                'aims' => [
+                    'title' => 'Aims & Values',
+                    'target' => '/about-us/our-aims/'
                 ],
-                'importance_of_data' => [
-                    'title' => 'Importance of Data',
-                    'target' => '/about-us/the-importance-of-data/'
+                'history' => [
+                    'title' => 'History',
+                    'target' => '/about-us/our-history/',
                 ],
-                'investment' => [
-                    'title' => 'Investment Areas',
-                    'target' => '/investment-areas/',
+                'governance' => [
+                    'title' => 'Governance',
+                    'target' => '/about-us/governance/',
                 ],
                 'partners' => [
                     'title' => 'Partners',
-                    'target' => '/partners/',
-                ],
-                'advisory' => [
-                    'title' => 'Technical Advisory Group',
-                    'target' => '/technical-advisory-group/'
+                    'target' => '/about-us/partners/',
                 ],
                 'contact' => [
-                    'title' => 'Contact Us',
+                    'title' => 'Contact',
                     'target' => '/contact-us/',
+                ],
+            ],
+        ],
+        'approach' => [
+            'title' => 'Our Approach',
+            'target' => '/our-approach/',
+
+            'children' => [
+                'about_amr' => [
+                    'title' => 'About AMR',
+                    'target' => '/our-approach/about-amr/'
+                ],
+                'importance_of_data' => [
+                    'title' => 'The Value of Data',
+                    'target' => '/our-approach/the-value-of-data/'
+                ],
+                'measuring_progress' => [
+                    'title' => 'Measuring Progress',
+                    'target' => '/our-approach/measuring-progress/',
+                ],
+                'activities' => [
+                    'title' => 'Our Activities',
+                    'target' => '/our-approach/our-activities/',
+                ],
+                'programme_design' => [
+                    'title' => 'Programme Design',
+                    'target' => '/our-approach/programme-design/',
                 ],
             ],
         ],
@@ -64,7 +87,7 @@ class MenuLinksConfig
                 'apply' => [
                     'title' => 'How to Apply',
                     'target' => '/application-process/',
-                ],
+                ]
             ],
         ],
         'regions' => [
