@@ -20,7 +20,7 @@ class MenuLinksConfig
                 ],
                 'governance' => [
                     'title' => 'Governance',
-                    'target' => '/governance/',
+                    'target' => '/about-us/governance/',
                 ],
                 'partners' => [
                     'title' => 'Partners',
@@ -39,23 +39,23 @@ class MenuLinksConfig
             'children' => [
                 'about_amr' => [
                     'title' => 'About AMR',
-                    'target' => '/about-us/about-amr/'
+                    'target' => '/our-approach/about-amr/'
                 ],
                 'importance_of_data' => [
                     'title' => 'The Value of Data',
-                    'target' => '/about-us/the-importance-of-data/'
+                    'target' => '/our-approach/the-value-of-data/'
                 ],
                 'measuring_progress' => [
                     'title' => 'Measuring Progress',
-                    'target' => '/measuring-progress/',
+                    'target' => '/our-approach/measuring-progress/',
                 ],
                 'activities' => [
                     'title' => 'Our Activities',
-                    'target' => '/our-activities/',
+                    'target' => '/our-approach/our-activities/',
                 ],
                 'programme_design' => [
                     'title' => 'Programme Design',
-                    'target' => '/programme-design/',
+                    'target' => '/our-approach/programme-design/',
                 ],
             ],
         ],
