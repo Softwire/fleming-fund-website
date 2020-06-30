@@ -146,6 +146,39 @@
                 "ui": 1
             },
             {
+                "key": "field_5b0nj9xnxyvj4",
+                "label": "Number of Fellows",
+                "name": "number_of_fellows",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_5b0696df6ae19",
+                            "operator": ">",
+                            "value": "167"
+                        },
+                        {
+                            "field": "field_5b0696df6ae19",
+                            "operator": "<",
+                            "value": "169"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "1",
+                "placeholder": "",
+                "min": "0",
+                "max": "",
+                "step": "1",
+                "ui": 1
+            },
+            {
                 "key": "field_5b0696f06ae1a",
                 "label": "Aims",
                 "name": "aims",

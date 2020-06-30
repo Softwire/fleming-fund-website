@@ -231,13 +231,11 @@ function show_grant_numbers_for_page(&$fleming_content) {
             $all_grants = get_full_grants($grant_type->ID);
             $open_grants = array_filter($all_grants, "grant_is_open");
             $active_grants = array_filter($all_grants, "grant_is_active");
-            $different_countries = array_unique(array_merge(array_map('get_countries', $grants)));
             $grant_numbers = [
                 'grant_type' => $grant_type->post_name,
                 'total_number_of_grants' => count($all_grants),
                 'number_of_open_grants' => count($open_grants),
                 'number_of_active_grants' => count($active_grants),
-                'number_of_countries' => count($different_countries),
             ];
         } else {
             // We couldn't read the grant type. Cache something as a failure.
@@ -251,7 +249,38 @@ function show_grant_numbers_for_page(&$fleming_content) {
     $fleming_content['total_number_of_grants'] = $grant_numbers['total_number_of_grants'];
     $fleming_content['number_of_open_grants'] = $grant_numbers['number_of_open_grants'];
     $fleming_content['number_of_active_grants'] = $grant_numbers['number_of_active_grants'];
-    $fleming_content['number_of_countries'] = $grant_numbers['number_of_countries'];
+}
+
+function show_fellowship_statistics(&$fleming_content) {
+    $post_id = get_post()->ID;
+    if (!$post_id) {
+        return;
+    }
+
+    $cache_id = 'fellowship_statistics_' . $post_id;
+    $fellowship_statistics = get_transient($cache_id);
+
+    if(!is_array($fellowship_statistics)) {
+        $fellowship_grant_type = get_grant_type_for_page($post_id);
+        $fellowships = get_full_grants($fellowship_grant_type->ID);
+
+        $active_fellowships = array_filter($fellowships, 'fellowship_is_active');
+        $different_countries = array_unique(call_user_func_array('array_merge', array_map('get_country_ids', $fellowships)));
+        $number_of_fellows = array_sum(array_map('get_number_of_fellows', $active_fellowships));
+
+
+        $fellowship_statistics = [
+            'number_of_countries' => count($different_countries),
+            'number_of_active_fellowships' => count($active_fellowships),
+            'number_of_fellows' => $number_of_fellows
+        ];
+
+        set_transient($cache_id, $fellowship_statistics, min(MAX_CACHE_SECONDS, MINUTE_IN_SECONDS * 10));
+    }
+
+    $fleming_content['number_of_fellows'] = $fellowship_statistics['number_of_fellows'];
+    $fleming_content['number_of_active_fellowships'] = $fellowship_statistics['number_of_active_fellowships'];
+    $fleming_content['number_of_countries'] = $fellowship_statistics['number_of_countries'];
 }
 
 function show_grant_numbers_by_type_awarded_to_country(&$fleming_content, $country_slug) {

@@ -296,8 +296,29 @@ function grant_is_open($grant) {
     return $grant['nextEvent'] && $grant['nextEvent']['apply_now_valid'];
 }
 
+function fellowship_is_active($fellowship) {
+    return (isset($fellowship['fields']['status_fellowship']) && $fellowship['fields']['status_fellowship']['value'] == 5);
+}
+
 function get_countries($grant) {
     return ($grant['fields']['countries']);
+}
+
+function get_country_ids($grant) {
+    $countries = get_countries($grant)['value'];
+    return array_map('get_country_id', $countries);
+}
+
+function get_country_id($country) {
+    return $country->ID;
+}
+
+function get_number_of_fellows($fellowship){
+    if (isset($fellowship['fields']['number_of_fellows'])) {
+        return $fellowship['fields']['number_of_fellows']['value'];
+    } else {
+        return 0;
+    }
 }
 
 // Sort grant records by deadline ascending
