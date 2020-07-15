@@ -19,6 +19,7 @@ plugins-to-download:
   - name: mailchimp
   - name: ga-google-analytics
   - name: contact-form-7
+  - name: redirection
 
 plugins-to-copy:
   directory: dependencies/plugins
