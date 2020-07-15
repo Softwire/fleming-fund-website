@@ -20,14 +20,14 @@ trait CommonLinksServer
 
     function getImportanceOfDataLink()
     {
-        $link = $this->getMenuRouteLink('about', 'importance_of_data');
+        $link = $this->getMenuRouteLink('approach', 'importance_of_data');
         $link->setTitle('The Importance of Data');
         return $link;
     }
 
     function getWhatIsAMRLink()
     {
-        return $this->getMenuRouteLink('about', 'about_amr');
+        return $this->getMenuRouteLink('approach', 'about_amr');
     }
 
     function getPublicationsLink()
