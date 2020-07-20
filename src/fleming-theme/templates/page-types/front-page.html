@@ -4,10 +4,15 @@
   {% block container %}
     <div class="home-splash{% if not opportunities %} without-opportunities{% endif %}">
       <div class="container">
-        <p class="large-text">The Fleming Fund brings evidence and people together to encourage
-         action against drug resistance for a healthier world. We support low- and middle-income 
-         countries to generate, share and use data to improve antimicrobial use 
-         and encourage investment in AMR.</p>
+        <p class="large-text">
+          The Fleming Fund brings evidence and people together to encourage
+          action against drug resistance for a healthier world.
+        </p>
+        <p class="large-text">
+          We support low- and middle-income 
+          countries to generate, share and use data to improve antimicrobial use 
+          and encourage investment in AMR.
+        </p>
         {% include 'layout/link-collection.html' with {'links': [
           nav.aboutUsLink, nav.whatIsAMRLink, nav.importanceOfDataLink
         ]} %}
