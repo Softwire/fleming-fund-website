@@ -41,7 +41,7 @@ class MenuLinksConfig
                     'title' => 'About AMR',
                     'target' => '/our-approach/about-amr/'
                 ],
-                'importance_of_data' => [
+                'the_value_of_data' => [
                     'title' => 'The Value of Data',
                     'target' => '/our-approach/the-value-of-data/'
                 ],

@@ -21,6 +21,15 @@ if ( file_exists( $root.$path ) ) {
         return false;
     }
 } else {
+    if ( $path === '/about-us' || $path === '/about-us/' ) {
+        header('Location: http://localhost:3000/about-us/our-aims/');
+        exit;
+    }
+
+    if ( $path === '/our-approach' || $path === '/our-approach/' ) {
+        header('Location: http://localhost:3000/our-approach/about-amr/');
+        exit;
+    }
 
     // Otherwise, run `index.php`
     chdir( $root );

@@ -18,10 +18,10 @@ trait CommonLinksServer
         return $this->getMenuRouteLink('about');
     }
 
-    function getImportanceOfDataLink()
+    function getTheValueOfDataLink()
     {
-        $link = $this->getMenuRouteLink('approach', 'importance_of_data');
-        $link->setTitle('The Importance of Data');
+        $link = $this->getMenuRouteLink('approach', 'the_value_of_data');
+        $link->setTitle('The Value of Data');
         return $link;
     }
 
