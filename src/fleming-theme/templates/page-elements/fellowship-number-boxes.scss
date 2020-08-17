@@ -1,0 +1,96 @@
+@mixin number_label_style($font-size, $line-height) {
+  display: inline-block;
+  font-size: $font-size;
+  line-height: $line-height;
+  vertical-align: middle;
+  font-weight: bold;
+}
+
+@mixin number_style($font-size, $line-height) {
+  display: inline-block;
+  width: 35%;
+  font-weight: bold;
+  font-size: $font-size;
+  line-height: $line-height;
+  text-align: left;
+  vertical-align: middle;
+  color: $mid-turquoise;
+  margin-bottom: 5px;
+}
+
+.fellowship-number-boxes {
+  display: flex;
+  flex-direction: row;
+
+  .fellowship-number-box {
+    background: white;
+    display: flex;
+    flex-direction: column;
+    color: $dark-grey;
+
+    &.four {
+      .info-container {
+        background: $light-grey;
+        display: flex;
+        flex-direction: column;
+        padding: 20px 15px;
+        flex: 1;
+        justify-content: center;
+
+        .number {
+          @include number_style(3em, 1);
+        }
+
+        .number-label {
+          @include number_label_style(1.2em, 1);
+        }
+      }
+
+      .button {
+        display: block;
+        text-align: left;
+        margin: 0;
+        border: none;
+        background: $light-grey;
+        color: $dark-grey;
+        font-weight: 700;
+        font-size: 0.7em;
+        margin-top: 5px;
+  
+        &::after {
+          content:">";
+          padding-left: 0.2em;
+          font-weight: 700;
+        }
+
+        &:hover {
+          background: $mid-turquoise;;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+@media (#{$min-width-mobile}) and (#{$max-width-tablet}) {
+  .fellowship-number-boxes .fellowship-number-box {
+    &:not(:first-child) {
+      margin-left: 10px;
+    }
+
+    .number {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+
+@media (#{$max-width-mobile}) {
+  .fellowship-number-boxes {
+    flex-direction: column;
+
+    .fellowship-number-box {
+      margin-bottom: 10px;
+    }
+  }
+}

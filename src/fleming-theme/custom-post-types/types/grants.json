@@ -146,6 +146,39 @@
                 "ui": 1
             },
             {
+                "key": "field_5b0nj9xnxyvj4",
+                "label": "Number of Fellows",
+                "name": "number_of_fellows",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": [
+                    [
+                        {
+                            "field": "field_5b0696df6ae19",
+                            "operator": ">",
+                            "value": "167"
+                        },
+                        {
+                            "field": "field_5b0696df6ae19",
+                            "operator": "<",
+                            "value": "169"
+                        }
+                    ]
+                ],
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "1",
+                "placeholder": "",
+                "min": "0",
+                "max": "",
+                "step": "1",
+                "ui": 1
+            },
+            {
                 "key": "field_5b0696f06ae1a",
                 "label": "Aims",
                 "name": "aims",
@@ -466,6 +499,35 @@
                     "Project Design",
                     "Project Active",
                     "Project Complete"
+                ],
+                "default_value": [],
+                "allow_null": 0,
+                "multiple": 0,
+                "ui": 0,
+                "ajax": 0,
+                "return_format": "value",
+                "placeholder": ""
+            },
+            {
+                "key": "field_5b324b018e38c",
+                "label": "Status - FELLOWSHIP",
+                "name": "status_fellowship",
+                "type": "select",
+                "instructions": "This is used by Fellowships, shown on the grant card and as a timeline on the individual project page",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": [
+                    "None",
+                    "Host Institution Approved",
+                    "Fellows Selected",
+                    "Workplan Development Workshop",
+                    "Workplans Approved",
+                    "Fellows Active"
                 ],
                 "default_value": [],
                 "allow_null": 0,

@@ -1,0 +1,28 @@
+<div class="fellowship-number-boxes">
+    {% if number_of_countries is defined %}
+    <div class="fellowship-number-box four columns">
+        <div class="info-container">
+            <div class="number">{{ number_of_countries }}</div>
+            <div class="number-label">countr{{number_of_countries != 1 ? 'ies' : 'y'}} with fellowships</div>
+        </div>
+        <a class="button" href="/grants/?type=fellowship">View all fellowships</a>
+    </div>
+    {% endif %}
+    {% if number_of_active_fellowships is defined %}
+    <div class="fellowship-number-box four columns">
+        <div class="info-container">
+            <div class="number">{{ number_of_active_fellowships }}</div>
+            <div class="number-label">active fellowhip{{number_of_active_fellowships != 1 ? 's' : ''}}</div>
+        </div>
+        <a class="button"href="/grants/?type=fellowship&status=active">View all active fellowships</a>
+    </div>
+    {% endif %}
+    {% if number_of_fellows is defined %}
+    <div class="fellowship-number-box four columns">
+        <div class="info-container">
+            <div class="number">{{ number_of_fellows }}</div>
+            <div class="number-label">total fellow{{number_of_fellows != 1 ? 's' : ''}}</div>
+        </div>
+    </div>
+    {% endif %}
+</div>

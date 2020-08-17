@@ -27,6 +27,17 @@
       } %}
     {% endfor %}
   </div>
+{% elseif fields.status_fellowship and fields.status_fellowship.value > 0 %}
+  <div class="grant-timeline">
+    {% for i in range(1,5) %}
+      {% include 'page-elements/status-box.html' with {
+        'level': i,
+        'current_status': fields.status_fellowship.value,
+        'status': fields.status_fellowship.choices[i],
+        'last': loop.last
+      } %}
+    {% endfor %}
+  </div>
 {% elseif fields.dates.value is not empty %}
   <div class="grant-timeline">
     {% for date in fields.dates.value %}
