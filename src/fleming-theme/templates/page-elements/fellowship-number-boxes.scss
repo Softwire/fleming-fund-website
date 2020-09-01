@@ -4,6 +4,7 @@
   line-height: $line-height;
   vertical-align: middle;
   font-weight: bold;
+  text-transform: uppercase;
 }
 
 @mixin number_style($font-size, $line-height) {
@@ -42,7 +43,7 @@
         }
 
         .number-label {
-          @include number_label_style(1.2em, 1);
+          @include number_label_style(1em, 1);
         }
       }
 
