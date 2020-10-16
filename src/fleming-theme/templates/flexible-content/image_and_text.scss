@@ -1,0 +1,22 @@
+.half-width-image {
+    margin-top: 0.5em;
+    
+    @media (#{$max-width-mobile}) {
+        width: 100%;
+    }
+
+    @media (#{$min-width-tablet}) {
+        width: 50%;
+
+        &.position-right {
+            float: right;
+            margin-left: 20px;
+        }
+
+        &.position-left {
+            float: left;
+            margin-right: 20px; 
+        }     
+    }
+}
+

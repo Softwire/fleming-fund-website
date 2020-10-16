@@ -253,6 +253,79 @@
             "min": "",
             "max": ""
           },
+          "noj29j59535qg": {
+            "key": "noj29j59535qg",
+            "name": "image_and_text",
+            "label": "Image and Text",
+            "display": "block",
+            "sub_fields": [
+              {
+                "key": "field_139qgv3i05lb8",
+                "label": "image",
+                "name": "image",
+                "type": "image",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                  "width": "",
+                  "class": "",
+                  "id": ""
+                },
+                "return_format": "array",
+                "preview_size": "medium",
+                "library": "all",
+                "min_width": "",
+                "min_height": "",
+                "min_size": "",
+                "max_width": "",
+                "max_height": "",
+                "max_size": "",
+                "mime_types": ""
+              },
+              {
+                "key": "field_5f86d645b0444",
+                "label": "Image Position",
+                "name": "image_position",
+                "type": "true_false",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "message": "",
+                "default_value": 1,
+                "ui": 1,
+                "ui_on_text": "Right",
+                "ui_off_text": "Left"
+
+              },
+              {
+                "key": "field_t8pozmf9vsthj",
+                "label": "Text",
+                "name": "text",
+                "type": "textarea",
+                "instructions": "This text will wrap around the image.",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                  "width": "",
+                  "class": "",
+                  "id": ""
+                },
+                "default_value": "",
+                "placeholder": "",
+                "maxlength": "",
+                "rows": "",
+                "new_lines": ""
+              }
+            ],
+            "min": "",
+            "max": ""
+          },
           "5b3f3e93ce919": {
             "key": "5b3f3e93ce919",
             "name": "youtube_embed",
