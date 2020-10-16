@@ -5,7 +5,7 @@
         width: 100%;
     }
 
-    @media (#{$min-width-tablet}) {
+    @media (#{$min-width-mobile}) {
         width: 50%;
 
         &.position-right {
