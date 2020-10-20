@@ -1,7 +1,7 @@
 <div class="row">
   <img src="{{weight == 'light' ? content_block.image.sizes.large : content_block.image.url}}"
     alt="{{content_block.image.alt}}" 
-    class="{{'half-width-image '~(content_block.image_position ? 'position-right' : 'position-left')}}"
+    class="{{'half-width-image '~(content_block.position_right ? 'position-right' : 'position-left')}}"
     />
    <p class="text">{{ content_block.text | markdown_line }}</p> 
 </div>

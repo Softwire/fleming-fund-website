@@ -286,7 +286,7 @@
               {
                 "key": "field_5f86d645b0444",
                 "label": "Image Position",
-                "name": "image_position",
+                "name": "position_right",
                 "type": "true_false",
                 "instructions": "",
                 "required": 0,
