@@ -37,7 +37,10 @@ function fleming_get_content()
         $grant_type = get_page_by_path($type_query, 'OBJECT', 'grant_types');
         $grant_type_id = ($grant_type != null && $grant_type->post_status == 'publish') ? $grant_type->ID : null;
     }
-    $grants = get_full_grants($grant_type_id);
+    $grants_including_completed= get_full_grants($grant_type_id, true);
+    $grants = array_filter($grants_including_completed, 'grant_is_current');
+    $completed_grants = array_filter($grants_including_completed, 'grant_is_complete');
+
 
     if ($country_query) {
         $grants = array_filter($grants, function($grant) use ($country_query) {
@@ -56,6 +59,8 @@ function fleming_get_content()
             $grants = array_filter($grants, 'grant_is_open');
         } elseif ($status_query == 'active') {
             $grants = array_filter($grants, 'grant_is_active');
+        } elseif ($status_query == 'completed') {
+            $grants = $completed_grants;
         }
     }
 
@@ -70,7 +75,8 @@ function fleming_get_content()
     ]));
     $fleming_content['statuses'] = [
         ['query_string' => 'open', 'display_string' => 'Applications Open'],
-        ['query_string' => 'active', 'display_string' => 'Active']
+        ['query_string' => 'active', 'display_string' => 'Active'],
+        ['query_string' => 'completed', 'display_string' => 'Completed']
     ];
 
     return $fleming_content;

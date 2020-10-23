@@ -57,7 +57,7 @@
           <option value="{{ country.query_string }}" {% if country_query == country.query_string %} selected {% endif %} >{{ country.display_string }}</option>
           {% endfor %}
         </select>{% if statuses %}<select name="status" class="filter-dropdown" aria-label="Status">
-          <option value="" {% if status_query is empty %} selected {% endif %}> All Statuses </option>
+          <option value="" {% if status_query is empty %} selected {% endif %}> All Current Projects </option>
           {% for status in statuses %}
           <option value="{{ status.query_string }}" {% if status_query == status.query_string %} selected {% endif %} >{{ status.display_string }}</option>
           {% endfor %}

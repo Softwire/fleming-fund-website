@@ -29,6 +29,10 @@ function fleming_get_content() {
 
     $grant_type = get_type();
 
+    $is_completed= ((isset($fields['status']) && $fields['status']['value'] == 6) || 
+        (isset($fields['status_global_project']) && $fields['status_global_project']['value'] == 4) ||
+        (isset($fields['status_fellowship']) && $fields['status_fellowship']['value'] == 6));
+
     $fleming_content = array(
         "css_filename" => get_css_filename(),
         "title" => get_raw_title(),
@@ -38,7 +42,9 @@ function fleming_get_content() {
             ->withAdditionalBreadcrumb(get_raw_title())
             ->build(),
         "have_eligibility" => $have_eligibility,
-        "have_application_steps" => $have_application_steps
+        "have_application_steps" => $have_application_steps,
+        "grant_name" => $grant_type->post_name,
+        "is_completed" => $is_completed
     );
 
     process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content'],

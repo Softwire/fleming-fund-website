@@ -228,7 +228,7 @@ function show_grant_numbers_for_page(&$fleming_content) {
         if ($grant_type) {
             // Look up all grants of this type. We only want two but we can't currently order this
             // in the query :-( so we'll read them all in and filter / sort in code
-            $all_grants = get_full_grants($grant_type->ID);
+            $all_grants = get_full_grants($grant_type->ID, true);
             $open_grants = array_filter($all_grants, "grant_is_open");
             $active_grants = array_filter($all_grants, "grant_is_active");
             $grant_numbers = [
@@ -262,7 +262,7 @@ function show_fellowship_statistics(&$fleming_content) {
 
     if(!is_array($fellowship_statistics)) {
         $fellowship_grant_type = get_grant_type_for_page($post_id);
-        $fellowships = get_full_grants($fellowship_grant_type->ID);
+        $fellowships = get_full_grants($fellowship_grant_type->ID, false);
 
         $active_fellowships = array_filter($fellowships, 'fellowship_is_active');
         $different_countries = array_unique(call_user_func_array('array_merge', array_map('get_country_ids', $fellowships)));
@@ -292,7 +292,7 @@ function show_grant_numbers_by_type_awarded_to_country(&$fleming_content, $count
     $grant_numbers = get_transient($cache_id);
 
     if (!is_array($grant_numbers)) {
-        $all_grants = get_full_grants(null);
+        $all_grants = get_full_grants(null, false);
         $grants_awarded_to_country = filter_grants($all_grants, "countries", $country_slug);
         $grant_numbers = [
             'number_of_country_grants' => count(filter_grants($grants_awarded_to_country, "type", "country-grant")),
@@ -484,7 +484,7 @@ function filter_publications_or_events_by_grant_type($publications_or_events, $g
     });
 }
 
-function get_full_grants($grant_type_id) {
+function get_full_grants($grant_type_id, $include_completed) {
     $query_args = [
         'post_type' => 'grants',
         'numberposts' => -1
@@ -504,6 +504,10 @@ function get_full_grants($grant_type_id) {
         $full_grants[] = grant_with_post_data_and_fields(get_post_data_and_fields($grant->ID));
     }
 
+    if (!$include_completed) {
+        $full_grants = array_filter($full_grants, 'grant_is_current');
+    }
+
     return $full_grants;
 }
 
@@ -514,7 +518,7 @@ function get_upcoming_or_else_most_recent_grants() {
         return $result;
     }
 
-    $full_grants = get_full_grants(null);
+    $full_grants = get_full_grants(null, false);
     $showing_future_grants = false;
 
     $future_grants = array_filter($full_grants, "grant_deadline_is_in_future");
