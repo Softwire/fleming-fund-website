@@ -38,7 +38,7 @@ function get_global_grants_as_content() {
     if (!is_array($grants_content)) {
         $post_id = get_post()->ID;
         $global_grant_type = get_grant_type_for_page($post_id);
-        $full_grants = get_full_grants($global_grant_type->ID, false);
+        $full_grants = get_full_grants($global_grant_type->ID);
 
         $sorted_grants = sort_past_grants($full_grants);
 
