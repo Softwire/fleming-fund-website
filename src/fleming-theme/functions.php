@@ -292,6 +292,16 @@ function grant_is_active($grant) {
         (isset($grant['fields']['status_fellowship']) && $grant['fields']['status_fellowship']['value'] == 5);
 }
 
+function grant_is_complete($grant) {
+    return (isset($grant['fields']['status']) && $grant['fields']['status']['value'] == 6) ||
+        (isset($grant['fields']['status_global_project']) && $grant['fields']['status_global_project']['value'] == 4) ||
+        (isset($grant['fields']['status_fellowship']) && $grant['fields']['status_fellowship']['value'] == 6);
+}
+
+function grant_is_current($grant) {
+   return  !grant_is_complete($grant);
+}
+
 function grant_is_open($grant) {
     return $grant['nextEvent'] && $grant['nextEvent']['apply_now_valid'];
 }

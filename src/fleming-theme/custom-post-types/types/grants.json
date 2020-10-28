@@ -470,7 +470,8 @@
                     "Request For Proposal published",
                     "Proposals under review",
                     "Approved",
-                    "Active"
+                    "Active",
+                    "Complete"
                 ],
                 "default_value": [],
                 "allow_null": 0,
@@ -498,7 +499,7 @@
                     "Scoping Activities",
                     "Project Design",
                     "Project Active",
-                    "Project Complete"
+                    "Complete"
                 ],
                 "default_value": [],
                 "allow_null": 0,
@@ -527,7 +528,8 @@
                     "Fellows Selected",
                     "Workplan Development Workshop",
                     "Workplan Development",
-                    "Fellows Active"
+                    "Fellows Active",
+                    "Complete"
                 ],
                 "default_value": [],
                 "allow_null": 0,

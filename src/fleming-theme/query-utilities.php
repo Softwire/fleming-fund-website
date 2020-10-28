@@ -228,7 +228,7 @@ function show_grant_numbers_for_page(&$fleming_content) {
         if ($grant_type) {
             // Look up all grants of this type. We only want two but we can't currently order this
             // in the query :-( so we'll read them all in and filter / sort in code
-            $all_grants = get_full_grants($grant_type->ID);
+            $all_grants = get_full_grants($grant_type->ID, true);
             $open_grants = array_filter($all_grants, "grant_is_open");
             $active_grants = array_filter($all_grants, "grant_is_active");
             $grant_numbers = [
@@ -484,7 +484,7 @@ function filter_publications_or_events_by_grant_type($publications_or_events, $g
     });
 }
 
-function get_full_grants($grant_type_id) {
+function get_full_grants($grant_type_id, $include_completed = false) {
     $query_args = [
         'post_type' => 'grants',
         'numberposts' => -1
@@ -502,6 +502,10 @@ function get_full_grants($grant_type_id) {
     $full_grants = array();
     foreach ($grants as $grant) {
         $full_grants[] = grant_with_post_data_and_fields(get_post_data_and_fields($grant->ID));
+    }
+
+    if (!$include_completed) {
+        $full_grants = array_filter($full_grants, 'grant_is_current');
     }
 
     return $full_grants;

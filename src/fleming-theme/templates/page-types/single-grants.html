@@ -4,8 +4,22 @@
 
 {% include 'page-elements/in-page-links.html' %}
 
+{% if is_completed %} 
+  <div class="grant-completed-banner">
+    <p class="grant-completed-message">
+      {% if grant_name == "fellowship" %}
+        This Fellowship has been completed
+      {% elseif grant_name == "country-grant" %}
+        This Country Grant has been completed
+      {% elseif grant_name == "regional-grant" %} 
+        This Regional Grant has been completed   
+      {% elseif grant_name == "global-project" %} 
+        This Global Project has been completed       
+      {% endif %}
+    </p>
+  </div>
 <!-- fields.status.value is the index of the selected country or regional grant status. -->
-{% if fields.status and fields.status.value != 0 and (fields.status.value != 2 or fields.dates.value is empty) %}
+{% elseif (fields.status and fields.status.value != 0) and (fields.status.value != 2 or fields.dates.value is empty) %}
   <div class="grant-timeline">
     {% for i in range(1,5) %}
       {% include 'page-elements/status-box.html' with {
