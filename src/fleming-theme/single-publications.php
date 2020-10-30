@@ -28,13 +28,12 @@ function fleming_get_content()
     );
 
     $thisPublication = get_current_post_data_and_fields();
-    $newsType = get_page_by_path('news', 'OBJECT', 'publication_types');
 
     $fleming_content['nav'] = get_nav_builder()
         ->withMenuRoute(
-            $thisPublication['fields']['type']['value']->ID == $newsType->ID
-                ? 'news'
-                : 'knowledge')
+            $thisPublication['fields']['publication_section']['value'] == 'news-events'
+            ? 'news' 
+            : 'knowledge')
         ->withAdditionalBreadcrumb(get_raw_title())
         ->build();
 
