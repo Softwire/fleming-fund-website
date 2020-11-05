@@ -41,6 +41,15 @@ function fleming_get_content()
     $grants = array_filter($grants_including_completed, 'grant_is_current');
     $completed_grants = array_filter($grants_including_completed, 'grant_is_complete');
 
+    if ($status_query) {
+        if ($status_query == 'open') {
+            $grants = array_filter($grants, 'grant_is_open');
+        } elseif ($status_query == 'active') {
+            $grants = array_filter($grants, 'grant_is_active');
+        } elseif ($status_query == 'completed') {
+            $grants = $completed_grants;
+        }
+    }
 
     if ($country_query) {
         $grants = array_filter($grants, function($grant) use ($country_query) {
@@ -52,16 +61,6 @@ function fleming_get_content()
         $grants = array_filter($grants, function($grant) use ($region_query) {
             return isset($grant['fields']['region']) && array_of_posts_contains_name($grant['fields']['region']['value'], $region_query);
         });
-    }
-
-    if ($status_query) {
-        if ($status_query == 'open') {
-            $grants = array_filter($grants, 'grant_is_open');
-        } elseif ($status_query == 'active') {
-            $grants = array_filter($grants, 'grant_is_active');
-        } elseif ($status_query == 'completed') {
-            $grants = $completed_grants;
-        }
     }
 
     process_list_query($fleming_content, 4, $grants, $type_query, $country_query, $region_query, $status_query);
