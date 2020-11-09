@@ -1,18 +1,27 @@
-.half-width-image {
-    margin-top: 0.5em;
-    width: 100%;
+.image-and-text-container {
+    margin: 20px 0;
 
-    @media (#{$min-width-mobile}) {
-        width: 50%;
+    .half-width-image {
+        margin: 0.5em 0;
+        width: 100%;
 
-        &.position-right {
-            float: right;
-            margin-left: 20px;
+        @media (#{$min-width-mobile}) {
+            width: 50%;
+            margin-bottom: 0;
+
+            &.position-right {
+                float: right;
+                margin-left: 20px;
+            }
+
+            &.position-left {
+                float: left;
+                margin-right: 20px; 
+            }     
         }
+    }
 
-        &.position-left {
-            float: left;
-            margin-right: 20px; 
-        }     
+    p {
+        margin: 0;
     }
 }
