@@ -351,6 +351,48 @@ function sort_past_grants($opportunities) {
     return $opportunities;
 }
 
+function sort_grants_by_type_then_status($grants) {
+    usort($grants, function ($a, $b) {
+        $typeOrder = array("country-grant", "fellowship", "regional-grant", "global-project");
+        $statusOrder = array("applications open", "active", "applications closed", "in progress");
+
+        $typeOrderDifference = array_search(get_grant_type($a), $typeOrder) - array_search(get_grant_type($b), $typeOrder);
+
+        if ($typeOrderDifference != 0) {
+            return $typeOrderDifference;
+        }
+        else {
+            return array_search(get_grant_status_for_filter($a), $statusOrder) - array_search(get_grant_status_for_filter($b), $statusOrder);
+        }
+    });
+    return $grants;
+}
+
+function get_grant_type($grant) {
+    return $grant['fields']['type']['value']->post_name;
+}
+
+function get_grant_status_for_filter($grant) {
+    if (get_grant_status($grant) == 0) {
+       return grant_is_open($grant) ? "applications open" : "applications closed";
+    }
+    else {
+        return grant_is_active($grant) ? "active" : "in progress";
+    }
+}
+
+function get_grant_status($grant) {
+    switch (get_grant_type($grant)) {
+        case "country-grant":
+        case "regional-grant":
+            return isset($grant['fields']['status']) ? $grant['fields']['status']['value'] : 0;
+        case "fellowship":
+            return isset($grant['fields']['status_fellowship']) ? $grant['fields']['status_fellowship']['value'] : 0;
+        case "global-project":
+            return isset($grant['fields']['status_global_project']) ? $grant['fields']['status_global_project']['value'] : 0;
+    }
+}
+
 function project_with_post_data_and_fields($project) {
     if ($project['fields']['grant']['value']) {
         $grant = grant_with_post_data_and_fields(
@@ -429,10 +471,6 @@ function publication_with_post_data_and_fields($publication) {
     $publication['can_display_prominently'] = $publication['picture_large_url'] != null;
 
     return $publication;
-}
-
-function activity_has_grant_type($activity, $grant_type) {
-
 }
 
 function country_with_post_data_and_fields($country) {

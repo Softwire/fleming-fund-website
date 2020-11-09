@@ -64,6 +64,8 @@ function fleming_get_content()
         }
     }
 
+    $grants = sort_grants_by_type_then_status($grants);
+
     process_list_query($fleming_content, 4, $grants, $type_query, $country_query, $region_query, $status_query);
 
     $fleming_content['types'] = array_map('map_post_to_filter_option', get_posts([
