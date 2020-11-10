@@ -16,6 +16,9 @@ remove_action('wp_head', 'rest_output_link_wp_head');
 ////////                    GENERAL                     ////////
 ////////////////////////////////////////////////////////////////
 
+$GRANT_TYPE_ORDER = array("country-grant", "fellowship", "regional-grant", "global-project");
+$GRANT_STATUS_ORDER = array("applications_open", "active", "applications_closed", "in_progress");
+
 function redirect_and_die($target='/') {
     header('Location: ' . $target);
     echo '<a href="',$target,'">Click here to continue</a>';
@@ -353,31 +356,34 @@ function sort_past_grants($opportunities) {
 
 function sort_grants_by_type_then_status($grants) {
     usort($grants, function ($a, $b) {
-        $typeOrder = array("country-grant", "fellowship", "regional-grant", "global-project");
-        $statusOrder = array("applications open", "active", "applications closed", "in progress");
-
-        $typeOrderDifference = array_search(get_grant_type($a), $typeOrder) - array_search(get_grant_type($b), $typeOrder);
+        global $GRANT_TYPE_ORDER;
+        global $GRANT_STATUS_ORDER;
+        
+        $typeOrderDifference = getSortingPosition(get_grant_type($a), $GRANT_TYPE_ORDER) - getSortingPosition(get_grant_type($b), $GRANT_TYPE_ORDER);
 
         if ($typeOrderDifference != 0) {
             return $typeOrderDifference;
         }
         else {
-            return array_search(get_grant_status_for_filter($a), $statusOrder) - array_search(get_grant_status_for_filter($b), $statusOrder);
+            return getSortingPosition(get_grant_status_for_filter($a), $GRANT_STATUS_ORDER) - getSortingPosition(get_grant_status_for_filter($b), $GRANT_STATUS_ORDER);
         }
     });
     return $grants;
 }
 
-function get_grant_type($grant) {
-    return $grant['fields']['type']['value']->post_name;
+function getSortingPosition($element, $orderDefiningArray) {
+    $position = array_search($element, $orderDefiningArray);
+    return $position !== false ? $position : sizeof($orderDefiningArray);
 }
 
 function get_grant_status_for_filter($grant) {
+    global $GRANT_STATUS_ORDER;
+    
     if (get_grant_status($grant) == 0) {
-       return grant_is_open($grant) ? "applications open" : "applications closed";
+       return grant_is_open($grant) ? $GRANT_STATUS_ORDER[0] : $GRANT_STATUS_ORDER[2];
     }
     else {
-        return grant_is_active($grant) ? "active" : "in progress";
+        return grant_is_active($grant) ? $GRANT_STATUS_ORDER[1] : $GRANT_STATUS_ORDER[3];
     }
 }
 
@@ -390,7 +396,13 @@ function get_grant_status($grant) {
             return isset($grant['fields']['status_fellowship']) ? $grant['fields']['status_fellowship']['value'] : 0;
         case "global-project":
             return isset($grant['fields']['status_global_project']) ? $grant['fields']['status_global_project']['value'] : 0;
+        default:
+            return 0;
     }
+}
+
+function get_grant_type($grant) {
+    return $grant['fields']['type']['value']->post_name;
 }
 
 function project_with_post_data_and_fields($project) {
