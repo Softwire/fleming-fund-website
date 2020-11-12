@@ -60,8 +60,15 @@ function fleming_get_content()
     
     $fleming_content['rss_link_target'] = '/feed/country/?channel=' . $country_slug;
 
-    //query for the events and publications of the country
-    $latest_activity = get_news_and_events(1, 2, $country_slug);
+    // query for the events and publications of the country
+    $latest_activity = get_news_and_events_filtered_by_type_and_country(null, get_page_by_path($country_slug, 'OBJECT', 'countries'), 1, 2);
+    
+    foreach ($latest_activity['posts'] as &$post) {
+        if ($post['data']->post_type === 'publications') {
+            $post = publication_with_post_data_and_fields($post);
+        }
+    }
+
     $fleming_content["latest_activity"] = $latest_activity['posts'];
 
     $fleming_content["view_all_button"] = [

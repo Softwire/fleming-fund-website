@@ -362,7 +362,7 @@ function get_activity_for_grant_type($grant_type) {
 
 function get_news_events_meta_query() {
     // Determines what appears on the news & events page and also what appears in "latest activity" sections.
-    $news_type   = get_page_by_path('news', 'OBJECT', 'publication_types');
+    $news_type = get_page_by_path('news', 'OBJECT', 'publication_types');
 
     return [
         'relation' => 'OR',
@@ -560,8 +560,8 @@ function array_of_posts_contains_name($array_of_posts, $target_name) {
     if (!$array_of_posts) {
         return false;
     }
-    $names = array_map(function($country_post) {
-        return is_object($country_post) ? $country_post->post_name : null;
+    $names = array_map(function($post) {
+        return is_object($post) ? $post->post_name : null;
     }
     , $array_of_posts);
 
@@ -640,47 +640,167 @@ function process_list_query(&$fleming_content, $initial_number_of_results, $post
     ]));
 }
 
-function get_news_and_events($current_page, $posts_per_page = 10, $country_slug = null) {
+function get_news_and_events_filtered_by_type_and_country($type, $country, $page_number, $number_items_per_page) {
     $query_args = [
         'post_type'  => ['events', 'publications'],
         'post_status' => 'publish',
         'orderby' => 'publication_date',
         'order' => 'DESC',
-        'posts_per_page' => $posts_per_page,
-        'meta_query' => get_news_events_meta_query(),
-        'paged' => $current_page
+        'posts_per_page' => $number_items_per_page,
+        'paged' => $page_number,
+        'meta_query' => get_news_events_meta_query()
     ];
 
-    if (isset($country_slug)) { 
-        set_query_args_to_filter_by_country_slug($country_slug, $query_args);
+    if (isset($type)) {
+        if ($type != 'event') {
+            $query_args['meta_query'] = add_type_filter_to_meta_query($type, $query_args['meta_query']);
+        }
+        else {
+            $query_args['post_type'] = ['events'];
+        }
+    }
+
+    if (isset($country)) {
+        $query_args['meta_query'] = add_country_filter_to_meta_query($country, $query_args['meta_query']);
     }
 
     $query = new WP_Query($query_args);
-    $query_result = get_query_results($query);
 
-    return $query_result;
+    return [
+        'posts' => get_query_posts_with_data_and_fields($query),
+        'current_page' => $page_number,
+        'posts_per_page' => $number_items_per_page,
+        'max_page_number' => $query->max_num_pages,
+        'total_number_results' => $query->found_posts
+    ];
 }
 
-function set_query_args_to_filter_by_country_slug($country_slug, &$query_args) {
-    $country = get_page_by_path($country_slug, 'OBJECT', 'countries');
+function get_knowledge_and_resources_publications_filtered_by_type_and_country($type, $country, $page_number, $number_items_per_page) {
+    $query_args = [
+        'post_type' => 'publications',
+        'post_status' => 'publish',
+        'orderby' => 'publication_date',
+        'order' => 'DESC',
+        'posts_per_page' => $number_items_per_page,
+        'paged' => $page_number,
+        'meta_query' => get_knowledge_resources_publications_meta_query()
+    ];
 
-    if ($country != null && $country->post_status == 'publish') {
-        $query_args["meta_query"]            = array(
-            'relation' => 'and',
-            $query_args["meta_query"],
-            array(
-                'relation' => 'or',
-                array(
-                    'key'   => 'country',
-                    'value'   => serialize(strval($country->ID)),
-                    'compare' => 'LIKE'
-                ),
-                array(
-                    'key'     => 'country_region',
-                    'value'   => serialize(strval($country->ID)),
-                    'compare' => 'LIKE',
-                ),
-            ),
-        );
+    if (isset($type)) {
+        $query_args['meta_query'] = add_type_filter_to_meta_query($type, $query_args['meta_query']);
     }
+
+    if (isset($country)) {
+        $query_args['meta_query'] = add_country_filter_to_meta_query($country, $query_args['meta_query']);
+
+    }
+
+    $query = new WP_Query($query_args);
+
+    return [
+        'posts' => get_query_posts_with_data_and_fields($query),
+        'current_page' => $page_number,
+        'posts_per_page' => $number_items_per_page,
+        'max_page_number' => $query->max_num_pages,
+        'total_number_results' => $query->found_posts
+    ];
+}
+
+function get_knowledge_resources_publications_meta_query() {
+    $news_type = get_page_by_path('news', 'OBJECT', 'publication_types');
+
+    return [
+        'relation' => 'OR',
+        [
+            'key' => 'publication_section',
+            'value' => 'knowledge-resources',
+            'compare' => '='
+        ],
+        [// Publications not assigned to a section yet, with type other than "news". Once live data has all been updated this clause can be removed
+            'relation' => 'AND',
+            [
+                'key' => 'publication_section',
+                'compare' => 'NOT EXISTS'
+            ],
+            [
+                'key' => 'type',
+                'value' => $news_type->ID,
+                'compare' => '!='
+            ]
+        ]
+    ];
+}
+
+function add_type_filter_to_meta_query($type, $meta_query) {
+    return [
+        'relation' => 'and',
+        $meta_query,
+        [
+            'key' => 'type',
+            'value' => $type->ID,
+            'compare' => 'LIKE'
+        ]
+    ];
+}
+
+function add_country_filter_to_meta_query($country, $meta_query) {
+    return [
+        'relation' => 'and',
+        $meta_query,
+        [
+            'relation' => 'or',
+            [
+                'key'   => 'country',
+                'value'   => $country->ID,
+                'compare' => 'LIKE'
+            ],
+            [
+                'key'     => 'country_region',
+                'value'   => $country->ID,
+                'compare' => 'LIKE',
+            ],
+        ]
+    ];
+}
+
+function get_query_posts_with_data_and_fields($query) {
+    $posts = [];
+    while ($query->have_posts()) {
+        $query->the_post();
+        $posts[] = get_current_post_data_and_fields();
+    }
+    wp_reset_postdata();
+
+    return $posts;
+}
+
+function get_publication_types_and_event_for_type_filter() {
+    $types = get_publication_types_for_type_filter();
+    $types[] = [
+        'query_string' => 'event',
+        'display_string' => 'Event'
+    ];
+
+    return $types;
+}
+
+function get_publication_types_for_type_filter() {
+    return array_map('map_post_to_filter_option', get_posts([
+        'post_type'   => 'publication_types',
+        'numberposts' => -1,
+        'orderby'     => 'name',
+        'order'       => 'ASC',
+        'post_status' => 'publish',
+    ]));
+}
+
+function get_countries_for_country_filter() {
+    return array_map('map_post_to_filter_option', get_posts([
+        'post_type'          => 'countries',
+        'numberposts'        => -1,
+        'ignore_custom_sort' => true,
+        'orderby'            => 'name',
+        'order'              => 'ASC',
+        'post_status'        => 'publish',
+    ]));
 }

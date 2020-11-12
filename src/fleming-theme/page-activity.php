@@ -64,17 +64,7 @@ function fleming_get_content()
 
     process_list_query($fleming_content, 6, $activity_posts, $type_query, $country_query, $region_query, null);
 
-    $fleming_content['types'] = array_map('map_post_to_filter_option', get_posts([
-        'post_type'   => 'publication_types',
-        'numberposts' => -1,
-        'orderby'     => 'name',
-        'order'       => 'ASC',
-        'post_status' => 'publish',
-    ]));
-    $fleming_content['types'][] = [
-        'query_string' => 'event',
-        'display_string' => 'Event'
-    ];
+    $fleming_content['types'] = get_publication_types_and_event_for_type_filter();
 
     return $fleming_content;
 }

@@ -1,0 +1,7 @@
+{% for post in query_result.posts %}
+  {% if weight == 'heavy' and post.should_display_prominently %}
+    {% include 'cards/entities/publication-with-image.html' with {'publication': post} %}
+  {% else %}
+    {% include 'cards/entities/single-post.html' %}
+  {% endif %}
+{% endfor %}

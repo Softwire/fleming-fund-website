@@ -36,6 +36,12 @@
     }
   }
 
+  &.two-filters {
+    .filter-dropdown {
+      @include perRow(2);
+    }
+  }
+
   @media (#{$max-width-tablet}) {
     .filter-dropdown {
       @include perRow(2);

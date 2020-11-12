@@ -23,19 +23,14 @@ function fleming_get_content()
         "nav"    => get_nav_builder()->withMenuRoute('news')->build(),
     );
 
-    $country_slug = $_GET["country"] ?? null;
-    $current_page = get_query_var('paged') ?: 1;
+    $type = !empty($_GET["type"]) && $_GET["type"] !== 'event' ? get_page_by_path($_GET["type"], 'OBJECT', 'publication_types') :
+        (!empty($_GET["type"]) ? $_GET["type"] : null);
+    $country = !empty($_GET["country"]) ? get_page_by_path($_GET["country"], 'OBJECT', 'countries') : null;
+    $page_number = !empty($_GET["page_number"]) ? $_GET["page_number"] : 1;
 
-    if (isset($country_slug)) {
-        $news_and_events = get_news_and_events($current_page, 10, $country_slug);
-        $country = get_page_by_path($country_slug, 'OBJECT', 'countries');
-        $fleming_content['selected_country'] = $country;
-    }
-    else {
-        $news_and_events = get_news_and_events($current_page, 10);
-    }
-
-    if ($current_page == 1 && empty($fleming_content['selected_country'])) {
+    $news_and_events = get_news_and_events_filtered_by_type_and_country($type, $country, $page_number, 10);    
+    
+    if ($page_number == 1) {
         process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
     }
 
@@ -84,19 +79,17 @@ function fleming_get_content()
     $news_and_events['posts'] = $ordered_posts;
 
     $fleming_content['query_result'] = $news_and_events;
-    $fleming_content['countries']    = get_posts(array(
-        'post_type'          => 'countries',
-        'numberposts'        => -1,
-        'ignore_custom_sort' => true,
-        'orderby'            => 'name',
-        'order'              => 'ASC',
-    ));
+    $fleming_content["type_query"] = !empty($_GET["type"]) ? $_GET["type"] : null;
+    $fleming_content["country_query"] = !empty($_GET["country"]) ? $_GET["country"] : null;
+
+    $fleming_content['types'] = get_publication_types_and_event_for_type_filter();
+    $fleming_content['countries'] = get_countries_for_country_filter();
 
     return $fleming_content;
 }
 
 $template_name = pathinfo(__FILE__)['filename'];
-if (isset($_GET['ajax'])) {
-    $template_name = 'ajax-' . $template_name;
+if (!empty($_GET["page_number"])) {
+    $template_name = 'ajax-list-query-result-items';
 }
 include __DIR__ . '/use-templates.php';
