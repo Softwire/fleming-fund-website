@@ -47,12 +47,16 @@
           {% for country in countries %}
           <option value="{{ country.query_string }}" {% if country_query == country.query_string %} selected {% endif %} >{{ country.display_string }}</option>
           {% endfor %}
-        </select><select name="type" class="filter-dropdown" aria-label="Type">
+        </select>
+        <select name="type" class="filter-dropdown" aria-label="Type">
           <option value="" {% if type_query is empty %} selected {% endif %}> All Types </option>
           {% for type in types %}
           <option value="{{ type.query_string }}" {% if type_query == type.query_string %} selected {% endif %} >{{ type.display_string }}</option>
           {% endfor %}
         </select>
+        <noscript>
+          <input class="apply-filter-button" type="submit" value="Apply"/>
+        </noscript>
       </form>
     </div>
 
