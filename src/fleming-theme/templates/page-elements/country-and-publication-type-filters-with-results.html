@@ -1,4 +1,4 @@
-<script>
+<script type="application/javascript">
     function updateFilter() {
         $('#filter-search-form').submit();
     }
@@ -53,7 +53,6 @@
           <option value="{{ type.query_string }}" {% if type_query == type.query_string %} selected {% endif %} >{{ type.display_string }}</option>
           {% endfor %}
         </select>
-        <input class="apply-filter-button" type="submit" value="Apply" style="display:none;"/>
       </form>
     </div>
 
