@@ -7,7 +7,6 @@
         var loadMoreResultsCounter = 1;
         var loading = false;
 
-        $('.filter-dropdowns-container .apply-filter-button').hide();
         $('.filter-dropdowns-container select').on('change', updateFilter);
 
         $('.load-more-button').click(function (e) {
@@ -63,7 +62,9 @@
           {% endfor %}
         </select>
         {% endif %}
-        <input class="apply-filter-button" type="submit" value="Apply"/>
+        <noscript>
+          <input class="apply-filter-button" type="submit" value="Apply"/>
+        </noscript>
       </form>
     </div>
 

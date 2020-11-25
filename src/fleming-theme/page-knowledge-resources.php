@@ -21,52 +21,34 @@ function fleming_get_content() {
         'nav' => get_nav_builder()->withMenuRoute('knowledge')->build()
     );
 
-    $current_page = get_query_var('paged') ?: 1;
+    $type = !empty($_GET["type"]) && $_GET["type"] !== 'event' ? get_page_by_path($_GET["type"], 'OBJECT', 'publication_types') :
+        (!empty($_GET["type"]) ? $_GET["type"] : null);
+    $country = !empty($_GET["country"]) ? get_page_by_path($_GET["country"], 'OBJECT', 'countries') : null;
+    $page_number = !empty($_GET["page_number"]) ? $_GET["page_number"] : 1;
 
-    $newsType = get_page_by_path('news', 'OBJECT', 'publication_types');
-    $query_args = [
-        'post_type' => 'publications',
-        'paged' => $current_page,
-        'meta_query' => array(
-            'relation' => 'OR',
-            array(
-                'key' => 'publication_section',
-                'value' => 'knowledge-resources',
-                'compare' => '='
-            ),
-            array(
-                // Publications not assigned to a section yet, with type other than "news". Once live data has all been updated this clause can be removed
-                'relation' => 'AND',
-                array(
-                    'key' => 'publication_section',
-                    'compare' => 'NOT EXISTS'
-                ),
-                array(
-                    'key' => 'type',
-                    'value' => $newsType->ID,
-                    'compare' => '!='
-                )
-            )
-        )
-    ];
+    $publications = get_knowledge_and_resources_publications_filtered_by_type_and_country($type, $country, $page_number, 10);
 
-    if ($current_page == 1) {
+    if ($page_number == 1) {
         process_flexible_content($fleming_content, $fleming_content['fields']['flexible_content']);
     }
 
-    $query = new WP_Query($query_args);
-    $query_result = get_query_results($query);
-    foreach($query_result['posts'] as &$publication) {
+    foreach($publications['posts'] as &$publication) {
         $publication = publication_with_post_data_and_fields($publication);
     }
-    $fleming_content['query_result'] = $query_result;
+
+    $fleming_content['query_result'] = $publications;
+
+    $fleming_content["type_query"] = !empty($_GET["type"]) ? $_GET["type"] : null;
+    $fleming_content["country_query"] = !empty($_GET["country"]) ? $_GET["country"] : null;
+
+    $fleming_content['types'] = get_publication_types_for_type_filter();
+    $fleming_content['countries'] = get_countries_for_country_filter();
 
     return $fleming_content;
 }
 
-
 $template_name = pathinfo(__FILE__)['filename'];
-if (isset($_GET['ajax'])) {
-    $template_name = 'ajax-'.$template_name;
+if (!empty($_GET["page_number"])) {
+    $template_name = 'ajax-list-query-result-items';
 }
 include __DIR__ . '/use-templates.php';

@@ -531,6 +531,15 @@ function entity_with_post_data_and_fields($entity) {
     }
 }
 
+function populate_publications_with_post_data_and_fields($array_of_posts) {
+    foreach ($array_of_posts as &$post) {
+        if ($post['data']->post_type === 'publications') {
+            $post = publication_with_post_data_and_fields($post);
+        }
+    }
+    return $array_of_posts;
+}
+
 function get_overview_text_from_flexible_content($flexibleContent) {
     if (isset($flexibleContent) && !empty($flexibleContent["value"])) {
         foreach ($flexibleContent["value"] as &$content_block) {

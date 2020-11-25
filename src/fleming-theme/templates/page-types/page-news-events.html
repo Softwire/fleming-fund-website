@@ -5,56 +5,6 @@
 
 {% include 'flexible_content.twig' with { 'flexible_content': fields.flexible_content.value } %}
 
-<div class="news-filters">
-  <form action="" method="get">
-    <span>Show me</span>
-    <select name="country">
-      <option value="" {% if selected_country.ID == NULL %} selected {% endif %}>All countries</option>
-      {% for country in countries %}
-        <option
-            value="{{ country.post_name }}" {% if selected_country.ID == country.ID %} selected {% endif %} >{{ country.post_title }}</option>
-      {% endfor %}
-    </select>
-    <input type="submit" value="Apply"/>
-  </form>
-</div>
-
-<script>
-    function updateLocation() {
-        var url = '/news-events/';
-        var country = $(".news-filters select[name='country']").val();
-        if (country) {
-            url += '?country=' + country
-        }
-        document.location = url;
-    }
-
-    $(function () {
-        $(".news-filters input[type='submit']").hide();
-        $(".news-filters select").on("change", updateLocation);
-    });
-</script>
-
-{% embed 'layout/supporting-content.html' with {'tight': true} %}
-  {% block content %}
-
-    {% include 'flexible_content.twig' with { 'flexible_content': fields.supporting_content.value } %}
-
-    {% if query_result %}
-      <p class="query-result-summary">{{ query_result.summary }}</p>
-      <div class="card-container new-two-max">
-        {% for post in query_result.posts %}
-          {% if weight == 'heavy' and post.should_display_prominently %}
-            {% include 'cards/entities/publication-with-image.html' with {'publication': post} %}
-          {% else %}
-            {% include 'cards/entities/single-post.html' %}
-          {% endif %}
-        {% endfor %}
-      </div>
-    {% endif %}
-    {% include 'page-elements/pagination-links.html' with {'ajax': true} %}
-
-  {% endblock %}
-{% endembed %}
+{% include 'page-elements/country-and-publication-type-filters-with-results.html' %}
 
 {{ include('layout/footer.html') }}

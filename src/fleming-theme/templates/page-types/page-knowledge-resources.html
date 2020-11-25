@@ -5,14 +5,6 @@
 
 {% include 'flexible_content.twig' with { 'flexible_content': fields.flexible_content.value } %}
 
-{% embed 'layout/supporting-content.html' with {'tight': true} %}
-  {% block content %}
-    {% include 'page-elements/list-query-result.html' %}
-
-    {% include 'page-elements/pagination-links.html' with {'ajax': true} %}
-
-    {% include 'flexible_content.twig' with { 'flexible_content': fields.supporting_content.value } %}
-  {% endblock %}
-{% endembed %}
+{% include 'page-elements/country-and-publication-type-filters-with-results.html' %}
 
 {{ include('layout/footer.html') }}

@@ -1,5 +1,6 @@
 .filter-dropdowns-container {
   position: relative;
+  white-space: nowrap;
 
   .filters-heading {
     color: $mid-turquoise;
@@ -33,6 +34,12 @@
   &.three-filters {
     .filter-dropdown {
       @include perRow(3);
+    }
+  }
+
+  &.two-filters {
+    .filter-dropdown {
+      @include perRow(2);
     }
   }
 

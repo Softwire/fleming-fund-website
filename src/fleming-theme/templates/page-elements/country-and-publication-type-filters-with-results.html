@@ -1,0 +1,76 @@
+<script type="application/javascript">
+    function updateFilter() {
+        $('#filter-search-form').submit();
+    }
+
+    $(function () {
+        var currentPage = 1;
+        var maxPageNumber = {{query_result.max_page_number}};
+        var loading = false;
+
+        $('.filter-dropdowns-container select').on('change', updateFilter);
+
+        $('.load-more-button').click(function (e) {
+            e.preventDefault();
+
+            if (!loading) {
+                loading = true;
+
+                $.get(window.location.href, { page_number: currentPage + 1 }, function(data) {
+                    $('.card-container').append(data);
+                    currentPage++;
+                    loading = false;
+
+                    if (currentPage == maxPageNumber) {
+                      $('.load-more-button').hide();
+                    }
+                });
+            }
+
+            return false;
+        });
+    });
+</script>
+
+{% embed 'layout/supporting-content.html' with {'tight': true} %}
+  {% block content %}
+    <div class="filter-dropdowns-container two-filters">
+      <div class="filters-heading">
+        <span>FILTER BY</span>
+        <form class="clear-all-button" action="" method="get">
+          <input type="submit" value="CLEAR ALL"/>
+        </form>
+      </div>
+      <form action="" method="get" id="filter-search-form">
+        <select name="country" class="filter-dropdown" aria-label="Country">
+          <option value="" {% if country_query is empty %} selected {% endif %}> All Countries </option>
+          {% for country in countries %}
+          <option value="{{ country.query_string }}" {% if country_query == country.query_string %} selected {% endif %} >{{ country.display_string }}</option>
+          {% endfor %}
+        </select>
+        <select name="type" class="filter-dropdown" aria-label="Type">
+          <option value="" {% if type_query is empty %} selected {% endif %}> All Types </option>
+          {% for type in types %}
+          <option value="{{ type.query_string }}" {% if type_query == type.query_string %} selected {% endif %} >{{ type.display_string }}</option>
+          {% endfor %}
+        </select>
+        <noscript>
+          <input class="apply-filter-button" type="submit" value="Apply"/>
+        </noscript>
+      </form>
+    </div>
+
+    {% if query_result %}
+      <p class="query-result-summary">{{ query_result.total_number_results }} result{{query_result.total_number_results == 1 ? "" : "s"}}</p>
+      <div class="card-container new-two-max">
+        {% include 'page-elements/list-query-result-items.html' %}
+      </div>
+    {% endif %}
+    
+    {% if query_result.current_page < query_result.max_page_number %}
+      {% include 'flexible-content/link_button.html' with { content_block: { link: { extra_class: 'load-more-button' }, button_text: 'Load more', centred: 1 } } %}
+    {% endif %}
+
+    {% include 'flexible_content.twig' with { 'flexible_content': fields.supporting_content.value } %}
+  {% endblock %}
+{% endembed %}
