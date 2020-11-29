@@ -559,6 +559,24 @@ function get_highlight_statistic_from_flexible_content($flexibleContent) {
     return null;
 }
 
+function get_number_of_regional_grants_for_region_by_id($regionID) {
+    $grants_for_region = get_referring_posts($regionID, 'grants', 'region');
+    return count(array_filter($grants_for_region, "is_regional_grant"));
+}
+
+function  get_number_of_global_projects_for_region_by_id($regionID) {
+    $grants_for_region = get_referring_posts($regionID, 'grants', 'region');
+    return count(array_filter($grants_for_region, "is_global_project"));
+}
+
+function is_regional_grant($grant) {
+    return get_grant_type($grant) === "regional-grant";
+}
+
+function is_global_project($grant) {
+    return get_grant_type($grant) === "global-project";
+}
+
 function get_primary_image_from_flexible_content($flexibleContent) {
     if (isset($flexibleContent) && !empty($flexibleContent["value"])) {
         foreach ($flexibleContent["value"] as &$content_block) {
@@ -842,3 +860,46 @@ add_action('admin_menu', 'ff_admin_menu_separators');
 ////////////////////////////////////////////////////////////////
 
 include __DIR__ . '/custom-post-types/load-custom-post-types-and-acf-fields.php';
+
+function wtf(){
+    error_reporting(E_ALL);
+    $args = func_get_args();
+    $backtrace = debug_backtrace();
+    $file = file($backtrace[0]['file']);
+    $src  = $file[$backtrace[0]['line']-1];  // select debug($varname) line where it has been called
+    $pat  = '#(.*)'.__FUNCTION__.' *?\( *?\$(.*) *?\)(.*)#i';  // search pattern for wtf(parameter)
+    $arguments  = trim(preg_replace($pat, '$2', $src));  // extract arguments pattern
+    $args_arr = array_map('trim', explode(',', $arguments));
+  
+    print '<style>
+    div.debug {visible; clear: both; display: table; width: 100%; font-family: Courier,monospace; border: medium solid red; background-color: yellow; border-spacing: 5px; z-index: 999;}
+    div.debug > div {display: unset; margin: 5px; border-spacing: 5px; padding: 5px;}
+    div.debug .cell {display: inline-flex; padding: 5px; white-space: pre-wrap;}
+    div.debug .left-cell {float: left; background-color: Violet;}
+    div.debug .array {color: RebeccaPurple; background-color: Violet;}
+    div.debug .object pre {color: DodgerBlue; background-color: PowderBlue;}
+    div.debug .variable pre {color: RebeccaPurple; background-color: LightGoldenRodYellow;}
+    div.debug pre {white-space: pre-wrap;}
+    </style>'.PHP_EOL;
+    print '<div class="debug">'.PHP_EOL;
+    foreach ($args as $key => $arg) {
+      print '<div><div class="left-cell cell"><b>';
+      array_walk(debug_backtrace(),create_function('$a,$b','print "{$a[\'function\']}()(".basename($a[\'file\']).":{$a[\'line\']})<br> ";'));
+      print '</b></div>'.PHP_EOL;
+      if (is_array($arg)) {
+        print '<div class="cell array"><b>'.$args_arr[$key].' = </b>';
+        print_r(htmlspecialchars(print_r($arg)), ENT_COMPAT, 'UTF-8');
+        print '</div>'.PHP_EOL;
+      } elseif (is_object($arg)) {
+        print '<div class="cell object"><pre><b>'.$args_arr[$key].' = </b>';
+        print_r(htmlspecialchars(print_r(var_dump($arg))), ENT_COMPAT, 'UTF-8');
+        print '</pre></div>'.PHP_EOL;
+      } else {
+        print '<div class="cell variable"><pre><b>'.$args_arr[$key].' = </b>&gt;';
+        print_r(htmlspecialchars($arg, ENT_COMPAT, 'UTF-8').'&lt;');
+        print '</pre></div>'.PHP_EOL;
+      }
+      print '</div>'.PHP_EOL;
+    }
+    print '</div>'.PHP_EOL;
+  }

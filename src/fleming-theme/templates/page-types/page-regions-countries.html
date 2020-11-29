@@ -36,6 +36,7 @@
       'colour_scheme': region.data.post_name|region_slug_to_colour_scheme_name,
       'title': region.data.post_title,
       'content': true,
+      'after_content': true,
       'link_target': region.permalink,
       'no_link_overlay': true
     }} %}
@@ -89,7 +90,30 @@
             {% include 'cards/entities/statistic.html' with {'statistic': region.highlightStatistic} %}
           </div>
         {% endif %}
+
+        {% if (region.numberOfRegionalGrants > 0 or region.numberOfGlobalProject > 0) %}
+          <div class="grant-statistics">
+            {% if region.numberOfRegionalGrants > 0 %}
+              <a class="statistic-item" href="/grants/?type=regional-grant&region={{region.data.post_name}}">
+                <div class="grant-number">{{region.numberOfRegionalGrants}}</div>
+                <div class="grant-label">Regional Grants</div>
+              </a>
+            {% endif %}
+            {% if region.numberOfRegionalGrants > 0 %}
+              <a class="statistic-item" href="/grants/?type=global-project&region={{region.data.post_name}}">
+                <div class="grant-number">{{region.numberOfGlobalProjects}}</div>
+                <div class="grant-label">Global Projects</div>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+        
       {% endblock %}
+
+      {% block after_content %}
+        <a class="regional-activity-button" href="/grants-funding/regional-grants/activity/?region={{region.data.post_name}}">View Regional Activity</a>
+      {% endblock %}  
+
     {% endembed %}
 
   {% endfor %}

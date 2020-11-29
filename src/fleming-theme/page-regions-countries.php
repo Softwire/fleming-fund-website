@@ -33,13 +33,16 @@ function fleming_get_content()
 
     $regions = get_posts(array('post_type' => 'regions', 'numberposts' => -1));
     foreach ($regions as &$region) {
-        $region = get_post_data_and_fields($region->ID);
+        $regionID = $region->ID;
+        $region = get_post_data_and_fields($regionID);
         $region['countries'] = get_referring_posts($region['data']->ID, 'countries', 'region');
         $region['overview'] = get_overview_text_from_flexible_content($region['fields']['flexible_content']);
         $region['highlightStatistic'] = get_highlight_statistic_from_flexible_content($region['fields']['flexible_content']);
         if ($region['highlightStatistic']) {
             $region['highlightStatistic']['text'] .= ' in '.$region['data']->post_title;
         }
+        $region['numberOfRegionalGrants'] = get_number_of_regional_grants_for_region_by_id($regionID);
+        $region['numberOfGlobalProjects'] = get_number_of_global_projects_for_region_by_id($regionID);
 
         $fleming_content['in_page_links'][] = [
             'title' => $region['data']->post_title,

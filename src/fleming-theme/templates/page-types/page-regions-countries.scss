@@ -32,16 +32,12 @@
 
     .header {
       padding-bottom: 0;
-
-      h3 a {
-        color: $dark-grey;
-      }
     }
 
     .content-block {
       width: 100%;
       padding-top: 1em;
-      margin-top: 1em;
+      margin-bottom: 1em;
 
       &:first-of-type {
         margin-top: 0;
@@ -81,28 +77,76 @@
       margin-right: 0.5ex;
     }
 
+    .grant-statistics {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      justify-content: space-evenly;
+      padding-top: 0.5em;
+
+      .statistic-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        .grant-number {
+          font-size: 2.4em;
+          font-weight: bold;
+        }
+
+        .grant-label {
+          font-size: 1.2em;
+        }
+      }
+    }
+
+    .regional-activity-button {
+      @extend .button;
+      margin-top: 0;
+      width: 100%;
+      border: 0;
+
+      &::after {
+        content:">";
+        padding-left: 1em;
+        font-weight: 900;
+      }
+    }
+
     @each $configName, $colourConfig in $colourConfigs {
       &.#{$configName} {
-        .content-block {
+        .content-block, .grant-statistics {
           border-top: 1px solid map_get($colourConfig, intense);
+        }
+
+        .grant-statistics .statistic-item {
+          color: map_get($colourConfig, mid);
         }
 
         .fund-color {
           background: map_get($colourConfig, intense);
         }
 
-        .partner-color {
+        .partner-color, .regional-activity-button {
           background: map_get($colourConfig, subtle);
         }
 
-        a, .legend-items {
+        a:not(.regional-activity-button), .legend-items {
           color: map_get($colourConfig, intense);
         }
 
-        h3 a:hover {
+        h3 a:hover, .grant-statistics .statistic-item:hover {
           color: map_get($colourConfig, subtle);
         }
+
+        .header h3 a {
+          color: $dark-grey;
+        } 
       }
+    }
+
+    &.blue .grant-statistics .statistic-item {
+      color: map_get(map_get($colourConfigs, blue), intense);
     }
   }
 }
