@@ -62,9 +62,7 @@
     </div>
   {% endif %}
 
-  {% if card.after_content %}
-    {% block after_content %}{% endblock %}
-  {% endif %}
+  {% block after_content %}{% endblock %}
 
   {% if card.link_target and not cta_override and not card.no_link_overlay %}
     {% include 'cards/common/link-overlay.html' %}
