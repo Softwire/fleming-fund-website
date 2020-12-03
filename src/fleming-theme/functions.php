@@ -568,6 +568,24 @@ function get_highlight_statistic_from_flexible_content($flexibleContent) {
     return null;
 }
 
+function get_number_of_regional_grants_for_region_by_id($regionID) {
+    $grants_for_region = get_referring_posts($regionID, 'grants', 'region');
+    return count(array_filter($grants_for_region, "is_regional_grant"));
+}
+
+function  get_number_of_global_projects_for_region_by_id($regionID) {
+    $grants_for_region = get_referring_posts($regionID, 'grants', 'region');
+    return count(array_filter($grants_for_region, "is_global_project"));
+}
+
+function is_regional_grant($grant) {
+    return get_grant_type($grant) === "regional-grant";
+}
+
+function is_global_project($grant) {
+    return get_grant_type($grant) === "global-project";
+}
+
 function get_primary_image_from_flexible_content($flexibleContent) {
     if (isset($flexibleContent) && !empty($flexibleContent["value"])) {
         foreach ($flexibleContent["value"] as &$content_block) {

@@ -89,7 +89,30 @@
             {% include 'cards/entities/statistic.html' with {'statistic': region.highlightStatistic} %}
           </div>
         {% endif %}
+
+        {% if (region.numberOfRegionalGrants > 0 or region.numberOfGlobalProject > 0) %}
+          <div class="grant-statistics">
+            {% if region.numberOfRegionalGrants > 0 %}
+              <a class="statistic-item" href="/grants/?type=regional-grant&region={{region.data.post_name}}">
+                <div class="grant-number">{{region.numberOfRegionalGrants}}</div>
+                <div class="grant-label">Regional Grants</div>
+              </a>
+            {% endif %}
+            {% if region.numberOfRegionalGrants > 0 %}
+              <a class="statistic-item" href="/grants/?type=global-project&region={{region.data.post_name}}">
+                <div class="grant-number">{{region.numberOfGlobalProjects}}</div>
+                <div class="grant-label">Global Projects</div>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+        
       {% endblock %}
+
+      {% block after_content %}
+        <a class="regional-activity-button" href="/grants-funding/regional-grants/activity/?region={{region.data.post_name}}">View Regional Activity</a>
+      {% endblock %}  
+
     {% endembed %}
 
   {% endfor %}
