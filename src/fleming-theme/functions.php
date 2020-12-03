@@ -560,13 +560,13 @@ function get_highlight_statistic_from_flexible_content($flexibleContent) {
 }
 
 function get_number_of_regional_grants_for_region_by_id($regionID) {
-    $grants_for_region = get_referring_posts($regionID, 'grants', 'region');
-    return count(array_filter($grants_for_region, "is_regional_grant"));
+    $current_grants_for_region = array_filter(get_referring_posts($regionID, 'grants', 'region'), 'grant_is_current');
+    return count(array_filter($current_grants_for_region, "is_regional_grant"));
 }
 
 function  get_number_of_global_projects_for_region_by_id($regionID) {
-    $grants_for_region = get_referring_posts($regionID, 'grants', 'region');
-    return count(array_filter($grants_for_region, "is_global_project"));
+    $current_grants_for_region = array_filter(get_referring_posts($regionID, 'grants', 'region'), 'grant_is_current');
+    return count(array_filter($current_grants_for_region, "is_global_project"));
 }
 
 function is_regional_grant($grant) {
