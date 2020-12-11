@@ -7,6 +7,7 @@
         var loadMoreResultsCounter = 1;
         var loading = false;
 
+        $('.filter-dropdowns-container .apply-filter-button').hide();
         $('.filter-dropdowns-container select').on('change', updateFilter);
 
         $('.load-more-button').click(function (e) {
@@ -40,31 +41,31 @@
         </form>
       </div>
       <form action="" method="get" id="filter-search-form">
-        <select name="type" class="filter-dropdown" aria-label="Type">
-          <option value="" {% if type_query is empty %} selected {% endif %}> All Types </option>
-          {% for type in types %}
-          <option value="{{ type.query_string }}" {% if type_query == type.query_string %} selected {% endif %} >{{ type.display_string }}</option>
-          {% endfor %}
-        </select><select name="region" class="filter-dropdown" aria-label="Region">
-          <option value="" {% if region_query is empty %} selected {% endif %}> All Regions </option>
-          {% for region in regions %}
-          <option value="{{ region.query_string }}" {% if region_query == region.query_string %} selected {% endif %} >{{ region.display_string }}</option>
-          {% endfor %}
-        </select><select name="country" class="filter-dropdown" aria-label="Country">
-          <option value="" {% if country_query is empty %} selected {% endif %}> All Countries </option>
-          {% for country in countries %}
-          <option value="{{ country.query_string }}" {% if country_query == country.query_string %} selected {% endif %} >{{ country.display_string }}</option>
-          {% endfor %}
-        </select>{% if statuses %}<select name="status" class="filter-dropdown" aria-label="Status">
-          <option value="" {% if status_query is empty %} selected {% endif %}> All Current Projects </option>
-          {% for status in statuses %}
-          <option value="{{ status.query_string }}" {% if status_query == status.query_string %} selected {% endif %} >{{ status.display_string }}</option>
-          {% endfor %}
-        </select>
-        {% endif %}
-        <noscript>
-          <input class="apply-filter-button" type="submit" value="Apply"/>
-        </noscript>
+        <div class="filter-fields-container">
+          <select name="type" class="filter-dropdown" aria-label="Type">
+            <option value="" {% if type_query is empty %} selected {% endif %}> All Types </option>
+            {% for type in types %}
+            <option value="{{ type.query_string }}" {% if type_query == type.query_string %} selected {% endif %} >{{ type.display_string }}</option>
+            {% endfor %}
+          </select><select name="region" class="filter-dropdown" aria-label="Region">
+            <option value="" {% if region_query is empty %} selected {% endif %}> All Regions </option>
+            {% for region in regions %}
+            <option value="{{ region.query_string }}" {% if region_query == region.query_string %} selected {% endif %} >{{ region.display_string }}</option>
+            {% endfor %}
+          </select><select name="country" class="filter-dropdown" aria-label="Country">
+            <option value="" {% if country_query is empty %} selected {% endif %}> All Countries </option>
+            {% for country in countries %}
+            <option value="{{ country.query_string }}" {% if country_query == country.query_string %} selected {% endif %} >{{ country.display_string }}</option>
+            {% endfor %}
+          </select>{% if statuses %}<select name="status" class="filter-dropdown" aria-label="Status">
+            <option value="" {% if status_query is empty %} selected {% endif %}> All Current Projects </option>
+            {% for status in statuses %}
+            <option value="{{ status.query_string }}" {% if status_query == status.query_string %} selected {% endif %} >{{ status.display_string }}</option>
+            {% endfor %}
+          </select>
+          {% endif %}
+        </div>
+        <input class="apply-filter-button" type="submit" value="Apply"/>
       </form>
     </div>
 

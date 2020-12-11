@@ -8,6 +8,7 @@
         var maxPageNumber = {{query_result.max_page_number}};
         var loading = false;
 
+        $('.filter-dropdowns-container .apply-filter-button').hide();
         $('.filter-dropdowns-container select').on('change', updateFilter);
 
         $('.load-more-button').click(function (e) {
@@ -42,21 +43,21 @@
         </form>
       </div>
       <form action="" method="get" id="filter-search-form">
-        <select name="country" class="filter-dropdown" aria-label="Country">
-          <option value="" {% if country_query is empty %} selected {% endif %}> All Countries </option>
-          {% for country in countries %}
-          <option value="{{ country.query_string }}" {% if country_query == country.query_string %} selected {% endif %} >{{ country.display_string }}</option>
-          {% endfor %}
-        </select>
-        <select name="type" class="filter-dropdown" aria-label="Type">
-          <option value="" {% if type_query is empty %} selected {% endif %}> All Types </option>
-          {% for type in types %}
-          <option value="{{ type.query_string }}" {% if type_query == type.query_string %} selected {% endif %} >{{ type.display_string }}</option>
-          {% endfor %}
-        </select>
-        <noscript>
-          <input class="apply-filter-button" type="submit" value="Apply"/>
-        </noscript>
+        <div class="filter-fields-container">
+          <select name="country" class="filter-dropdown" aria-label="Country">
+            <option value="" {% if country_query is empty %} selected {% endif %}> All Countries </option>
+            {% for country in countries %}
+            <option value="{{ country.query_string }}" {% if country_query == country.query_string %} selected {% endif %} >{{ country.display_string }}</option>
+            {% endfor %}
+          </select>
+          <select name="type" class="filter-dropdown" aria-label="Type">
+            <option value="" {% if type_query is empty %} selected {% endif %}> All Types </option>
+            {% for type in types %}
+            <option value="{{ type.query_string }}" {% if type_query == type.query_string %} selected {% endif %} >{{ type.display_string }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <input class="apply-filter-button" type="submit" value="Apply"/>
       </form>
     </div>
 

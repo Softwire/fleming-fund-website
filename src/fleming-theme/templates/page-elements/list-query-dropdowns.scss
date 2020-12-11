@@ -9,6 +9,21 @@
     margin-bottom: 1.1em;
   }
 
+  #filter-search-form {
+    display: flex;
+    flex-direction: column;
+
+    .filter-fields-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .apply-filter-button {
+      width: 100px;
+    }
+  }
+
   .clear-all-button {
     position: absolute;
     top: 0;
@@ -51,6 +66,12 @@
   @media (#{$max-width-mobile}) {
     .filter-dropdown {
       @include perRow(1);
+    }
+
+    &.two-filters, &.three-filters {
+      .filter-dropdown {
+        @include perRow(1);
+      }
     }
   }
 }
