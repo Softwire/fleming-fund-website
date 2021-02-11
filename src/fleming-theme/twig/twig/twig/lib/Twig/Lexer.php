@@ -146,7 +146,8 @@ class Twig_Lexer
 
         // push the template text first
         $text = $textContent = substr($this->code, $this->cursor, $position[1] - $this->cursor);
-        if (isset($this->positions[2][$this->position][0])) {
+        // this line was changed to fix an incompatibility between PHP7.4 and the old version of Twig we're using.
+        if (isset($this->positions[2][$this->position][0]) && ($this->options['whitespace_trim'] === $this->positions[2][$this->position][0])) { 
             $text = rtrim($text);
         }
         $this->pushToken(/* Twig_Token::TEXT_TYPE */ 0, $text);

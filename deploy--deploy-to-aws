@@ -8,14 +8,14 @@ const siteName = 'fleming-fund';
 const allowedEnvironments = ['test', 'stage', 'production'];
 
 const ebAppNames = {
-    'test': 'fleming-eb-stage',
-    'stage': 'fleming-eb-stage',
-    'production': 'fleming-fund-eb-app'
+    'test': 'fleming-fund-test',
+    'stage': 'fleming-fund-stage',
+    'production': 'fleming-fund-prod'
 };
 const ebEnvNames = {
-    'test': 'fleming-test-eb-1',
-    'stage': 'FlemingEbStage-env',
-    'production': 'fleming-fund-eb-dev-2'
+    'test': 'fleming-fund-test',
+    'stage': 'fleming-fund-stage',
+    'production': 'fleming-fund-prod'
 };
 const s3bucket = 'elasticbeanstalk-eu-west-1-382810960254';
 
