@@ -136,13 +136,29 @@ function init(config, mapElementID) {
                     {attribute: 'stroke', values: getCountryFillMap()},
                     {attribute: 'fill-opacity', values: getCountryFillOpacityMap()},
                     {attribute: 'style', values: getCountryStyleMap()},
-                ]
+                ],
+            },
+            markerStyle: {
+                initial: {
+                    r: 15
+                }
+            },
+            markers: mapConfig.markers,
+            labels: {
+                markers: {
+                    render: function (markerIndex) {
+                        return parseInt(markerIndex) + 1;
+                    },
+                    offsets: function (markerIndex) {
+                        return [-24, 0];
+                    }
+                }
             },
             zoomOnScroll: false,
             panOnDrag: config.interactive,
             bindTouchEvents: config.interactive,
             zoomButtons: false, // we implement our own
-            zoomMax: 10,
+            zoomMax: 50,
             onRegionTipShow: function (e, tip, code) {
                 var country = mapConfig.countries[code];
                 if (country) {

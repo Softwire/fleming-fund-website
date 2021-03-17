@@ -252,6 +252,137 @@
                 "multiple": 0,
                 "return_format": "object",
                 "ui": 1
+            },
+            {
+                "key": "field_r7wg72cq9o9gb",
+                "label": "Map Markers",
+                "name": "map_markers",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "collapsed": "",
+                "min": 0,
+                "max": 0,
+                "layout": "table",
+                "button_label": "Add marker",
+                "sub_fields": [
+                    {
+                        "key": "field_td9q2uqaekil2",
+                        "label": "Latitude",
+                        "name": "latitude",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        }
+                    },
+                    {
+                        "key": "field_wvp80qqp14nej",
+                        "label": "Longitude",
+                        "name": "longitude",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        }
+                    },
+                    {
+                        "key": "field_ng5osu7mrfbe3",
+                        "label": "Description",
+                        "name": "description",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        }
+                    },
+                    {
+                        "key": "field_t641lppw5kq3i",
+                        "label": "Institutions",
+                        "name": "institutions",
+                        "type": "repeater",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "50%",
+                            "class": "",
+                            "id": ""
+                        },
+                        "collapsed": "",
+                        "min": 0,
+                        "max": 0,
+                        "layout": "table",
+                        "button_label": "Add institution",
+                        "sub_fields": [
+                            {
+                                "key": "field_98w4anld9wywh",
+                                "label": "Name",
+                                "name": "name",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 1,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                }
+                            },
+                            {
+                                "key": "field_b6zdpiz7544n5",
+                                "label": "Actitivity",
+                                "name": "activity",
+                                "type": "true_false",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": 0,
+                                "ui": 1,
+                                "ui_on_text": "Active",
+                                "ui_off_text": "Inactive"
+                            },
+                            {
+                                "key": "field_rogwbxg8p8ut9",
+                                "label": "Description",
+                                "name": "description",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 0,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                }
+                            }
+                        ]
+                    }
+                    
+                ]
             }
         ],
         "location": [

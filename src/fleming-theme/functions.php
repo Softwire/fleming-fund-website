@@ -672,6 +672,76 @@ function markdown_line_filter($text) {
     return get_parsedown()->line($text);
 }
 
+function get_country_institutions($countryID) {
+    $country = get_post_data_and_fields($countryID);
+    $institutions = [];
+    foreach ($country["fields"]["map_markers"]["value"] as $key => $marker) {
+        foreach ($marker["institutions"] as $subkey => $institution) {
+            $institutions[] = [
+                'index' => $key + 1,
+                'subindex' => count($marker["institutions"]) > 1 ? chr($subkey % 26 + 65) : null,
+                'name' => $institution['name'],
+                'activity' => $institution['activity'],
+                'description' => $institution['description']
+            ];
+        }
+    }
+    return $institutions;
+}
+
+function add_current_region_to_map_config(&$mapConfig, $regionSlug) {
+    $mapConfig = [
+        'currentRegion' => $regionSlug
+    ];
+}
+
+function add_countries_and_regions_to_map_config(&$mapConfig, $countries) {
+    $countryCodesByRegion = [];
+
+    foreach ($countries as &$country) {
+        $country = get_post_data_and_fields($country->ID);
+        $countryCode = $country['fields']['country_code']['value'];
+        if (!empty($countryCode)) {
+            $regionSlug = $country['fields']['region']['value']->post_name;
+            $countryCodesByRegion[$regionSlug][] = $countryCode;
+            add_country_to_map_config($mapConfig, $country);
+        }
+    }
+
+    foreach ($countryCodesByRegion as $regionSlug => $countryCodes) {
+        add_region_to_map_config($mapConfig, $regionSlug, $countryCodes);
+    }
+}
+
+function add_country_to_map_config(&$mapConfig, $country) {
+    $countryCode = $country['fields']['country_code']['value'];
+    
+    if (!empty($countryCode)) {
+        $mapConfig['countries'][$countryCode] = [
+            'name' => $country['data']->post_title,
+            'region' => $country['fields']['region']['value']->post_name,
+            'URL' => $country['permalink'],
+            'isPartner' => $country['fields']['relationship']['value'] !== 'fund'
+        ];
+
+        $mapConfig['regions']['all']['countries'][] = $countryCode;
+    }
+}
+
+function add_region_to_map_config(&$mapConfig, $regionSlug, $countryCodes) {
+    $mapConfig['regions'][$regionSlug] = [
+        'countries' => $countryCodes,
+        'colourScheme' => region_slug_to_colour_scheme_name($regionSlug)
+    ];
+}
+
+function add_markers_to_map_config(&$mapConfig, $markers) {
+    $mapConfig["markers"] = [];
+    foreach ($markers as $marker) {
+        $mapConfig["markers"][] = ["latLng" => [$marker['latitude'], $marker['longitude']], "name" => $marker['description']];
+    }
+}
+
 ////////////////////////////////////////////////////////////////
 ////////                  ADMIN PORTAL                  ////////
 ////////////////////////////////////////////////////////////////

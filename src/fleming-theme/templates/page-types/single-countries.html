@@ -1,126 +1,180 @@
-{{ include('layout/header.html') }}
-
-<div class="row">
-  <div class="eight columns">
-    <h1>{{ title }}</h1>
-  </div>
-  <!-- RSS link disabled for the launch of the website.
-       The way RSS is displayed (particularly in Chrome) is quite ugly.
-       We might change this "subscribe" button to do something else later
-       e.g. could be an email subscription, or instructions on how to use RSS, before you click the RSS button
-  -->
-  <!-- <div class="four columns subscribe-for-updates">
-    <a class="button" href="{{ rss_link_target }}" target="_blank">
-      Subscribe for {{ title }} updates
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 0 33 33">
-        <circle cx="3.5" cy="28.5" r="4"/>
-        <path d="M 12 28 H 16 A 12 12 0 0 0 4 16 V 20 A 8  8  0 0 1 12 28"/>
-        <path d="M 20 28 H 24 A 20 20 0 0 0 4 8  V 12 A 16 16 0 0 1 20 28"/>
-        <path d="M 28 28 H 32 A 28 28 0 0 0 4 0  V 4  A 24 24 0 0 1 28 28"/>
-      </svg>
-    </a>
-  </div> -->
-</div>
-
-{% include 'page-elements/in-page-links.html' %}
-
-{% include 'page-elements/country-specific-grant-number-boxes.html' %}
-
-{% embed 'flexible_content.twig' with { 'flexible_content': fields.flexible_content.value } %}
-  {% block aside %}
-    <div class="card-container cover">
-      {% if fields.nap_doc.value %}
-        <div class="card {{ colour_scheme }} aside-card">
-          <div class="content">
-            <p>{{ title }}'s National Action Plan is available here</p>
-            <a href={{ fields.nap_doc.value.url }}>
-              <button class="button">Download &darr;</button>
-            </a>
-          </div>
-        </div>
-      {% endif %}
-      {% if fields.rfp_doc.value %}
-        <div class="card {{ colour_scheme }} aside-card">
-          <div class="content">
-            <p>{{ title }}'s Request for Proposals is available here</p>
-            <a href={{ fields.rfp_doc.value.url }}>
-              <button class="button">Download &darr;</button>
-            </a>
-          </div>
-        </div>
-      {% endif %}
-      {% for file in fields.other_files.value %}
-        <div class="card {{ colour_scheme }} aside-card">
-          <div class="content">
-            <p>{{ file.title }}</p>
-            <a href={{ file.file.url }}>
-              <button class="button">Download &darr;</button>
-            </a>
-          </div>
-        </div>
-      {% endfor %}
+<div class="single-country-page">
+  {{ include('layout/header.html') }}
+  <div class="row">
+    <div class="eight columns">
+      <h1>{{ title }}</h1>
     </div>
-    <div class="people card-container cover">
-      {% include 'cards/entities/person-with-image.html' with {
-        'person': coordinator,
-        'supertitle': 'Regional Coordinator',
-        'person_colour_scheme': colour_scheme,
-        'cta_override': {
-          'title': 'Contact Now',
-          'target': 'mailto:' ~ coordinator.fields.email.value
+    <!-- RSS link disabled for the launch of the website.
+        The way RSS is displayed (particularly in Chrome) is quite ugly.
+        We might change this "subscribe" button to do something else later
+        e.g. could be an email subscription, or instructions on how to use RSS, before you click the RSS button
+    -->
+    <!-- <div class="four columns subscribe-for-updates">
+      <a class="button" href="{{ rss_link_target }}" target="_blank">
+        Subscribe for {{ title }} updates
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 0 33 33">
+          <circle cx="3.5" cy="28.5" r="4"/>
+          <path d="M 12 28 H 16 A 12 12 0 0 0 4 16 V 20 A 8  8  0 0 1 12 28"/>
+          <path d="M 20 28 H 24 A 20 20 0 0 0 4 8  V 12 A 16 16 0 0 1 20 28"/>
+          <path d="M 28 28 H 32 A 28 28 0 0 0 4 0  V 4  A 24 24 0 0 1 28 28"/>
+        </svg>
+      </a>
+    </div> -->
+  </div>
+
+  {% include 'page-elements/in-page-links.html' %}
+
+  {% include 'page-elements/country-specific-grant-number-boxes.html' %}
+
+  <script type="application/javascript">
+      $(function () {
+          $('.institutions-light-mode').hide();
+          $('.country-map-container').show();
+      });
+  </script>
+  <div class="country-map-container" style="display:none;">
+    <div class="country-map">
+      {% include 'page-elements/map.html' with {
+        'additional_map_config': {
+          'interactive': true,
+          'zoomAwayFromFocus': 1.2
         }
       } %}
     </div>
-  {% endblock %}
-{% endembed %}
-
-{% embed 'layout/supporting-content.html' %}
-  {% block content %}
-
-    {% include 'flexible_content.twig' with { 'flexible_content': fields.supporting_content.value } %}
-
-    {% if fields.case_study.value %}
-      <h3>Feature Case Study</h3>
-      <div class="card-container cover">
-        {% include 'cards/entities/publication-with-image.html' with {'publication': fields.case_study.value} %}
+    {% if institutions|length > 0 %}
+      <div class="institutions">
+        <ul>
+          {% for institution in institutions %}
+            <li class="institution">
+              <span class="index">{{institution.index}}{{institution.subindex}}</span> - {{ institution.name }} | {{ institution.activity ? 'active' : 'inactive' }} | {{institution.description}}
+            </li>
+          {% endfor %}
+        </ul>
       </div>
     {% endif %}
-
-    {% if open_grants_in_this_country is not empty %}
-      <h3>Current and Upcoming Opportunities</h3>
-      <div class="card-container two-max">
-        {% for grant in open_grants_in_this_country %}
-          {% include 'cards/entities/grant.html' with {'grant': grant} %}
+  </div>
+  {% if institutions|length > 0 %}
+    <div class="institutions-light-mode">
+      {% set first_half = institutions|slice(0, institutions|length/2) %}
+      {% set second_half = institutions|slice(institutions|length/2) %}
+      <ul>
+        {% for institution in first_half %}
+          <li class="institution">
+            {{ institution.name }} | {{ institution.activity ? 'active' : 'inactive' }} | {{institution.description}}
+          </li>
         {% endfor %}
-      </div>
-      {% if open_grants_in_this_country|length > 1 %}
-        {% include 'flexible-content/link_button.html' with { 'content_block': view_all_button.open_grants_in_this_country } %}
-      {% endif %}
-
-    {% elseif latest_activity is not empty %}
-      <h3>Latest Activity</h3>
-      <div class="card-container two-max">
-        {% for post in latest_activity %}
-          {% include 'cards/entities/single-post.html' %}
+      </ul>
+      <ul>
+        {% for institution in second_half %}
+          <li class="institution">
+            {{ institution.name }} | {{ institution.activity ? 'active' : 'inactive' }} | {{institution.description}}
+          </li>
         {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+  
+  {% if coordinator is not empty %}
+    {% embed 'flexible_content.twig' with { 'flexible_content': fields.flexible_content.value } %}
+      {% block aside %}
+        <div class="people card-container cover">
+          {% include 'cards/entities/person-with-image.html' with {
+            'person': coordinator,
+            'supertitle': 'Regional Coordinator',
+            'person_colour_scheme': colour_scheme,
+            'cta_override': {
+              'title': 'Contact Now',
+              'target': 'mailto:' ~ coordinator.fields.email.value
+            }
+          } %}
+        </div>
+      {% endblock %}
+    {% endembed %}
+  {% else %}
+    {% include 'flexible_content.twig' with { 'flexible_content': fields.flexible_content.value } %}
+  {% endif %}
+  
+  <div class="card-container four-max-desktop-one-max-mobile">
+    {% if fields.nap_doc.value %}
+      <div class="card {{ colour_scheme }} aside-card">
+        <div class="content">
+          <p>{{ title }}'s National Action Plan is available here</p>
+          <a href={{ fields.nap_doc.value.url }}>
+            <button class="button">Download &darr;</button>
+          </a>
+        </div>
       </div>
-      {% if latest_activity|length > 1 %}
-        {% include 'flexible-content/link_button.html' with { 'content_block': view_all_button.latest_activity } %}
-      {% endif %}
-    
-    {% elseif grants_in_this_country is not empty %}
-      <h3>Grants in {{ title }} </h3>
-      <div class="card-container two-max">
-        {% for grant in grants_in_this_country %}
-          {% include 'cards/entities/grant.html' with {'grant': grant} %}
-        {% endfor %}
-      </div>
-      {% if grants_in_this_country|length > 1 %}
-        {% include 'flexible-content/link_button.html' with { 'content_block': view_all_button.grants_in_this_country } %}
-      {% endif %}
     {% endif %}
+    {% if fields.rfp_doc.value %}
+      <div class="card {{ colour_scheme }} aside-card">
+        <div class="content">
+          <p>{{ title }}'s Request for Proposals is available here</p>
+          <a href={{ fields.rfp_doc.value.url }}>
+            <button class="button">Download &darr;</button>
+          </a>
+        </div>
+      </div>
+    {% endif %}
+    {% for file in fields.other_files.value %}
+      <div class="card {{ colour_scheme }} aside-card">
+        <div class="content">
+          <p>{{ file.title }}</p>
+          <a href={{ file.file.url }}>
+            <button class="button">Download &darr;</button>
+          </a>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 
-  {% endblock %}
-{% endembed %}
+  {% embed 'layout/supporting-content.html' %}
+    {% block content %}
 
-{{ include('layout/footer.html') }}
+      {% include 'flexible_content.twig' with { 'flexible_content': fields.supporting_content.value } %}
+
+      {% if fields.case_study.value %}
+        <h3>Feature Case Study</h3>
+        <div class="card-container cover">
+          {% include 'cards/entities/publication-with-image.html' with {'publication': fields.case_study.value} %}
+        </div>
+      {% endif %}
+
+      {% if open_grants_in_this_country is not empty %}
+        <h3>Current and Upcoming Opportunities</h3>
+        <div class="card-container two-max">
+          {% for grant in open_grants_in_this_country %}
+            {% include 'cards/entities/grant.html' with {'grant': grant} %}
+          {% endfor %}
+        </div>
+        {% if open_grants_in_this_country|length > 1 %}
+          {% include 'flexible-content/link_button.html' with { 'content_block': view_all_button.open_grants_in_this_country } %}
+        {% endif %}
+
+      {% elseif latest_activity is not empty %}
+        <h3>Latest Activity</h3>
+        <div class="card-container two-max">
+          {% for post in latest_activity %}
+            {% include 'cards/entities/single-post.html' %}
+          {% endfor %}
+        </div>
+        {% if latest_activity|length > 1 %}
+          {% include 'flexible-content/link_button.html' with { 'content_block': view_all_button.latest_activity } %}
+        {% endif %}
+      
+      {% elseif grants_in_this_country is not empty %}
+        <h3>Grants in {{ title }} </h3>
+        <div class="card-container two-max">
+          {% for grant in grants_in_this_country %}
+            {% include 'cards/entities/grant.html' with {'grant': grant} %}
+          {% endfor %}
+        </div>
+        {% if grants_in_this_country|length > 1 %}
+          {% include 'flexible-content/link_button.html' with { 'content_block': view_all_button.grants_in_this_country } %}
+        {% endif %}
+      {% endif %}
+
+    {% endblock %}
+  {% endembed %}
+
+  {{ include('layout/footer.html') }}
+</div>

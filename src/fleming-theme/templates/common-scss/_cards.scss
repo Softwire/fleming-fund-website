@@ -223,11 +223,19 @@
   &.four-max .card {
     @include perRow(4);
   }
+  &.four-max-desktop-one-max-mobile .card {
+    @include perRow(4);
+  }
 }
 
 @media (#{$max-width-desktop}) {
   .card {
     font-size: 14px;
+  }
+  .card-container {
+    &.four-max-desktop-one-max-mobile .card {
+      @include perRow(3);
+    }
   }
 }
 
@@ -250,6 +258,9 @@
       @include perRow(2);
     }
     &.four-max .card {
+      @include perRow(2);
+    }
+    &.four-max-desktop-one-max-mobile .card {
       @include perRow(2);
     }
   }
@@ -275,6 +286,9 @@
     }
     &.four-max .card {
       @include perRow(2);
+    }
+    &.four-max-desktop-one-max-mobile .card {
+      @include perRow(1);
     }
   }
 }
