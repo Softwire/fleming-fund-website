@@ -272,7 +272,7 @@
                 "mime_types": ""
             },
             {
-                "key": "field_5ba0fad3164d2",
+                "key": "field_e12ec000ade54",
                 "label": "Other files",
                 "name": "other_files",
                 "type": "repeater",
@@ -291,7 +291,7 @@
                 "button_label": "Add file",
                 "sub_fields": [
                     {
-                        "key": "field_5b6165ccf2f5e",
+                        "key": "field_56c4249310434",
                         "label": "Description",
                         "name": "title",
                         "type": "text",
@@ -305,7 +305,7 @@
                         }
                     },
                     {
-                        "key": "field_5b14d3f68fbda",
+                        "key": "field_11dd57c037884",
                         "label": "File",
                         "name": "file",
                         "type": "file",
