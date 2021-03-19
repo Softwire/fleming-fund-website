@@ -147,6 +147,7 @@
     border-color: map-get($colourConfig, intense);
     background: map-get($colourConfig, intense);
     color: #fff;
+    width: 100%;
 
     .button {
       background: map-get($colourConfig, subtle);
