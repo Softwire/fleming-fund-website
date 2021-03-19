@@ -45,9 +45,13 @@
     {% if institutions|length > 0 %}
       <div class="institutions">
         <ul>
-          {% for institution in institutions %}
-            <li class="institution">
-              <span class="index">{{institution.index}}{{institution.subindex}}</span> - {{ institution.name }} | {{ institution.activity ? 'active' : 'inactive' }} | {{institution.description}}
+          {% for marker_label, marker_institutions in institutions %}
+            <li class="marker-institutions" data-marker-code={{marker_label - 1}}>
+              {% for institution in marker_institutions %}
+                <div class="institution">
+                  <span class="index">{{marker_label}}{{institution.subindex}}</span> <span class="institution-name">{{institution.name}}</span> | {{ institution.activity ? 'Active' : 'Inactive' }} | {{institution.description|capitalize}}
+                </div>
+              {% endfor %}
             </li>
           {% endfor %}
         </ul>
@@ -57,10 +61,12 @@
   {% if institutions|length > 0 %}
     <div class="institutions-light-mode">
       <ul>
-        {% for institution in institutions %}
-          <li class="institution">
-            {{ institution.name }} | {{ institution.activity ? 'active' : 'inactive' }} | {{institution.description}}
-          </li>
+        {% for marker_institutions in institutions %}
+          {% for institution in marker_institutions %}
+            <li class="institution" >
+              <span class="institution-name">{{institution.name}}</span> | {{ institution.activity ? 'Active' : 'Inactive' }} | {{institution.description|capitalize}}
+            </li>
+          {% endfor %}
         {% endfor %}
       </ul>
     </div>

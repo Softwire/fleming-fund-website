@@ -7,6 +7,8 @@ function get_map_config(string $currentRegion = 'all') {
     add_current_region_to_map_config($mapConfig, $currentRegion);
     add_countries_and_regions_to_map_config($mapConfig, $countries);
 
+    $mapConfig["countryIsClickable"] = true;
+
     return $mapConfig;
 }
 

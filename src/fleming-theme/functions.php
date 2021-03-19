@@ -682,9 +682,8 @@ function get_country_institutions($countryID) {
     $institutions = [];
     foreach ($country["fields"]["map_markers"]["value"] as $key => $marker) {
         foreach ($marker["institutions"] as $subkey => $institution) {
-            $institutions[] = [
-                'index' => $key + 1,
-                'subindex' => count($marker["institutions"]) > 1 ? chr($subkey % 26 + 65) : null,
+            $institutions[$key + 1][] = [
+                'subindex' => count($marker["institutions"]) > 1 ? chr($subkey % 26 + 97) : null,
                 'name' => $institution['name'],
                 'activity' => $institution['activity'],
                 'description' => $institution['description']

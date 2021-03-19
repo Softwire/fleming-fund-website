@@ -141,6 +141,9 @@ function init(config, mapElementID) {
             markerStyle: {
                 initial: {
                     r: 15
+                },
+                hover: {
+                    "stroke-width": 4
                 }
             },
             markers: mapConfig.markers,
@@ -150,7 +153,7 @@ function init(config, mapElementID) {
                         return parseInt(markerIndex) + 1;
                     },
                     offsets: function () {
-                        return [-24, 0];
+                        return [-23.5, 0];
                     }
                 }
             },
@@ -167,11 +170,22 @@ function init(config, mapElementID) {
                     e.preventDefault();
                 }
             },
-            onRegionClick: function (e, code) {
+            onRegionClick:  function (e, code) {
                 var country = mapConfig.countries[code];
-                if (country) {
+                if (country && mapConfig.countryIsClickable) {
                     window.location.href = country.URL;
                 }
+            },
+            onMarkerOver: function (e, code) {
+                $(`[data-marker-code='${code}']`).addClass('highlighted');
+                document.querySelectorAll(`[data-marker-code='${code}']`)[0].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'start'
+                });
+            },
+            onMarkerOut: function (e, code) {
+                $(`[data-marker-code='${code}']`).removeClass('highlighted');
             },
             onViewportChange: function() {
                 setTimeout(forceRedrawMap, 700);
