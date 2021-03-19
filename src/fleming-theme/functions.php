@@ -672,6 +672,11 @@ function markdown_line_filter($text) {
     return get_parsedown()->line($text);
 }
 
+
+////////////////////////////////////////////////////////////////
+////////                   Map                          ////////
+////////////////////////////////////////////////////////////////
+
 function get_country_institutions($countryID) {
     $country = get_post_data_and_fields($countryID);
     $institutions = [];
@@ -741,6 +746,7 @@ function add_markers_to_map_config(&$mapConfig, $markers) {
         $mapConfig["markers"][] = ["latLng" => [$marker['latitude'], $marker['longitude']], "name" => $marker['description']];
     }
 }
+
 
 ////////////////////////////////////////////////////////////////
 ////////                  ADMIN PORTAL                  ////////

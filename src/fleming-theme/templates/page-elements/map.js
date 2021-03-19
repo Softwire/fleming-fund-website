@@ -149,7 +149,7 @@ function init(config, mapElementID) {
                     render: function (markerIndex) {
                         return parseInt(markerIndex) + 1;
                     },
-                    offsets: function (markerIndex) {
+                    offsets: function () {
                         return [-24, 0];
                     }
                 }

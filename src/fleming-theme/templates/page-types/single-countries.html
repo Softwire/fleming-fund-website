@@ -1,5 +1,6 @@
+{{ include('layout/header.html') }}
+
 <div class="single-country-page">
-  {{ include('layout/header.html') }}
   <div class="row">
     <div class="eight columns">
       <h1>{{ title }}</h1>
@@ -55,17 +56,8 @@
   </div>
   {% if institutions|length > 0 %}
     <div class="institutions-light-mode">
-      {% set first_half = institutions|slice(0, institutions|length/2) %}
-      {% set second_half = institutions|slice(institutions|length/2) %}
       <ul>
-        {% for institution in first_half %}
-          <li class="institution">
-            {{ institution.name }} | {{ institution.activity ? 'active' : 'inactive' }} | {{institution.description}}
-          </li>
-        {% endfor %}
-      </ul>
-      <ul>
-        {% for institution in second_half %}
+        {% for institution in institutions %}
           <li class="institution">
             {{ institution.name }} | {{ institution.activity ? 'active' : 'inactive' }} | {{institution.description}}
           </li>
@@ -175,6 +167,6 @@
 
     {% endblock %}
   {% endembed %}
-
-  {{ include('layout/footer.html') }}
 </div>
+
+{{ include('layout/footer.html') }}

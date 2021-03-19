@@ -258,7 +258,7 @@
                 "label": "Map Markers",
                 "name": "map_markers",
                 "type": "repeater",
-                "instructions": "",
+                "instructions": "<h4>How to find lat/lon:</h4><ol><li>Find the place on <a href='https://www.google.co.uk/maps' target='_blank' rel='noopener noreferrer'>Google Maps</a> where you want to pin the marker.</li><li>Right click on the map. It'll give you two numbers: the first is the Latitude and the second is the Longitude.</li><li>Click to copy.</li></ol>",
                 "required": 0,
                 "conditional_logic": 0,
                 "wrapper": {
@@ -349,7 +349,7 @@
                             },
                             {
                                 "key": "field_b6zdpiz7544n5",
-                                "label": "Actitivity",
+                                "label": "Activity",
                                 "name": "activity",
                                 "type": "true_false",
                                 "instructions": "",

@@ -1,6 +1,8 @@
 <?php
 
 add_filter('acf/validate_value/name=flexible_content', 'require_overview', 10, 4);
+add_filter('acf/validate_value/name=latitude', 'validate_latitude', 10, 4);
+add_filter('acf/validate_value/name=longitude', 'validate_longitude', 10, 4);
 
 function require_overview($valid, $value, $field, $input) {
     if (!$valid) {
@@ -32,4 +34,32 @@ function require_overview($valid, $value, $field, $input) {
     }
 
     return $valid;
+}
+
+function validate_latitude($valid, $value, $field, $input) {
+    if (!$valid) {
+        return $valid;
+    }
+
+    $value = trim($value);
+
+    if (is_numeric($value) && $value <= 90 && $value >= -90) {
+        return $valid;
+    }
+
+    return "Latitude has to be a number between -90 and 90.";
+}
+
+function validate_longitude($valid, $value, $field, $input) {
+    if (!$valid) {
+        return $valid;
+    }
+
+    $value = trim($value);
+
+    if (is_numeric($value) && $value <= 180 && $value > -180) {
+        return $valid;
+    }
+
+    return "Longitude has to be a number between -180 and 180.";
 }
