@@ -40,47 +40,41 @@
       overflow-y: auto;
       box-sizing: border-box;
       flex-grow: 1;
+      list-style: none;
 
-      ul {
-        list-style: none;
-        padding: 0;
+      .marker-institutions {
+        margin-bottom: 0;
 
-        .marker-institutions {
-          margin-bottom: 0;
+        &.highlighted {
+          background-color: $dark-grey;
+          border-top: 1px solid white;
+          border-bottom: 1px solid white;
+        }
 
-          &.highlighted {
-            background-color: $dark-grey;
-            border-top: 1px solid white;
-            border-bottom: 1px solid white;
-          }
+        .institution {
+          color: white;
+          padding: 5px 20px;
 
-          .institution {
-            color: white;
-            padding: 5px 20px;
-
-            .index, .institution-name {
-              font-weight: bold;
-            }
+          .index, .institution-name {
+            font-weight: bold;
           }
         }
-      }
+      } 
     }
   }
 
   .institutions-light-mode {
-    ul {
-      width: 100%;
-      padding: 10px 30px;
-      margin-bottom: 0;
-      columns: 2;
-      column-gap: 30px;
+    width: 100%;
+    padding: 10px 30px;
+    margin-bottom: 0;
+    columns: 2;
+    column-gap: 30px;
 
-      .institution {
-        color: white;
+    .institution {
+      color: white;
 
-        .institution-name {
-          font-weight: bold;
-        }
+      .institution-name {
+        font-weight: bold;
       }
     }
   }
@@ -110,9 +104,7 @@
     }
 
     .institutions-light-mode {
-      ul {
-        columns: 1;
-      }
+      columns: 1;
     }
   }
 
@@ -136,7 +128,7 @@
         font-family: inherit;
       }
 
-      .institutions, .institutions-light-mode ul {
+      .institutions, .institutions-light-mode {
         background-color: map-get($colourConfig, intense);
       }
     }

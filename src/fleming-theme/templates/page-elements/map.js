@@ -178,7 +178,7 @@ function init(config, mapElementID) {
             },
             onMarkerOver: function (e, code) {
                 $(`[data-marker-code='${code}']`).addClass('highlighted');
-                document.querySelectorAll(`[data-marker-code='${code}']`)[0].scrollIntoView({
+                $(`[data-marker-code='${code}']`)[0].scrollIntoView({
                     behavior: 'smooth',
                     block: 'nearest',
                     inline: 'start'

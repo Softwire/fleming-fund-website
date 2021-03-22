@@ -43,33 +43,29 @@
       } %}
     </div>
     {% if institutions|length > 0 %}
-      <div class="institutions">
-        <ul>
-          {% for marker_label, marker_institutions in institutions %}
-            <li class="marker-institutions" data-marker-code={{marker_label - 1}}>
-              {% for institution in marker_institutions %}
-                <div class="institution">
-                  <span class="index">{{marker_label}}{{institution.subindex}}</span> <span class="institution-name">{{institution.name}}</span> | {{ institution.activity ? 'Active' : 'Inactive' }} | {{institution.description|capitalize}}
-                </div>
-              {% endfor %}
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
+      <ul class="institutions">
+        {% for marker_label, marker_institutions in institutions %}
+          <li class="marker-institutions" data-marker-code={{marker_label - 1}}>
+            {% for institution in marker_institutions %}
+              <div class="institution">
+                <span class="index">{{marker_label}}{{institution.subindex}}</span> <span class="institution-name">{{institution.name}}</span> | {{ institution.activity ? 'Active' : 'Inactive' }} | {{institution.description|capitalize}}
+              </div>
+            {% endfor %}
+          </li>
+        {% endfor %}
+      </ul>
     {% endif %}
   </div>
   {% if institutions|length > 0 %}
-    <div class="institutions-light-mode">
-      <ul>
-        {% for marker_institutions in institutions %}
-          {% for institution in marker_institutions %}
-            <li class="institution" >
-              <span class="institution-name">{{institution.name}}</span> | {{ institution.activity ? 'Active' : 'Inactive' }} | {{institution.description|capitalize}}
-            </li>
-          {% endfor %}
+    <ul class="institutions-light-mode">
+      {% for marker_institutions in institutions %}
+        {% for institution in marker_institutions %}
+          <li class="institution" >
+            <span class="institution-name">{{institution.name}}</span> | {{ institution.activity ? 'Active' : 'Inactive' }} | {{institution.description|capitalize}}
+          </li>
         {% endfor %}
-      </ul>
-    </div>
+      {% endfor %}
+    </ul>
   {% endif %}
   
   {% if coordinator is not empty %}
