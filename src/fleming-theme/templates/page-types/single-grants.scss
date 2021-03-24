@@ -105,6 +105,12 @@ $tick-size: 25px;
   }
 }
 
+.rfp-download {
+  width: 100%; 
+  height: auto; 
+  box-sizing: border-box;
+}
+
 @each $configName, $colourConfig in $colourConfigs {
   .#{$configName} {
     .grant-timeline {

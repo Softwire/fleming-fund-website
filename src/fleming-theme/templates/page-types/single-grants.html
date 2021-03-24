@@ -70,7 +70,7 @@
   {% block aside %}
     {% if fields.rfp_doc.value %}
       <a href={{ fields.rfp_doc.value.url }} target="_blank" rel="noopener noreferrer">
-        <button class="button" style="width: 100%; height: auto; box-sizing: border-box;">Download RFP</button>
+        <button class="button rfp-download">Download RFP</button>
       </a>
     {% endif %}
     {% for file in fields.other_files.value %}
