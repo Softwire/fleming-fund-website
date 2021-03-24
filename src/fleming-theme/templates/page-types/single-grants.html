@@ -73,16 +73,18 @@
         <button class="button rfp-download">Download RFP</button>
       </a>
     {% endif %}
-    {% for file in fields.other_files.value %}
-      <div class="card {{ colour_scheme }} aside-card">
-        <div class="content">
-          <p>{{ file.title }}</p>
-          <a href={{ file.file.url }} target="_blank" rel="noopener noreferrer">
-            <button class="button">Download &darr;</button>
-          </a>
+    <div class="card-container aside-desktop-main-flow-mobile">
+      {% for file in fields.other_files.value %}
+        <div class="card {{ colour_scheme }} aside-card">
+          <div class="content">
+            <p>{{ file.title }}</p>
+            <a href={{ file.file.url }} target="_blank" rel="noopener noreferrer">
+              <button class="button">Download &darr;</button>
+            </a>
+          </div>
         </div>
-      </div>
-    {% endfor %}
+      {% endfor %}
+    </div>
   {% endblock %}
 {% endembed %}
 
