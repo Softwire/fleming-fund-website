@@ -33,7 +33,7 @@
         <div class="card {{ colour_scheme }} aside-card">
           <div class="content">
             <p>{{ title }}'s National Action Plan is available here</p>
-            <a href={{ fields.nap_doc.value.url }}>
+            <a href={{ fields.nap_doc.value.url }} target="_blank" rel="noopener noreferrer">
               <button class="button">Download &darr;</button>
             </a>
           </div>
@@ -43,7 +43,7 @@
         <div class="card {{ colour_scheme }} aside-card">
           <div class="content">
             <p>{{ title }}'s Request for Proposals is available here</p>
-            <a href={{ fields.rfp_doc.value.url }}>
+            <a href={{ fields.rfp_doc.value.url }} target="_blank" rel="noopener noreferrer">
               <button class="button">Download &darr;</button>
             </a>
           </div>
@@ -53,7 +53,7 @@
         <div class="card {{ colour_scheme }} aside-card">
           <div class="content">
             <p>{{ file.title }}</p>
-            <a href={{ file.file.url }}>
+            <a href={{ file.file.url }} target="_blank" rel="noopener noreferrer">
               <button class="button">Download &darr;</button>
             </a>
           </div>
