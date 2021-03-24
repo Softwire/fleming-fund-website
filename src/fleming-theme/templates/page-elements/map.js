@@ -172,6 +172,9 @@ function init(config, mapElementID) {
             },
             onRegionClick:  function (e, code) {
                 var country = mapConfig.countries[code];
+                /* Clicking on a country should only take the user to the country page if the countryIsClickable property
+                has been set in the mapConfig. This is because if countries were always clickable, then clicking the 
+                country in the country page map would simply refresh the page, and we want to avoid that.*/
                 if (country && mapConfig.countryIsClickable) {
                     window.location.href = country.URL;
                 }
