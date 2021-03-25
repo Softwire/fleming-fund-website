@@ -264,6 +264,9 @@
     &.four-max-desktop-one-max-mobile .card {
       @include perRow(2);
     }
+    &.aside-desktop-main-flow-mobile .card {
+      @include perRow(2);
+    }
   }
 }
 
@@ -289,6 +292,9 @@
       @include perRow(2);
     }
     &.four-max-desktop-one-max-mobile .card {
+      @include perRow(1);
+    }
+    &.aside-desktop-main-flow-mobile .card {
       @include perRow(1);
     }
   }

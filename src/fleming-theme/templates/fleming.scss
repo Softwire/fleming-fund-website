@@ -183,6 +183,7 @@ ul, ol {
   aside {
     float: right;
     width: grid-column-width(3);
+    min-width: 180px;
     margin-left: $column-margin;
   }
 }
