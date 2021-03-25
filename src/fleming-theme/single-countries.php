@@ -4,6 +4,7 @@ require_once __DIR__ . '/php/get-css-filename.php';
 require_once 'navigation/index.php';
 require_once 'query-utilities.php';
 require_once 'functions.php';
+require_once 'map/config.php';
 
 /**
  * NOTE:
@@ -26,14 +27,14 @@ function get_nav_model()
 
 function fleming_get_content()
 {
+    $this_country = get_current_post_data_and_fields();
     $fleming_content = [
         "css_filename" => get_css_filename(),
         "title" => get_raw_title(),
         "fields" => get_field_objects(),
-        "nav" => get_nav_model()
+        "nav" => get_nav_model(),
+        "map_config" => get_country_map_config($this_country["data"]->ID)
     ];
-
-    $this_country = get_current_post_data_and_fields();
 
     $country_slug = $this_country['data']->post_name;
 
@@ -47,7 +48,7 @@ function fleming_get_content()
 
     $region_data = get_post_data_and_fields($fleming_content["fields"]["region"]["value"]->ID);
     if ($region_data["fields"]["coordinator"]["value"]) {
-        $fleming_content["coordinator"] = get_post_data_and_fields($region_data["fields"]["coordinator"]["value"]->ID);
+        $fleming_content["coordinator"] = person_with_post_data_and_fields(get_post_data_and_fields($region_data["fields"]["coordinator"]["value"]->ID));
     }
 
     $grants_in_this_country = array_map('grant_with_post_data_and_fields', get_referring_posts(get_the_ID(), 'grants', 'countries'));
@@ -71,6 +72,7 @@ function fleming_get_content()
         "latest_activity" => get_link_button("/news-events/?country=".$country_slug, "View all", "turquoise")
     ];
 
+    $fleming_content["institutions"] = get_country_institutions($this_country["data"]->ID);
     return $fleming_content;
 }
 

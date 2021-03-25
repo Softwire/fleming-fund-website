@@ -1,29 +1,136 @@
-.subscribe-for-updates {
-  button, .button {
+.single-country-page {
+  .subscribe-for-updates {
+    button, .button {
 
-    display: inline-block;
-    font-size: 0.8em;
-    line-height: 1.2em;
-    padding: 0.5em 4em 0.8em 1.2em;
-    position: relative;
-    height: auto;
-    white-space: normal;
-    text-align: left;
+      display: inline-block;
+      font-size: 0.8em;
+      line-height: 1.2em;
+      padding: 0.5em 4em 0.8em 1.2em;
+      position: relative;
+      height: auto;
+      white-space: normal;
+      text-align: left;
 
-    svg {
-      width: 1.5em;
-      height: 1.5em;
-      fill: #fff;
-      position: absolute;
-      right: 1em;
-      top: 0.5em;
+      svg {
+        width: 1.5em;
+        height: 1.5em;
+        fill: #fff;
+        position: absolute;
+        right: 1em;
+        top: 0.5em;
+      }
     }
   }
+
+  .country-map-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: $map-height;
+
+    .country-map {
+      width: 60%;
+      flex-grow: 1;
+    }
+
+    .institutions {
+      width: 40%;
+      padding: 20px 0;
+      height: 100%;
+      overflow-y: auto;
+      box-sizing: border-box;
+      flex-grow: 1;
+      list-style: none;
+
+      .marker-institutions {
+        margin-bottom: 0;
+
+        &.highlighted {
+          background-color: $dark-grey;
+          border-top: 1px solid white;
+          border-bottom: 1px solid white;
+        }
+
+        .institution {
+          color: white;
+          padding: 5px 20px;
+
+          .index, .institution-name {
+            font-weight: bold;
+          }
+        }
+      } 
+    }
+  }
+
+  .institutions-light-mode {
+    width: 100%;
+    padding: 10px 30px;
+    margin-bottom: 0;
+    columns: 2;
+    column-gap: 30px;
+
+    .institution {
+      color: white;
+
+      .institution-name {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .supporting {
+    max-width: initial;
+  }
+
+  @media (#{$max-width-tablet}) {
+    .subscribe-for-updates {
+      text-align: center;
+      margin-top: 1em;
+    }
+
+    .country-map-container {
+      flex-direction: column;
+      height: auto;
+
+      .country-map {
+        width: 100%;
+      }
+
+      .institutions {
+        width: 100%;
+        max-height: 40vh;
+      }
+    }
+
+    .institutions-light-mode {
+      columns: 1;
+    }
+  }
+
+  @media (#{$min-width-tablet}) {
+    aside ~ .supporting {
+      max-width: $supporting-max-width;
+    }
+  }  
 }
 
-@media (#{$max-width-tablet}) {
-  .subscribe-for-updates {
-    text-align: center;
-    margin-top: 1em;
+@each $configName, $colourConfig in $colourConfigs {
+  .#{$configName} {
+    .single-country-page {
+      circle.jvectormap-marker {
+        fill: $dark-grey;
+        stroke: white;
+      }
+
+      text.jvectormap-marker {
+        fill: white;
+        font-family: inherit;
+      }
+
+      .institutions, .institutions-light-mode {
+        background-color: map-get($colourConfig, intense);
+      }
+    }
   }
 }

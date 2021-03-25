@@ -136,13 +136,32 @@ function init(config, mapElementID) {
                     {attribute: 'stroke', values: getCountryFillMap()},
                     {attribute: 'fill-opacity', values: getCountryFillOpacityMap()},
                     {attribute: 'style', values: getCountryStyleMap()},
-                ]
+                ],
+            },
+            markerStyle: {
+                initial: {
+                    r: 15
+                },
+                hover: {
+                    "stroke-width": 4
+                }
+            },
+            markers: mapConfig.markers,
+            labels: {
+                markers: {
+                    render: function (markerIndex) {
+                        return parseInt(markerIndex) + 1;
+                    },
+                    offsets: function () {
+                        return [-23.5, 0];
+                    }
+                }
             },
             zoomOnScroll: false,
             panOnDrag: config.interactive,
             bindTouchEvents: config.interactive,
             zoomButtons: false, // we implement our own
-            zoomMax: 10,
+            zoomMax: 50,
             onRegionTipShow: function (e, tip, code) {
                 var country = mapConfig.countries[code];
                 if (country) {
@@ -151,11 +170,25 @@ function init(config, mapElementID) {
                     e.preventDefault();
                 }
             },
-            onRegionClick: function (e, code) {
+            onRegionClick:  function (e, code) {
                 var country = mapConfig.countries[code];
-                if (country) {
+                /* Clicking on a country should only take the user to the country page if the countryIsClickable property
+                has been set in the mapConfig. This is because if countries were always clickable, then clicking the 
+                country in the country page map would simply refresh the page, and we want to avoid that.*/
+                if (country && mapConfig.countryIsClickable) {
                     window.location.href = country.URL;
                 }
+            },
+            onMarkerOver: function (e, code) {
+                $(`[data-marker-code='${code}']`).addClass('highlighted');
+                $(`[data-marker-code='${code}']`)[0].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'nearest',
+                    inline: 'start'
+                });
+            },
+            onMarkerOut: function (e, code) {
+                $(`[data-marker-code='${code}']`).removeClass('highlighted');
             },
             onViewportChange: function() {
                 setTimeout(forceRedrawMap, 700);

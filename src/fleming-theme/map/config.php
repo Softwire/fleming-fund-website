@@ -2,39 +2,24 @@
 require_once __DIR__.'/../query-utilities.php';
 
 function get_map_config(string $currentRegion = 'all') {
-    $mapConfig = [
-        'currentRegion' => $currentRegion
-    ];
-
-    $countryCodesByRegion = [];
-
     $countries = get_posts(array('post_type' => 'countries', 'numberposts' => -1));
-    foreach ($countries as &$country) {
-        $country = get_post_data_and_fields($country->ID);
-        $countryCode = $country['fields']['country_code']['value'];
-        if (!empty($countryCode)) {
-            $countryName = $country['data']->post_title;
-            $regionSlug = $country['fields']['region']['value']->post_name;
 
-            $countryCodesByRegion[$regionSlug][] = $countryCode;
+    add_current_region_to_map_config($mapConfig, $currentRegion);
+    add_countries_and_regions_to_map_config($mapConfig, $countries);
 
-            $mapConfig['countries'][$countryCode] = [
-                'name' => $countryName,
-                'region' => $regionSlug,
-                'URL' => $country['permalink'],
-                'isPartner' => $country['fields']['relationship']['value'] !== 'fund'
-            ];
+    $mapConfig["countryIsClickable"] = true;
 
-            $mapConfig['regions']['all']['countries'][] = $countryCode;
-        }
-    }
+    return $mapConfig;
+}
 
-    foreach ($countryCodesByRegion as $regionSlug => $countryCodes) {
-        $mapConfig['regions'][$regionSlug] = [
-            'countries' => $countryCodes,
-            'colourScheme' => region_slug_to_colour_scheme_name($regionSlug)
-        ];
-    }
+function get_country_map_config(string $countryID) {
+    $country = get_post_data_and_fields($countryID);
+    $regionSlug = $country['fields']['region']['value']->post_name;
+
+    add_current_region_to_map_config($mapConfig, $regionSlug);
+    add_country_to_map_config($mapConfig, $country);
+    add_region_to_map_config($mapConfig, $regionSlug, [$country['fields']['country_code']['value']]);
+    add_markers_to_map_config($mapConfig, $country['fields']['map_markers']['value']);
 
     return $mapConfig;
 }

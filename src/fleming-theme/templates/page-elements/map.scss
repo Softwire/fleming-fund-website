@@ -4,6 +4,8 @@
   }
 }
 
+$map-height: 40vh;
+
 body .jvectormap-tip {
   background: #fff;
   color: $dark-grey;
@@ -16,14 +18,18 @@ body .jvectormap-tip {
   padding: 0.5ex 1em;
   margin-top: -20px;
   cursor: pointer;
+
+  &:empty {
+    display: none !important;
+  }
 }
 
 .map-container {
   display: none;
   min-height: 200px;
   height: 200px;
-  height: 40vh;
-  max-height: 40vh;
+  height: $map-height;
+  max-height: $map-height;
   position: relative;
 
   .alignment-helper {
